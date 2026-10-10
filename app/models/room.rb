@@ -28,6 +28,9 @@ class Room < ApplicationRecord
   has_one_attached :presentation
 
   validates :scheduled_at, presence: true, on: :create
+  attr_accessor :meeting_type
+  validates :meeting_type, inclusion: { in: %w[instant scheduled] }, allow_nil: true
+  before_validation :set_instant_start, on: :create
   validates :duration_minutes, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 1440 }
   validate :validate_participants
   validate do
@@ -100,6 +103,10 @@ class Room < ApplicationRecord
   end
 
   private
+
+  def set_instant_start
+    self.scheduled_at = Time.current if meeting_type == 'instant'
+  end
 
   def set_friendly_id
     id = SecureRandom.alphanumeric(12).downcase.scan(/.../).join('-') # Separate into 3 chunks of 4 chars

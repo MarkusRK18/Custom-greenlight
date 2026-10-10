@@ -16,6 +16,8 @@ Emails are queued using the existing Active Job configuration. No real participa
 
 ## BigBlueButton server work
 
+Choose Instant meeting when creating a room to make it available immediately, or Scheduled meeting to choose a date/time. Both modes accept duration and participant emails. Instant meetings use server time at creation; the host then uses Start Meeting. Room settings allow the schedule to be changed later.
+
 The portal passes Sri Shakthi logo/banner/copyright, disables infiniteWhiteboard and automatic multi-user whiteboard access, and sets the session duration. Infinite whiteboard requires BBB 3.0+. Presenter annotations are not fully disabled by these options. Enable displayBrandingArea on the BBB server for the logo, and customize its default welcome message/footer, default presentation and client title/favicon to remove remaining upstream identity. The BBB server and browsers must reach the public logo URL.
 
 The generic portal welcome page is skipped in favor of sign-in. The portal join page remains in place for authentication, consent and waiting for a moderator. Hiding the BBB default welcome presentation or pre-meeting device screen requires confirming the installed BBB version and adjusting its server configuration; these screens are not managed by this repository.

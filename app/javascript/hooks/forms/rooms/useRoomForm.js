@@ -22,7 +22,11 @@ import { useCallback, useMemo } from 'react';
 
 export function useRoomFormValidation() {
   return useMemo(() => (yup.object({
-    scheduled_at: yup.string().required('Choose a meeting date and time'),
+    meeting_type: yup.string().oneOf(['instant', 'scheduled']).required(),
+    scheduled_at: yup.string().when('meeting_type', {
+      is: 'scheduled',
+      then: (schema) => schema.required('Choose a meeting date and time'),
+    }),
     duration_minutes: yup.number().integer().min(1).max(1440).required(),
     participant_emails: yup.string(),
     name: yup.string().required('forms.validations.room.name.required').min(2, 'forms.validations.room.name.min'),
@@ -54,6 +58,7 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
       defaultValues: {
         ...{
           name: '',
+          meeting_type: 'instant',
           scheduled_at: '',
           duration_minutes: 60,
           participant_emails: '',

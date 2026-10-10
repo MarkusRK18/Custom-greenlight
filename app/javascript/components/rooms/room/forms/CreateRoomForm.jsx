@@ -16,7 +16,7 @@
 
 import React from 'react';
 import {
-  Button, Stack,
+  Button, Stack, Form as BootstrapForm,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -31,11 +31,29 @@ export default function CreateRoomForm({ mutation: useCreateRoomAPI, userId, han
   const currentUser = useAuth();
   const createRoomAPI = useCreateRoomAPI({ onSettled: handleClose, user_id: currentUser.id });
   const { methods, fields } = useRoomForm({ defaultValues: { user_id: userId } });
+  const meetingType = methods.watch('meeting_type');
+  const createMeeting = (values) => {
+    const payload = { ...values };
+    if (values.meeting_type === 'scheduled') {
+      payload.scheduled_at = new Date(values.scheduled_at).toISOString();
+    } else {
+      delete payload.scheduled_at;
+    }
+    createRoomAPI.mutate(payload);
+  };
 
   return (
-    <Form methods={methods} onSubmit={(values) => createRoomAPI.mutate({ ...values, scheduled_at: new Date(values.scheduled_at).toISOString() })}>
+    <Form methods={methods} onSubmit={createMeeting}>
+      <BootstrapForm.Group className="mb-3">
+        <BootstrapForm.Label>Meeting type</BootstrapForm.Label>
+        <BootstrapForm.Check type="radio" id="instant-meeting" label="Instant meeting" value="instant" {...methods.register('meeting_type')} />
+        <BootstrapForm.Check type="radio" id="scheduled-meeting" label="Scheduled meeting" value="scheduled" {...methods.register('meeting_type')} />
+        <BootstrapForm.Text>
+          {meetingType === 'instant' ? 'Create a meeting you can start now.' : 'Choose when the meeting will be available.'}
+        </BootstrapForm.Text>
+      </BootstrapForm.Group>
       <FormControl field={fields.name} type="text" />
-      <FormControl field={fields.scheduled_at} type="datetime-local" />
+      {meetingType === 'scheduled' && <FormControl field={fields.scheduled_at} type="datetime-local" />}
       <FormControl field={fields.duration_minutes} type="number" min="1" max="1440" />
       <FormControl field={fields.participant_emails} type="text" />
       <Stack className="mt-1" direction="horizontal" gap={1}>
@@ -44,7 +62,7 @@ export default function CreateRoomForm({ mutation: useCreateRoomAPI, userId, han
         </Button>
         <Button variant="brand" type="submit" disabled={createRoomAPI.isLoading}>
           {createRoomAPI.isLoading && <Spinner className="me-2" />}
-          { t('room.create_room') }
+          {meetingType === 'instant' ? 'Create instant meeting' : 'Schedule meeting'}
         </Button>
       </Stack>
     </Form>
