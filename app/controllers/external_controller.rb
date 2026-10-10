@@ -91,6 +91,7 @@ class ExternalController < ApplicationController
     return head :bad_request unless payload['data'].is_a?(Hash) && payload['internal_meeting_id'].is_a?(String)
 
     data = payload['data'].except('metadata') # Callback metadata can contain private URLs.
+    data['meeting_name'] = payload['data'].dig('metadata', 'meeting_name') || room.name
     # Upsert makes repeated callbacks safe and preserves delayed older sessions.
     now = Time.current
     MeetingAnalyticsSession.upsert(

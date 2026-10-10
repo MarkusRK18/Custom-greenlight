@@ -69,7 +69,8 @@ module Api
       def analytics
         sessions = @room.meeting_analytics_sessions.order(created_at: :desc, id: :desc)
         if params[:session_id].present?
-          render_data data: sessions.find(params[:session_id]).data, status: :ok
+          session = sessions.find(params[:session_id])
+          render_data data: session.data.merge('meeting_name' => session.data['meeting_name'] || @room.name, 'saved_at' => session.updated_at), status: :ok
         else
           summaries = sessions.map(&:summary).sort_by { |item| Time.parse((item[:started_at] || item[:saved_at]).to_s) }.reverse
           render json: { data: summaries }, status: :ok

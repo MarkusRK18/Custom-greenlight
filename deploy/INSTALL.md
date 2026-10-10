@@ -73,6 +73,10 @@ end, duration and participant count. Clicking the date opens that session's
 stored dashboard. Existing Greenlight analytics are migrated into this history;
 repeated or delayed callbacks do not overwrite other sessions. The history is
 stored in PostgreSQL and included in the installer's database backup.
+Saved dashboards display the full overview columns, participant join/leave
+times, connection bars, ended/offline status, last-updated time, download and
+Help. Metrics absent from BBB's callback (for example webcam time, annotations,
+shared notes or activity score on some versions) display `N/A`, not zero.
 Unlimited time uses BBB duration zero; hosts can still end meetings manually.
 
 The installer includes the college logo, favicon, and Apple touch icons from

@@ -550,6 +550,42 @@ input[type='checkbox'] {
   line-height: 1.2;
 }
 
+.analytics-dashboard {
+  max-width: 1800px;
+  margin: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+
+  .analytics-stat .card-body { display: flex; justify-content: space-between; align-items: center; min-height: 80px; }
+  .analytics-stat.pink { border-left: 4px solid #ec4899; }
+  .analytics-stat-icon { padding: 10px; border-radius: 50%; }
+  .analytics-stat-icon.pink { color: #ec4899; background: #fdf2f8; }
+  .analytics-stat-icon.green { color: #004d00; background: #dcfce7; }
+  .analytics-stat-icon.blue { color: #004d00; background: #e7f1e7; }
+  .analytics-stat-icon.orange { color: #ea580c; background: #ffedd5; }
+  .analytics-overview { background: white; font-size: 13px; }
+  .table-responsive { max-width: 100%; overflow-x: auto; }
+  .analytics-overview th { text-transform: uppercase; font-size: 11px; background: #f1f2f5; white-space: nowrap; padding: 16px; }
+  .analytics-overview td { padding: 16px; min-width: 95px; }
+  .analytics-overview td:first-child { min-width: 250px; }
+  .analytics-avatar { padding: 8px; border-radius: 6px; background: #004d00; color: white; }
+  .analytics-online-bar { height: 5px; min-width: 90px; margin-top: 4px; }
+  .analytics-status { display: inline-block; border-radius: 16px; padding: 3px 8px; font-weight: 600; font-size: 12px; }
+  .analytics-status.offline { background: #fee2e2; color: #b91c1c; }
+  .analytics-footer { border-top: 1px solid #dce1e8; }
+}
+
+@media (min-width: 1400px) {
+  .analytics-dashboard {
+    width: calc(100vw - 80px);
+    max-width: 1800px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+  }
+}
+
 .institution-brand-small {
   flex-direction: row;
   gap: 0.65rem;
