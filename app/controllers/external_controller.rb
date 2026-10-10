@@ -90,13 +90,13 @@ class ExternalController < ApplicationController
     BigBlueButtonApi.new(provider: room.user.provider).verify_analytics_token(token)
     return head :bad_request unless payload['data'].is_a?(Hash) && payload['internal_meeting_id'].is_a?(String)
 
-    # Ignore delayed callbacks from an older session in the same reusable room.
-    session_time = payload['internal_meeting_id'].split('-').last.to_i
-    if room.last_session && session_time < room.last_session.to_time.to_i * 1000
-      return head :ok
-    end
     data = payload['data'].except('metadata') # Callback metadata can contain private URLs.
-    room.update_columns(analytics_data: data, analytics_session_id: payload['internal_meeting_id'])
+    # Upsert makes repeated callbacks safe and preserves delayed older sessions.
+    now = Time.current
+    MeetingAnalyticsSession.upsert(
+      { room_id: room.id, internal_meeting_id: payload['internal_meeting_id'], data: data, created_at: now, updated_at: now },
+      unique_by: 'unique_room_analytics_session', update_only: %i[data updated_at], record_timestamps: false
+    )
     head :ok
   rescue JWT::DecodeError
     head :unauthorized

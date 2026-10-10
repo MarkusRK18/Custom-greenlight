@@ -5,7 +5,7 @@ from pathlib import Path
 secret = Path('/local/private/api-secret').read_text().strip()
 properties = {
     'securitySalt': secret,
-    'disableRecordingDefault': 'true',
+    'disableRecordingDefault': 'false',
     'breakoutRoomsRecord': 'false',
     'autoStartRecording': 'false',
     'allowStartStopRecording': 'false',

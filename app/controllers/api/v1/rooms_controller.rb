@@ -67,7 +67,13 @@ module Api
       end
 
       def analytics
-        render_data data: @room.analytics_data, status: :ok
+        sessions = @room.meeting_analytics_sessions.order(created_at: :desc, id: :desc)
+        if params[:session_id].present?
+          render_data data: sessions.find(params[:session_id]).data, status: :ok
+        else
+          summaries = sessions.map(&:summary).sort_by { |item| Time.parse((item[:started_at] || item[:saved_at]).to_s) }.reverse
+          render json: { data: summaries }, status: :ok
+        end
       end
 
       # GET /api/v1/rooms/:friendly_id/public.json

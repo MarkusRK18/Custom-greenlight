@@ -68,6 +68,11 @@ The meeting page includes an Analytics tab. New sessions request `keepEvents`
 and an authenticated analytics callback. BBB's recording/event processing
 services must be running for results to arrive after the meeting ends.
 Previously completed meetings have no saved analytics to import automatically.
+The Analytics tab now lists saved sessions separately, with date/time, start,
+end, duration and participant count. Clicking the date opens that session's
+stored dashboard. Existing Greenlight analytics are migrated into this history;
+repeated or delayed callbacks do not overwrite other sessions. The history is
+stored in PostgreSQL and included in the installer's database backup.
 Unlimited time uses BBB duration zero; hosts can still end meetings manually.
 
 The installer includes the college logo, favicon, and Apple touch icons from

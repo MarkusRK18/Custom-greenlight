@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 # Run with: bundle exec rails runner scripts/verify-meeting-options.rb
 # All fixture changes roll back; does not start a real BBB meeting.
-user = User.find_by!(email: 'student_name@siet.ac.in')
 Room.transaction do
+  password = "Verify-Aa1!#{SecureRandom.hex(12)}"
+  user = User.create!(name: 'Analytics verification', email: "analytics-#{SecureRandom.hex(8)}@siet.ac.in",
+                      password: password, password_confirmation: password, verified: true, provider: 'greenlight', language: 'en')
   room = Room.create!(user: user, name: 'Duration verification', meeting_type: 'instant', duration_minutes: 0)
   room.update!(scheduled_at: 3.days.ago, last_session: Time.current)
   raise 'Unlimited schedule closed' unless room.schedule_open?
@@ -30,10 +32,30 @@ Room.transaction do
   headers['HTTP_AUTHORIZATION'] = "Bearer #{token}"
   client.post('/analytics_callback', params: payload.to_json, headers: headers)
   raise "Callback failed: #{client.response.status}" unless client.response.status == 200
-  raise 'Analytics not saved' unless room.reload.analytics_data['duration'] == 90
-  raise 'Private metadata saved' if room.analytics_data.key?('metadata')
+  raise 'Analytics not saved' unless room.meeting_analytics_sessions.first.data['duration'] == 90
+  raise 'Private metadata saved' if room.meeting_analytics_sessions.first.data.key?('metadata')
+  client.post('/analytics_callback', params: payload.to_json, headers: headers)
+  raise 'Repeated callback created a duplicate session' unless room.meeting_analytics_sessions.count == 1
+  payload[:internal_meeting_id] = "older-#{1.day.ago.to_i * 1000}"
+  client.post('/analytics_callback', params: payload.to_json, headers: headers)
+  raise 'Older session was lost' unless room.meeting_analytics_sessions.count == 2
   client.get("/api/v1/rooms/#{room.friendly_id}/analytics.json", headers: { 'HTTP_ACCEPT' => 'application/json' })
   raise 'Anonymous analytics accessible' unless client.response.status == 401
-  puts 'Unlimited/limited timing, BBB options, callback authentication, analytics storage and access: OK'
+  json_headers = { 'HTTP_ACCEPT' => 'application/json', 'CONTENT_TYPE' => 'application/json' }
+  client.get('/')
+  json_headers['HTTP_X_CSRF_TOKEN'] = Nokogiri::HTML(client.response.body).at_css('meta[name="csrf-token"]')['content']
+  client.post('/api/v1/sessions.json', params: { session: { email: user.email, password: password } }.to_json, headers: json_headers)
+  raise 'Fixture sign-in failed' unless client.response.status == 200
+  client.get("/api/v1/rooms/#{room.friendly_id}/analytics.json", headers: json_headers)
+  history = JSON.parse(client.response.body)['data']
+  raise 'History list incorrect' unless client.response.status == 200 && history.length == 2 && history.first['participant_count'] == 1
+  selected = history.first['id']
+  client.get("/api/v1/rooms/#{room.friendly_id}/analytics/#{selected}.json", headers: json_headers)
+  raise 'Saved dashboard inaccessible' unless client.response.status == 200 && JSON.parse(client.response.body)['data']['duration'] == 90
+  other_room = Room.create!(user: user, name: 'Other session verification', meeting_type: 'instant', duration_minutes: 0)
+  other_session = other_room.meeting_analytics_sessions.create!(internal_meeting_id: 'other-123', data: { duration: 1 })
+  client.get("/api/v1/rooms/#{room.friendly_id}/analytics/#{other_session.id}.json", headers: json_headers)
+  raise 'Session was accessible through the wrong meeting' unless client.response.status == 404
+  puts 'Timing, callbacks, duplicate/delayed history, saved dashboards and session access: OK'
   raise ActiveRecord::Rollback
 end

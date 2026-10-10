@@ -23,6 +23,7 @@ class Room < ApplicationRecord
   has_many :shared_users, through: :shared_accesses, class_name: 'User'
 
   has_many :recordings, dependent: :destroy
+  has_many :meeting_analytics_sessions, dependent: :destroy
   has_many :room_meeting_options, dependent: :destroy
 
   has_one_attached :presentation

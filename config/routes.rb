@@ -47,6 +47,7 @@ Rails.application.routes.draw do
         member do
           get '/recordings', to: 'rooms#recordings'
           get '/analytics', to: 'rooms#analytics'
+          get '/analytics/:session_id', to: 'rooms#analytics'
           get '/public_recordings', to: 'rooms#public_recordings'
           get '/recordings_processing', to: 'rooms#recordings_processing'
           get '/public', to: 'rooms#public_show'
