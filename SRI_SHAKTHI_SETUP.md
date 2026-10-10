@@ -8,7 +8,7 @@ Build this checkout with the provided Dockerfile and point docker-compose.yml at
 
 Configure SMTP_SERVER and the other SMTP values in sample.env. Local signup activates siet.ac.in accounts without an email verification challenge. Existing account activation flags remain unchanged. For OIDC, the identity provider must supply a boolean email_verified claim in extra.raw_info; unverified identities cannot join.
 
-Default User/Guest roles are participant-only. Assign approved employees an Administrator, Faculty or Staff role and grant CreateRoom permission in role administration. Do not use domain-wide role mapping to grant staff access. Domain membership alone cannot distinguish staff from students. Existing student-owned rooms cannot start meetings. Schedule existing rooms before use.
+All new siet.ac.in accounts are assigned the Administrator role. A migration promotes existing institutional accounts to Administrator. These accounts can create instant/scheduled meetings and access administrator functions; active-account requirements still apply. This replaces the earlier student-only joining policy.
 
 Create or update a room with its date/time, duration and participant email addresses. Browser local times are converted to UTC. Invitations display IST and link to authenticated joining. Notification recipients must belong to siet.ac.in; joining additionally requires an active institutional account. The participant list is a notification list, not a meeting allowlist. A host starts the session within its scheduled window; it does not auto-start at the scheduled instant. Late starts use the remaining duration.
 

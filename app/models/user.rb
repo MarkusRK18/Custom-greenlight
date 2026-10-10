@@ -75,6 +75,13 @@ class User < ApplicationRecord
   validate :check_user_role_provider, if: :role_changed?
 
   before_validation :set_session_token, on: :create
+  before_validation :assign_institution_administrator, on: :create
+
+  def assign_institution_administrator
+    return unless email.to_s.split('@').last&.downcase == InstitutionPolicy::DOMAIN
+
+    self.role = Role.find_by!(name: 'Administrator', provider: provider)
+  end
 
   scope :with_provider, ->(current_provider) { where(provider: current_provider) }
 

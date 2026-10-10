@@ -18,11 +18,11 @@ ActiveRecord::Base.transaction do
   email = "signup-test-#{SecureRandom.hex(4)}@siet.ac.in"
   client = ActionDispatch::Integration::Session.new(Rails.application)
   client.host! 'localhost'
-  client.post '/api/v1/users.json', params: { user: { name: 'Signup Test', email: email.upcase, password: 'Testing1!Local', role_id: Role.find_by!(name: 'Administrator', provider: 'greenlight').id } }, as: :json
+  client.post '/api/v1/users.json', params: { user: { name: 'Signup Test', email: email.upcase, password: 'Testing1!Local', role_id: Role.find_by!(name: 'User', provider: 'greenlight').id } }, as: :json
   check(client.response.status == 201, 'SIET signup succeeds without verification mail')
   user = User.find_by!(email: email)
   check(user.verified? && user.verification_digest.nil?, 'Account is activated without an activation token')
-  check(InstitutionPolicy.member?(user) && !InstitutionPolicy.host?(user), 'Signup creates a participant even when a host role is supplied')
+  check(user.role.name == 'Administrator' && InstitutionPolicy.host?(user), 'SIET signup creates an administrator')
   login = ActionDispatch::Integration::Session.new(Rails.application)
   login.host! 'localhost'
   login.post '/api/v1/sessions.json', params: { session: { email: email, password: 'Testing1!Local' } }, as: :json

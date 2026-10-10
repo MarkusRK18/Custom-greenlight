@@ -35,7 +35,7 @@ ActiveRecord::Base.transaction do
   check(student_client.response.status == 200, 'Student sign-in')
   %w[instant scheduled].each do |type|
     student_client.post '/api/v1/rooms.json', params: { room: base.merge(user_id: student.id, name: 'Forbidden meeting', meeting_type: type, scheduled_at: start.iso8601) }, as: :json
-    check(student_client.response.status == 403, "Students cannot create #{type} meetings")
+    check(student_client.response.status == 201, "Institutional accounts can create #{type} meetings")
   end
   raise ActiveRecord::Rollback
 end
