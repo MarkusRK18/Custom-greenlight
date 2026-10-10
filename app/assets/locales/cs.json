@@ -23,8 +23,8 @@
   "return_home": "Návrat domů",
   "created_at": "Vytvořeno v",
   "homepage": {
-    "welcome_bbb": "Vítejte v BigBlueButtonu.",
-    "greenlight_description": "Greenlight je jednoduché webové rozhraní k BigBlueButtonu web videokonferenčnímu řešení. Můžete si vytvářet vlastní místnosti nebo se připojit k existujícím pomocí krátkého odkazu."
+    "welcome_bbb": "Vítejte v Sri Shakthiu.",
+    "greenlight_description": "Sri Shakthi Meetings je jednoduché webové rozhraní k Sri Shakthiu web videokonferenčnímu řešení. Můžete si vytvářet vlastní místnosti nebo se připojit k existujícím pomocí krátkého odkazu."
   },
   "authentication": {
     "sign_in": "Přihlásit",
@@ -208,7 +208,7 @@
     },
     "site_settings": {
       "site_settings": "Nastavení serveru",
-      "customize_greenlight": "Přizpůsobit Greenlight",
+      "customize_greenlight": "Přizpůsobit Sri Shakthi Meetings",
       "appearance": {
         "appearance": "Vzhled",
         "brand_color": "Firemní barva",
@@ -241,7 +241,7 @@
         "role_mapping_by_email_description": "Mapovat uživatele na role podle emailu. Dle formátu: role1=email1, role2=email2",
         "enter_role_mapping_rule": "Vložit pravidlo mapování rolí",
         "resync_on_login": "Synchronizovat uživatelská data po každém přihlášení",
-        "resync_on_login_description": "Synchronizovaní údajů o uživateli při každém přihlášení, převzetí údajů z externího poskytovatele identit do Greenlight",
+        "resync_on_login_description": "Synchronizovaní údajů o uživateli při každém přihlášení, převzetí údajů z externího poskytovatele identit do Sri Shakthi Meetings",
         "default_role": "Výchozí role",
         "default_role_description": "Výchozí role je přidělena nově vytvořeným uživatelům",
         "registration_method": "Metoda registrace",

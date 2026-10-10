@@ -90,9 +90,10 @@ module Api
 
         # TODO: amir - ensure accessibility for authenticated requests only.
         # The created room will be the current user's unless a user_id param is provided with the request.
-        room = Room.new(name: room_params[:name], user_id: room_params[:user_id])
+        room = Room.new(room_params)
 
         if room.save
+          send_schedule_emails(room)
           logger.info "room(friendly_id):#{room.friendly_id} created for user(id):#{room.user_id}"
           render_data status: :created
         else
@@ -104,6 +105,7 @@ module Api
       # Updates the values of the specified room
       def update
         if @room.update(room_params)
+          send_schedule_emails(@room) if (@room.previous_changes.keys & %w[name scheduled_at duration_minutes participant_emails]).any?
           render_data status: :ok
         else
           render_error errors: @room.errors.to_a, status: :bad_request
@@ -159,8 +161,14 @@ module Api
         @room = Room.find_by!(friendly_id: params[:friendly_id])
       end
 
+      def send_schedule_emails(room)
+        room.participant_addresses.each do |email|
+          MeetingMailer.with(room: room, email: email, base_url: request.base_url).scheduled.deliver_later
+        end
+      end
+
       def room_params
-        params.require(:room).permit(:name, :user_id, :presentation)
+        params.require(:room).permit(:name, :user_id, :presentation, :scheduled_at, :duration_minutes, :participant_emails)
       end
     end
   end

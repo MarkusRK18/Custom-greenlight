@@ -24,12 +24,8 @@ export default function Logo({ size }) {
   const { isLoading, data: brandingImage } = useSiteSetting('BrandingImage');
   const navigate = useNavigate();
 
-  // Logo can be small or regular size
-  const sizeClass = size === 'small'
-    ? 'small-logo cursor-pointer'
-    : 'logo cursor-pointer position-absolute bottom-0 mx-auto start-0 end-0 text-center';
-  // Small Logo is used in Header only and does not require a wrapper
-  const sizeWrapperClass = !size ? 'logo-wrapper position-relative d-block mx-auto' : undefined;
+  const sizeClass = size === 'small' ? 'small-logo cursor-pointer' : 'logo cursor-pointer';
+  const sizeWrapperClass = size === 'small' ? 'institution-brand institution-brand-small' : 'institution-brand';
 
   if (isLoading) return <div className={sizeWrapperClass} />;
 
@@ -38,9 +34,10 @@ export default function Logo({ size }) {
       <Image
         src={brandingImage}
         className={sizeClass}
-        alt="CompanyLogo"
+        alt="Sri Shakthi"
         onClick={() => { navigate('/'); }}
       />
+      <span className="institution-brand-name">Sri Shakthi</span>
     </div>
   );
 }

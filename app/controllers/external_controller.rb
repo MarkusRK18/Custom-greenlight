@@ -58,6 +58,8 @@ class ExternalController < ApplicationController
       return redirect_to pending_path if user.pending?
     end
 
+    return redirect_to root_path(error: 'A verified srishakthi.ac.in account is required') unless InstitutionPolicy.member?(user) && user_info[:verified]
+
     user.generate_session_token!
     session[:session_token] = user.session_token
 
@@ -138,7 +140,7 @@ class ExternalController < ApplicationController
       email: credentials['info']['email'],
       language: extract_language_code(credentials['info']['locale']),
       external_id: credentials['uid'],
-      verified: true
+      verified: credentials.dig('extra', 'raw_info', 'email_verified') == true
     }
   end
 end

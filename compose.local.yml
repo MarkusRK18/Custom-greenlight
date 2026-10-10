@@ -1,0 +1,43 @@
+name: sri-shakthi-local
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: greenlight
+      POSTGRES_PASSWORD: ${LOCAL_DATABASE_PASSWORD}
+      POSTGRES_DB: greenlight_local
+    volumes:
+      - local_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U greenlight -d greenlight_local']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+  portal:
+    command: [sh, -c, 'rm -f /usr/src/app/tmp/pids/server.pid && exec bundle exec rails server -b 0.0.0.0 -p 3000']
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      SECRET_KEY_BASE: ${LOCAL_SECRET_KEY_BASE}
+      DATABASE_URL: postgres://greenlight:${LOCAL_DATABASE_PASSWORD}@postgres:5432/greenlight_local
+      REDIS_URL: redis://redis:6379/0
+      BIGBLUEBUTTON_ENDPOINT: ${BIGBLUEBUTTON_ENDPOINT:-http://127.0.0.1:9/bigbluebutton/api/}
+      BIGBLUEBUTTON_SECRET: ${BIGBLUEBUTTON_SECRET:-not-configured}
+    ports:
+      - '127.0.0.1:5050:3000'
+    volumes:
+      - local_storage:/usr/src/app/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+volumes:
+  local_postgres:
+  local_storage:

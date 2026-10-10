@@ -19,7 +19,7 @@
 class PublicRoomSerializer < ApplicationSerializer
   include Avatarable
 
-  attributes :name, :recording_consent, :require_authentication, :viewer_access_code, :moderator_access_code,
+  attributes :scheduled_at, :duration_minutes, :name, :recording_consent, :require_authentication, :viewer_access_code, :moderator_access_code,
              :anyone_join_as_moderator, :friendly_id, :owner_name, :owner_id, :owner_avatar, :shared_user_ids
 
   def recording_consent
@@ -27,7 +27,7 @@ class PublicRoomSerializer < ApplicationSerializer
   end
 
   def require_authentication
-    @instance_options[:options][:settings]['glRequireAuthentication']
+    'true'
   end
 
   def viewer_access_code

@@ -22,6 +22,9 @@ import { useCallback, useMemo } from 'react';
 
 export function useRoomFormValidation() {
   return useMemo(() => (yup.object({
+    scheduled_at: yup.string().required('Choose a meeting date and time'),
+    duration_minutes: yup.number().integer().min(1).max(1440).required(),
+    participant_emails: yup.string(),
     name: yup.string().required('forms.validations.room.name.required').min(2, 'forms.validations.room.name.min'),
   })), []);
 }
@@ -30,6 +33,9 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
   const { t, i18n } = useTranslation();
 
   const fields = useMemo(() => ({
+    scheduled_at: { label: 'Meeting date and time (your local time)', controlId: 'meetingStart', hookForm: { id: 'scheduled_at' } },
+    duration_minutes: { label: 'Duration (minutes)', controlId: 'meetingDuration', hookForm: { id: 'duration_minutes' } },
+    participant_emails: { label: 'Participant emails (comma separated, srishakthi.ac.in only)', controlId: 'meetingParticipants', hookForm: { id: 'participant_emails' } },
     name: {
       label: t('forms.room.fields.name.label'),
       placeHolder: t('forms.room.fields.name.placeholder'),
@@ -48,6 +54,9 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
       defaultValues: {
         ...{
           name: '',
+          scheduled_at: '',
+          duration_minutes: 60,
+          participant_emails: '',
           user_id: '',
         },
         ..._defaultValues,

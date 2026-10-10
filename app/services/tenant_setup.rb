@@ -39,9 +39,9 @@ class TenantSetup
 
   def create_site_settings
     SiteSetting.create! [
-      { setting: Setting.find_by(name: 'PrimaryColor'), value: '#467fcf', provider: @provider },
-      { setting: Setting.find_by(name: 'PrimaryColorLight'), value: '#e8eff9', provider: @provider },
-      { setting: Setting.find_by(name: 'PrimaryColorDark'), value: '#316cbe', provider: @provider },
+      { setting: Setting.find_by(name: 'PrimaryColor'), value: '#004d00', provider: @provider },
+      { setting: Setting.find_by(name: 'PrimaryColorLight'), value: '#e6ede6', provider: @provider },
+      { setting: Setting.find_by(name: 'PrimaryColorDark'), value: '#003d00', provider: @provider },
       { setting: Setting.find_by(name: 'BrandingImage'),
         value: ActionController::Base.helpers.image_path('bbb_logo.png'),
         provider: @provider },
@@ -95,7 +95,7 @@ class TenantSetup
       { role: admin, permission: can_record, value: 'true' },
       { role: admin, permission: room_limit, value: '100' },
 
-      { role: user, permission: create_room, value: 'true' },
+      { role: user, permission: create_room, value: 'false' },
       { role: user, permission: manage_users, value: 'false' },
       { role: user, permission: manage_rooms, value: 'false' },
       { role: user, permission: manage_recordings, value: 'false' },

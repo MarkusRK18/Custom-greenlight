@@ -27,6 +27,26 @@ class Room < ApplicationRecord
 
   has_one_attached :presentation
 
+  validates :scheduled_at, presence: true, on: :create
+  validates :duration_minutes, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 1440 }
+  validate :validate_participants
+  validate do
+    errors.add(:user, 'must be an authorized Sri Shakthi host') unless InstitutionPolicy.host?(user)
+  end
+
+  def participant_addresses
+    participant_emails.to_s.split(/[\s,;]+/).reject(&:blank?).map(&:downcase).uniq
+  end
+
+  def schedule_open?
+    scheduled_at.present? && Time.current >= scheduled_at && Time.current < scheduled_at + duration_minutes.minutes
+  end
+
+  def validate_participants
+    invalid = participant_addresses.reject { |email| email.match?(/\A[\w.+-]+@srishakthi\.ac\.in\z/i) }
+    errors.add(:participant_emails, 'must contain only srishakthi.ac.in addresses') if invalid.any?
+  end
+
   validates :name, presence: true
   validates :friendly_id, presence: true, uniqueness: true
   validates :meeting_id, presence: true, uniqueness: true

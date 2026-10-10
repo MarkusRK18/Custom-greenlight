@@ -32,3 +32,10 @@ test/
 app/assets/builds/*
 dockerfiles/
 !**/.keep
+
+# Local agent configuration and credentials
+.aws
+.codex
+.agents
+
+local-bbb/

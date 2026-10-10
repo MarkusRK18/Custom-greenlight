@@ -1,0 +1,15 @@
+services:
+  portal:
+    environment:
+      BBB_CALLBACK_BASE_URL: http://portal:3000
+      BBB_BRANDING_LOGO_URL: https://bbb.srishakthi.test/assets/images/logo.png
+    networks:
+      - default
+      - meeting_test
+    volumes:
+      - ./local-bbb/certs/sri-shakthi-local-ca.crt:/usr/local/share/ca-certificates/sri-shakthi-local-ca.crt:ro
+    command: [sh, -c, 'update-ca-certificates >/dev/null && rm -f /usr/src/app/tmp/pids/server.pid && exec bundle exec rails server -b 0.0.0.0 -p 3000']
+networks:
+  meeting_test:
+    external: true
+    name: sri-shakthi-bbb-test

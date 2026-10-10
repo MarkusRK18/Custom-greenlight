@@ -28,10 +28,12 @@ class CurrentUserSerializer < UserSerializer
   end
 
   def permissions
-    RolePermission.joins(:permission)
+    permissions = RolePermission.joins(:permission)
                   .where(role_id: object.role_id)
                   .pluck(:name, :value)
                   .to_h
+    permissions['CreateRoom'] = 'false' unless InstitutionPolicy.host?(object)
+    permissions
   end
 
   def super_admin

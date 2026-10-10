@@ -35,6 +35,9 @@ class PermissionsChecker
   #    1.4. Checks if the current_user is allowed to access a whole class of resources AKA admin (has at least one permission enabled for its role).
   # 2. Checks if the current_user is not an admin but allowed to access that specific target resource.
   def call
+    if (Array(@permission_names) & %w[CreateRoom ManageRooms SharedRoom RoomLimit]).any?
+      return false unless InstitutionPolicy.host?(@current_user)
+    end
     if @current_user
       # check to see if current_user has SuperAdmin role
       return true if @current_user.role == Role.find_by(name: 'SuperAdmin', provider: 'bn')

@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License along
 // with Greenlight; if not, see <http://www.gnu.org/licenses/>.
 
+$primary: #004d00;
+$link-color: #004d00;
+$link-hover-color: #004d00;
+
 @import 'bootstrap/scss/bootstrap';
 @import 'react-toastify/dist/ReactToastify';
 @import 'variables';
@@ -396,10 +400,10 @@ input.search-bar {
 .btn-link {
   background-color: transparent;
   border: 0;
-  color: #0d6efd;
+  color: #004d00;
 
   &:hover {
-    color: #0a58ca !important;
+    color: #004d00 !important;
     text-decoration: none !important;
   }
 
@@ -533,9 +537,35 @@ input[type='checkbox'] {
 }
 
 //Logo
+.institution-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.institution-brand-name {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.institution-brand-small {
+  flex-direction: row;
+  gap: 0.65rem;
+  height: 50px;
+
+  .institution-brand-name {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+}
+
 .small-logo {
-  max-width: 200px;
-  max-height: $header-height;
+  display: block;
+  width: 44px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .logo {

@@ -28,21 +28,21 @@
   "no_result_search_input": "\"{{ searchInput }}\"は見つかりませんでした",
   "action_permanent": "この操作は取り消すことができません",
   "homepage": {
-    "welcome_bbb": "BigBlueButton へようこそ",
-    "bigbluebutton_description": "BigBlueButtonは、オンライン授業に最適化された、オープンソースのウェブ会議システムです。生徒や学生が協働し、すぐにフィードバックが得られるようにすることで、より多くの時間を実践的な学びにあてることができます。",
+    "welcome_bbb": "Sri Shakthi へようこそ",
+    "bigbluebutton_description": "Sri Shakthiは、オンライン授業に最適化された、オープンソースのウェブ会議システムです。生徒や学生が協働し、すぐにフィードバックが得られるようにすることで、より多くの時間を実践的な学びにあてることができます。",
     "greenlight_description": "自分の会議室を作成し、会議を開いてみてください。簡単なリンクを使って手軽に他人を招待することもできます。",
-    "learn_more": "BigBlueButtonについてもっと知る",
+    "learn_more": "Sri Shakthiについてもっと知る",
     "explore_features": "基本的な機能",
     "meeting_title": "会議を立ち上げる",
     "meeting_description": "ビデオ、音声、画面共有、チャットなど、実践的な学びに必要な全てのツールを備えた、仮想授業を立ちあげることができます。",
     "recording_title": "会議を録画する",
-    "recording_description": "BigBlueButtonの会議を録画し、それを生徒や学生と共有することで、教材を効果的に復習させることができます。",
+    "recording_description": "Sri Shakthiの会議を録画し、それを生徒や学生と共有することで、教材を効果的に復習させることができます。",
     "settings_title": "会議室を管理する",
     "settings_description": "自分の会議室や会議方法の設定を変更し、効果的な学びの場を作り上げることができます。",
     "and_more_title": "それだけではありません",
-    "and_more_description": "BigBlueButtonには実践的な学びのためのさまざまなツールが用意されており、授業を効率的に行うことができるようデザインされています。",
+    "and_more_description": "Sri Shakthiには実践的な学びのためのさまざまなツールが用意されており、授業を効率的に行うことができるようデザインされています。",
     "enter_meeting_url": "会議URLを入力",
-    "enter_meeting_url_instruction": "下の欄にBigBlueButtonの会議のURLを記入してください。"
+    "enter_meeting_url_instruction": "下の欄にSri Shakthiの会議のURLを記入してください。"
   },
   "authentication": {
     "sign_in": "サインイン",
@@ -252,7 +252,7 @@
     },
     "site_settings": {
       "site_settings": "サイトの設定",
-      "customize_greenlight": "Greenlightのカスタマイズ",
+      "customize_greenlight": "Sri Shakthi Meetingsのカスタマイズ",
       "appearance": {
         "appearance": "外観",
         "brand_color": "サイトの基調色",
@@ -287,7 +287,7 @@
         "role_mapping_by_email_description": "メールアドレスを使ってユーザーに役割を割り当てます。役割1=メール1, 役割2=メール2、の形式にしてください。",
         "enter_role_mapping_rule": "役割割り当てルールを入力",
         "resync_on_login": "サインインごとにユーザーのデーターを再同期",
-        "resync_on_login_description": "サインインのたびにユーザーの情報を再同期し、外部の承認提供者の情報とGreenlightの情報とを常に一致させます",
+        "resync_on_login_description": "サインインのたびにユーザーの情報を再同期し、外部の承認提供者の情報とSri Shakthi Meetingsの情報とを常に一致させます",
         "default_role": "標準の役割",
         "default_role_description": "新しく作成されたユーザーに自動的に割り当てられる役割です",
         "registration_method": "登録方法",
@@ -309,7 +309,7 @@
         "allow_room_to_be_recorded": "会議室の録画を許可",
         "allow_room_to_be_recorded_description": "会議室のオーナーが、会議の録画機能の有無を決められるようになります。これをオンにしたとしても、録画を開始するためには、司会者が\"録画\"ボタンを押す必要があります。",
         "require_user_signed_in": "参加前にユーザーのサインインを求める",
-        "require_user_signed_in_description": "Greenlightのアカウントを持つユーザーのみが会議に参加できます。もしサインインなしで参加しようとした場合、ログインページに差し戻されます。",
+        "require_user_signed_in_description": "Sri Shakthi Meetingsのアカウントを持つユーザーのみが会議に参加できます。もしサインインなしで参加しようとした場合、ログインページに差し戻されます。",
         "require_mod_approval": "参加に司会者の許可を必須とする",
         "require_mod_approval_description": "会議への参加希望に対し、許可するかどうか、司会者にその都度問い合わせます。許可されてはじめてユーザーは参加できます。",
         "allow_any_user_to_start_meeting": "誰でもこの会議を開始可能とする",
@@ -444,7 +444,7 @@
   "account_activation_page": {
     "title": "アカウントの有効化",
     "account_unverified": "あなたのアカウントはまだ認証されていません。",
-    "message": "Greenlightを使用するために、送付されたアクチベーションメールの指示に従い、アカウントの認証を行ってください。",
+    "message": "Sri Shakthi Meetingsを使用するために、送付されたアクチベーションメールの指示に従い、アカウントの認証を行ってください。",
     "resend_activation_link": "アクチベーションメールが届かない、もしくはメールに問題がある場合、下の再送ボタンをクリックして新しいメールを送付してみてください。",
     "resend_btn_lbl": "認証メールの再送"
   },

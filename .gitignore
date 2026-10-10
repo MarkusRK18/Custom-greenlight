@@ -52,3 +52,10 @@
 
 # Ignore environment configuration.
 .env*
+
+.env.local
+
+local-bbb/
+.aws/
+.codex/
+.agents/

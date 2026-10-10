@@ -26,11 +26,10 @@ class UserCreator
 
   def call
     @user_params[:email] = @user_params[:email].downcase
-    email_role = infer_role_from_email(@user_params[:email])
 
     User.new({
       provider: @provider,
-      role: email_role || @role
+      role: @role
     }.merge(@user_params))
   end
 

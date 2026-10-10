@@ -20,7 +20,8 @@ module Api
   module V1
     class MeetingsController < ApiController
       before_action :find_room, only: %i[start status running]
-      skip_before_action :ensure_authenticated, only: %i[status]
+      before_action :ensure_institution_member
+      before_action :ensure_schedule_open, only: %i[start status]
       before_action only: %i[start running] do
         ensure_authorized(%w[ManageRooms SharedRoom], friendly_id: params[:friendly_id])
       end
@@ -28,6 +29,7 @@ module Api
       # POST /api/v1/meetings/:friendly_id/start.json
       # Starts a BigBlueButton meetings and joins in the meeting starter
       def start
+        return render_error status: :forbidden unless InstitutionPolicy.host?(current_user)
         begin
           MeetingStarter.new(room: @room, base_url: request.base_url, current_user:, provider: current_provider).call
         rescue BigBlueButton::BigBlueButtonException => e
@@ -97,6 +99,14 @@ module Api
 
       private
 
+      def ensure_institution_member
+        render_error status: :forbidden unless InstitutionPolicy.member?(current_user) && current_user.provider == @room.user.provider
+      end
+
+      def ensure_schedule_open
+        render_error status: :forbidden, errors: ['Meeting is outside its scheduled time.'] unless @room.schedule_open?
+      end
+
       def find_room
         @room = Room.find_by!(friendly_id: params[:friendly_id])
       end
@@ -116,15 +126,11 @@ module Api
       # 5. a room that has the AnyoneJoinAsModerator setting enabled and requires a moderator or a viewer access code
       #    and the access code input correspond to either
       def authorized_as_moderator?(mod_code:, viewer_code:, anyone_join_as_mod:)
-        @room.user_id == current_user&.id ||
-          current_user&.shared_rooms&.include?(@room) ||
-          access_code_validator(access_code: mod_code) ||
-          (anyone_join_as_mod && viewer_code.blank? && mod_code.blank?) ||
-          (anyone_join_as_mod && (access_code_validator(access_code: mod_code) || access_code_validator(access_code: viewer_code)))
+        InstitutionPolicy.host?(current_user) && (@room.user_id == current_user.id || current_user.shared_rooms.include?(@room))
       end
 
       def authorized_to_start_meeting?(settings, bbb_role)
-        settings['glAnyoneCanStart'] == 'true' || bbb_role == 'Moderator'
+        InstitutionPolicy.host?(current_user) && bbb_role == 'Moderator'
       end
 
       def unauthorized_access?(settings)
@@ -138,7 +144,7 @@ module Api
       def infer_bbb_role(mod_code:, viewer_code:, anyone_join_as_mod:)
         if authorized_as_moderator?(mod_code:, viewer_code:, anyone_join_as_mod:)
           'Moderator'
-        elsif authorized_as_viewer?(viewer_code:) && !anyone_join_as_mod
+        elsif authorized_as_viewer?(viewer_code:)
           'Viewer'
         end
       end

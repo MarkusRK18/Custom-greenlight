@@ -27,7 +27,7 @@ class MeetingStarter
   end
 
   def call
-    # TODO: amir - Check the legitimately of the action.
+    raise ArgumentError, 'Meeting cannot be started' unless InstitutionPolicy.host?(@current_user) && @room.schedule_open?
     options = RoomSettingsGetter.new(room_id: @room.id, provider: @room.user.provider, current_user: @current_user, only_bbb_options: true).call
     viewer_code = RoomSettingsGetter.new(
       room_id: @room.id,
@@ -61,9 +61,16 @@ class MeetingStarter
     moderator_message += "<br>#{I18n.t('meeting.access_code', code: access_code)}" if access_code.present?
     {
       moderatorOnlyMessage: moderator_message,
+      logo: ENV.fetch('BBB_BRANDING_LOGO_URL', "#{@base_url}#{File.join(Rails.configuration.relative_url_root, "sri-shakthi-logo.png")}"),
+      bannerText: 'Sri Shakthi',
+      copyright: 'Sri Shakthi',
+      welcome: 'Welcome to Sri Shakthi',
+      disabledFeatures: 'infiniteWhiteboard',
+      multiUserWhiteboardEnabled: false,
+      duration: [((@room.scheduled_at + @room.duration_minutes.minutes - Time.current) / 60).ceil, 1].max,
       logoutURL: room_url,
-      meta_endCallbackUrl: meeting_ended_url(host: @base_url),
-      'meta_bbb-recording-ready-url': recording_ready_url(host: @base_url),
+      meta_endCallbackUrl: meeting_ended_url(host: ENV.fetch('BBB_CALLBACK_BASE_URL', @base_url)),
+      'meta_bbb-recording-ready-url': recording_ready_url(host: ENV.fetch('BBB_CALLBACK_BASE_URL', @base_url)),
       'meta_bbb-origin-version': ENV.fetch('VERSION_TAG', 'v3'),
       'meta_bbb-origin': 'greenlight'
     }
@@ -72,6 +79,6 @@ class MeetingStarter
   def presentation_url
     return unless @room.presentation.attached?
 
-    rails_blob_url(@room.presentation, host: @base_url).gsub('&', '%26')
+    rails_blob_url(@room.presentation, host: ENV.fetch('BBB_CALLBACK_BASE_URL', @base_url)).gsub('&', '%26')
   end
 end

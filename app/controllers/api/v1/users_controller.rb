@@ -65,7 +65,7 @@ module Api
 
         smtp_enabled = ENV['SMTP_SERVER'].present?
 
-        user.verify! unless smtp_enabled
+        user.verified = false
 
         # Set to pending if registration method is approval
         user.pending! if !admin_create && registration_method == SiteSetting::REGISTRATION_METHODS[:approval]

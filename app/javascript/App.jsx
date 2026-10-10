@@ -50,7 +50,7 @@ export default function App() {
 
   return (
     <>
-      <Title>BigBlueButton</Title>
+      <Title>Sri Shakthi Meetings</Title>
       {(homePage || currentUser.signed_in) && <Header /> }
       <Container className={pageHeight}>
         <Outlet />

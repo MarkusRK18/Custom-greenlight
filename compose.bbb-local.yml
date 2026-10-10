@@ -1,0 +1,36 @@
+name: sri-shakthi-bbb-test
+services:
+  bigbluebutton:
+    image: imdt/bigbluebutton:3.0.x-develop
+    container_name: sri-shakthi-bbb-test
+    hostname: bbb.srishakthi.test
+    entrypoint: [/bin/bash, /local/start-local.sh]
+    privileged: true
+    cgroup: host
+    environment:
+      container: docker
+      DEBIAN_FRONTEND: noninteractive
+    cpus: 4
+    mem_limit: 8g
+    memswap_limit: 10g
+    volumes:
+      - ./local-bbb/certs:/local/certs:ro
+      - ./scripts/start-local-bbb.sh:/local/start-local.sh:ro
+      - ./public/sri-shakthi-logo.png:/local/sri-shakthi-logo.png:ro
+      - ./local-bbb/private/api-secret:/local/private/api-secret:ro
+    networks:
+      meeting_test:
+        ipv4_address: 172.30.50.10
+        aliases:
+          - bbb.srishakthi.test
+    restart: 'no'
+    logging:
+      options:
+        max-size: 10m
+        max-file: '2'
+networks:
+  meeting_test:
+    name: sri-shakthi-bbb-test
+    ipam:
+      config:
+        - subnet: 172.30.50.0/24

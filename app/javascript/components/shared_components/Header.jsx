@@ -36,7 +36,7 @@ export default function Header() {
   return (
     <Navbar collapseOnSelect id="navbar" expand="sm">
       <Container className="ps-0">
-        <Navbar.Brand as={Link} to={homePath} className="ps-2">
+        <Navbar.Brand as={Link} to={homePath} className="ps-2 py-0 d-flex align-items-center">
           <Logo size="small" />
         </Navbar.Brand>
         {

@@ -57,6 +57,8 @@ module Api
           return render_error errors: Rails.configuration.custom_error_msgs[:pending_user] if user.pending?
           return render_error errors: Rails.configuration.custom_error_msgs[:banned_user] if user.banned?
 
+          return render_error status: :forbidden unless InstitutionPolicy.member?(user)
+
           sign_in user
           render_data data: current_user, serializer: CurrentUserSerializer, status: :ok
         else

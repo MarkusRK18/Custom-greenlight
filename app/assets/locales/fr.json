@@ -28,21 +28,21 @@
   "no_result_search_input": "Aucun résultat trouvé pour {{ searchInput }}",
   "action_permanent": "Cette action ne peut être annulée",
   "homepage": {
-    "welcome_bbb": "Bienvenue sur BigBlueButton.",
+    "welcome_bbb": "Bienvenue sur Sri Shakthi.",
     "bigbluebutton_description": "BigBluButton est un système de webconférence dont le code source ouvert et qui est destinée à l'enseignement en ligne. La plateforme permet de profiter au mieux du temps dédié à la formation en favorisant la collaboration et une supervision en temps réel. ",
     "greenlight_description": "Créez vos salles et sessions ou rejoignez celles de autres grâce à un lien court et pratique.",
-    "learn_more": "En apprendre plus sur BigBlueButton",
+    "learn_more": "En apprendre plus sur Sri Shakthi",
     "explore_features": "Découvrez les fonctionnalités",
     "meeting_title": "Commencer une réunion",
     "meeting_description": "Démarrez une classe virtuelles avec de la vidéo, de l'audio, du partage d'écran, un chat et tous les outils nécessaires à une formation.",
     "recording_title": "Enregistrez vos réunions",
-    "recording_description": "Enregistrez des conférences dans BigBlueButton et partagez les avec les étudiants pour en étudier les contenus.",
+    "recording_description": "Enregistrez des conférences dans Sri Shakthi et partagez les avec les étudiants pour en étudier les contenus.",
     "settings_title": "Gérez vos salles",
     "settings_description": "Paramétrez vos salles et chaque réunion pour une salle de classe optimale",
     "and_more_title": "Et plus encore!",
-    "and_more_description": "BigBlueButton propose de outils intégrés pour la formation et est conçu pour vous faire gagner du temps pendant le cours",
-    "enter_meeting_url": "Veuillez saisir l'URL de votre réunion sur BigBlueButton dans le champ ci-dessous",
-    "enter_meeting_url_instruction": "Veuillez saisir l'URL de votre réunion BigBlueButton dans le champ ci-dessous."
+    "and_more_description": "Sri Shakthi propose de outils intégrés pour la formation et est conçu pour vous faire gagner du temps pendant le cours",
+    "enter_meeting_url": "Veuillez saisir l'URL de votre réunion sur Sri Shakthi dans le champ ci-dessous",
+    "enter_meeting_url_instruction": "Veuillez saisir l'URL de votre réunion Sri Shakthi dans le champ ci-dessous."
   },
   "authentication": {
     "sign_in": "S'identifier",
@@ -252,7 +252,7 @@
     },
     "site_settings": {
       "site_settings": "Paramètres du site",
-      "customize_greenlight": "Personnaliser Greenlight",
+      "customize_greenlight": "Personnaliser Sri Shakthi Meetings",
       "appearance": {
         "appearance": "Aspect",
         "brand_color": "Couleur du logo",
@@ -287,7 +287,7 @@
         "role_mapping_by_email_description": "Configurer le rôle d'un utilisateur en se servant de son courriel. Doit être au format suivant: rôle1=courriel1, rôle2=courriel2",
         "enter_role_mapping_rule": "Saisir une règle de configuration des rôles",
         "resync_on_login": "Resynchroniser les données utilisateur à chaque authentification",
-        "resync_on_login_description": "Resynchroniser les données utilisateur de Greenlight à chacune de ses connexions, afin qu'elles correspondent toujours avec celles du service d'authentification",
+        "resync_on_login_description": "Resynchroniser les données utilisateur de Sri Shakthi Meetings à chacune de ses connexions, afin qu'elles correspondent toujours avec celles du service d'authentification",
         "default_role": "Rôle par défaut",
         "default_role_description": "Le rôle par défaut a été attribué aux nouveaux utilisateurs",
         "registration_method": "Mode d'inscription",
@@ -309,7 +309,7 @@
         "allow_room_to_be_recorded": "Autoriser les enregistrements pour cette salle",
         "allow_room_to_be_recorded_description": "Permettre aux propriétaires de la salle de préciser s'ils veulent ou non disposer de l'enregistrement. S'ils l'activent ils devront tout de même cliquer sur le bouton \"Enregistrer\" une fois que la session à débuté.",
         "require_user_signed_in": "Demander l'identification des utilisateurs pour rejoindre une salle",
-        "require_user_signed_in_description": "Autoriser uniquement les utilisateurs disposant d'un compte Greenlight à se joindre à une réunion. S'ils ne sont pas authentifiés, ils seront redirigés vers la page d'identification quand ils essayent de rejoindre une salle",
+        "require_user_signed_in_description": "Autoriser uniquement les utilisateurs disposant d'un compte Sri Shakthi Meetings à se joindre à une réunion. S'ils ne sont pas authentifiés, ils seront redirigés vers la page d'identification quand ils essayent de rejoindre une salle",
         "require_mod_approval": "L'approbation d'un modérateur est nécessaire pour se joindre à une réunion.",
         "require_mod_approval_description": "Notifie le modérateur quand un utilisateur tente de rejoindre la salle. Après approbation, l'utilisateur pourra se joindre à la réunion",
         "allow_any_user_to_start_meeting": "Permettre à tout utilisateur de lancer une réunion",
@@ -444,7 +444,7 @@
   "account_activation_page": {
     "title": "Activation du compte",
     "account_unverified": "Votre compte n'a pas encore été validé.",
-    "message": "Pour pouvoir utiliser Greenlight, veuillez valider votre compte en suivant les instructions présentes dans le courriel d'activation qui vous a été envoyé.",
+    "message": "Pour pouvoir utiliser Sri Shakthi Meetings, veuillez valider votre compte en suivant les instructions présentes dans le courriel d'activation qui vous a été envoyé.",
     "resend_activation_link": "Si vous n'avez pas reçu de courriel d'activation ou si son contenu pose problème, cliquez sur le bouton renvoyer pour le recevoir à nouveau",
     "resend_btn_lbl": "Renvoyer la demande de validation"
   },
