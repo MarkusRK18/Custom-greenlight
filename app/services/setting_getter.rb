@@ -53,7 +53,7 @@ class SettingGetter
 
   def transform_value(site_setting)
     if site_setting.setting.name == 'BrandingImage'
-      return "#{File.join(Rails.configuration.relative_url_root, "sri-shakthi-logo.png")}"
+      return ENV.fetch('BBB_BRANDING_LOGO_URL') { File.join(Rails.configuration.relative_url_root, 'sri-shakthi-logo.png') }
     end
 
     case site_setting.value

@@ -27,6 +27,7 @@ fi
 yq e -i '.public.app.clientTitle = "SIETConnect" | .public.app.branding.displayBrandingArea = true | .public.app.copyright = "Sri Shakthi" | .public.layout.hidePresentationOnJoin = true | .public.layout.showSessionDetailsOnJoin = false' /etc/bigbluebutton/bbb-html5.yml
 yq e -i '.public.whiteboard.toolbar.initialSelectedTool = "select" | del(.public.whiteboard.toolbar.presenterTools) | del(.public.whiteboard.toolbar.multiUserTools) | del(.public.whiteboard.lockToolbarTools)' /etc/bigbluebutton/bbb-html5.yml
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/images/logo.png
+install -m 644 /local/college-favicon.ico /var/www/bigbluebutton-default/assets/favicon.ico
 # This image's rc.local contains a LibreOffice Docker build; local testing
 # omits document conversion, so it does not need the host Docker socket.
 systemctl mask bbb-rap-starter.service bbb-rap-resque-worker.service bbb-rap-caption-inbox.service >/dev/null

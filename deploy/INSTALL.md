@@ -62,3 +62,23 @@ Backups live in `/opt/sietconnect/backups/<UTC timestamp>/`: `database.dump`, `s
 To restore, stop the custom app, restore `database.dump` to the original PostgreSQL database using `pg_restore --clean --if-exists`, restore the storage archive into the original mounted storage directory, and start the original Compose app without the custom override. Use the original database name and PostgreSQL account from that installation. Keep the failed migration stopped until the restore is complete. The script never automatically restores or discards a database.
 
 Validation performed during development: shell/Python syntax and generated Docker Compose configuration. Installation on your remote BBB server still needs to be run; it has not been executed against that server.
+# College logo assets
+
+The installer includes the college logo, favicon, and Apple touch icons from
+the repository. It installs a dedicated `/sietconnect-assets/logo.png` route on
+the existing BBB hostname and uses it for both Greenlight and meeting branding.
+Rerun the updated installer with your original arguments to apply this change
+to an existing deployment. No separate logo download or upload is needed.
+
+To install only the native BBB logo files and icons from a checked-out repository:
+
+```bash
+sudo bash scripts/install-college-assets.sh
+```
+
+This reloads nginx and keeps backups under `/var/backups/sietconnect-assets.*`.
+It does not restart BBB or alter functional microphone/headphone icons.
+Meeting logos apply to newly started meetings after the portal upgrade. If the
+native BBB client has its branding area disabled, enable
+`public.app.branding.displayBrandingArea: true` in
+`/etc/bigbluebutton/bbb-html5.yml` and restart the HTML5 services during maintenance.

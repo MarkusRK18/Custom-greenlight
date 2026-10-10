@@ -150,7 +150,7 @@ for line in env.read_text().splitlines():
 root=existing.get('RELATIVE_URL_ROOT','').rstrip('/')
 if root!=u.path.rstrip('/'): raise SystemExit('Public URL path must match RELATIVE_URL_ROOT in the existing .env.')
 if fresh!='1' and not existing.get('SECRET_KEY_BASE'): raise SystemExit('Existing .env must contain SECRET_KEY_BASE.')
-data={'SIET_BBB_ENDPOINT':base+'/bigbluebutton/api/','SIET_BBB_SECRET':secret,'SIET_PUBLIC_URL':public,'SIET_RELATIVE_ROOT':root}
+data={'SIET_BBB_ENDPOINT':base+'/bigbluebutton/api/','SIET_BBB_SECRET':secret,'SIET_PUBLIC_URL':public,'SIET_RELATIVE_ROOT':root,'SIET_BBB_ASSET_URL':base+'/sietconnect-assets/logo.png'}
 Path(out).write_text('\n'.join(k+'='+v for k,v in data.items())+'\n');Path(out).chmod(0o600)
 PY
 
@@ -179,13 +179,14 @@ python3 - "$override" "$source_dir" "$app_service" <<'PY'
 import json,sys
 service={'image':'sietconnect-custom:installed','build':{'context':sys.argv[2],'dockerfile':'deploy/Dockerfile','args':{'RELATIVE_URL_ROOT':'${SIET_RELATIVE_ROOT}'}},'entrypoint':[],
  'command':['sh','-c','rm -f /usr/src/app/tmp/pids/server.pid && exec bundle exec rails server -b 0.0.0.0 -p 3000'],
- 'environment':{'BIGBLUEBUTTON_ENDPOINT':'${SIET_BBB_ENDPOINT}','BIGBLUEBUTTON_SECRET':'${SIET_BBB_SECRET}','BBB_CALLBACK_BASE_URL':'${SIET_PUBLIC_URL}','BBB_BRANDING_LOGO_URL':'${SIET_PUBLIC_URL}/sri-shakthi-logo.png'}}
+ 'environment':{'BIGBLUEBUTTON_ENDPOINT':'${SIET_BBB_ENDPOINT}','BIGBLUEBUTTON_SECRET':'${SIET_BBB_SECRET}','BBB_CALLBACK_BASE_URL':'${SIET_PUBLIC_URL}','BBB_BRANDING_LOGO_URL':'${SIET_BBB_ASSET_URL}'}}
 open(sys.argv[1],'w').write(json.dumps({'services':{sys.argv[3]:service}},indent=2))
 PY
 dc() { docker compose --project-directory "$gl_dir" --env-file "$gl_dir/.env" --env-file "$config_env" -f "$base_file" -f "$override" "$@"; }
 dc config --quiet
 printf 'Building custom Greenlight (BBB services continue running)...\n'
 dc build "$app_service"
+bash "$source_dir/scripts/install-college-assets.sh"
 dc up -d "$postgres_service" "$redis_service"
 
 backup=$install_dir/backups/$(date -u +%Y%m%dT%H%M%SZ)
