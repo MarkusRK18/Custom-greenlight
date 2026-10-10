@@ -1,0 +1,100 @@
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  Exclude:
+    - 'bin/**/*'
+    - 'db/schema.rb'
+    - 'db/data_schema.rb'
+    - 'vendor/**/*'
+    - 'vendor/bundle/**/*'
+    - 'config/routes.rb'
+  DisabledByDefault: false
+  TargetRubyVersion: 3.1
+  NewCops: enable
+
+# Document classes and non-namespace modules.
+Style/Documentation:
+  Enabled: false
+
+RSpec/ContextWording:
+  Enabled: false
+
+# Enable having multiple expectations per example in a spec.
+RSpec/MultipleExpectations:
+  Enabled: false
+
+# Enable having long examples
+RSpec/ExampleLength:
+  Enabled: false
+
+# Enable having arbitrary Spec path i.e. Api::V1::Controller.
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 7
+
+RSpec/StubbedMock:
+  Enabled: false
+
+# Enable having lines with up to 150 charachters in length.
+Layout/LineLength:
+  Max: 150
+
+# Avoid methods longer than 10 lines of code.
+Metrics/MethodLength:
+  Enabled: false
+
+# Avoid long blocks with many lines.
+Metrics/BlockLength:
+  AllowedMethods: [ 'describe', 'context', 'xdescribe', 'xcontext', 'FactoryBot.define' ]
+  Exclude:
+    - 'config/routes.rb'
+  Max: 70
+
+Metrics/ClassLength:
+  Max: 150
+
+# A calculated magnitude based on number of assignments,
+# branches, and conditions.
+Metrics/AbcSize:
+  Max: 65
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 16
+
+Metrics/PerceivedComplexity:
+  Max: 15
+
+Rails/Exit:
+  Exclude:
+    - 'lib/tasks/task_helpers.rb'
+
+Rails/Output:
+  Exclude:
+    - 'lib/tasks/task_helpers.rb'
+
+Rails/RootPathnameMethods:
+  Enabled: false
+
+Rails/ThreeStateBooleanColumn:
+  Enabled: false
+
