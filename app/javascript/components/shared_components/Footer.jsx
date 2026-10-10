@@ -26,7 +26,6 @@ export default function Footer() {
   return (
     <footer id="footer" className="footer background-whitesmoke text-center">
       <Container id="footer-container" className="py-3">
-        <a href="https://siet.ac.in" target="_blank" rel="noreferrer">Sri Shakthi Meetings</a>
         { links?.Terms
           && (
             <a className="ps-3" href={links?.Terms} target="_blank" rel="noreferrer">
