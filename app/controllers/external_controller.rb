@@ -58,7 +58,7 @@ class ExternalController < ApplicationController
       return redirect_to pending_path if user.pending?
     end
 
-    return redirect_to root_path(error: 'A verified srishakthi.ac.in account is required') unless InstitutionPolicy.member?(user) && user_info[:verified]
+    return redirect_to root_path(error: 'A verified siet.ac.in account is required') unless InstitutionPolicy.member?(user) && user_info[:verified]
 
     user.generate_session_token!
     session[:session_token] = user.session_token

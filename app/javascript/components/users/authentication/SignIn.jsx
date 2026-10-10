@@ -32,7 +32,7 @@ export default function SignIn() {
         <Logo />
       </div>
       <Card className="col-xl-5 col-lg-6 col-md-8 col-10 mx-auto p-4 border-0 card-shadow">
-        <Card.Title className="text-center pb-2"> { t('authentication.sign_in') } </Card.Title>
+        <Card.Title className="text-center pb-2" style={{ color: '#004d00' }}>Sri Shakthi Institue of Engineering and Technology</Card.Title>
         <SigninForm />
         { registrationMethod !== 'invite' && (
         <span className="text-center text-muted small"> { t('authentication.dont_have_account') }

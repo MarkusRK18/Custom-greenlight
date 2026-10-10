@@ -52,7 +52,7 @@ export default function UpdateRoomNameForm({ friendlyId }) {
         <Form.Control id="scheduled-start" type="datetime-local" defaultValue={localStart} {...register('room.scheduled_at', { required: true })} />
         <Form.Label htmlFor="scheduled-duration">Duration (minutes)</Form.Label>
         <Form.Control id="scheduled-duration" type="number" defaultValue={room.duration_minutes} {...register('room.duration_minutes', { required: true, min: 1, max: 1440 })} />
-        <Form.Label htmlFor="scheduled-participants">Participant emails (srishakthi.ac.in only)</Form.Label>
+        <Form.Label htmlFor="scheduled-participants">Participant emails (siet.ac.in only)</Form.Label>
         <Form.Control id="scheduled-participants" type="text" defaultValue={room.participant_emails} {...register('room.participant_emails')} />
         <Stack direction="horizontal">
           <Form.Control type="text" defaultValue={room.name} {...register('room.name', { minLength: 2, maxLength: 255 })} />

@@ -39,7 +39,7 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
   const fields = useMemo(() => ({
     scheduled_at: { label: 'Meeting date and time (your local time)', controlId: 'meetingStart', hookForm: { id: 'scheduled_at' } },
     duration_minutes: { label: 'Duration (minutes)', controlId: 'meetingDuration', hookForm: { id: 'duration_minutes' } },
-    participant_emails: { label: 'Participant emails (comma separated, srishakthi.ac.in only)', controlId: 'meetingParticipants', hookForm: { id: 'participant_emails' } },
+    participant_emails: { label: 'Participant emails (comma separated, siet.ac.in only)', controlId: 'meetingParticipants', hookForm: { id: 'participant_emails' } },
     name: {
       label: t('forms.room.fields.name.label'),
       placeHolder: t('forms.room.fields.name.placeholder'),

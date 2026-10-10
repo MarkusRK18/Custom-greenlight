@@ -8,7 +8,7 @@ def check(condition, message)
 end
 
 ActiveRecord::Base.transaction do
-  admin = User.find_by!(email: ENV.fetch('LOCAL_ADMIN_EMAIL', 'student_name@srishakthi.ac.in'))
+  admin = User.find_by!(email: ENV.fetch('LOCAL_ADMIN_EMAIL', 'student_name@siet.ac.in'))
   password = File.read(Rails.root.join('storage/local-admin-credentials.txt')).lines.find { |line| line.start_with?('Password: ') }.delete_prefix('Password: ').strip
   client = ActionDispatch::Integration::Session.new(Rails.application)
   client.host! 'localhost'
@@ -28,7 +28,7 @@ ActiveRecord::Base.transaction do
   check(client.response.status == 400, 'Scheduled meetings require a date')
   client.post '/api/v1/rooms.json', params: { room: base.merge(name: 'Invalid type', meeting_type: 'other', scheduled_at: start.iso8601) }, as: :json
   check(client.response.status == 400, 'Unknown meeting types are rejected')
-  student = User.create!(name: 'Meeting Test Student', email: "meeting-test-#{SecureRandom.hex(4)}@srishakthi.ac.in", password: 'Testing1!Local', role: Role.find_by!(name: 'User', provider: admin.provider), provider: admin.provider, verified: true, language: 'en')
+  student = User.create!(name: 'Meeting Test Student', email: "meeting-test-#{SecureRandom.hex(4)}@siet.ac.in", password: 'Testing1!Local', role: Role.find_by!(name: 'User', provider: admin.provider), provider: admin.provider, verified: true, language: 'en')
   student_client = ActionDispatch::Integration::Session.new(Rails.application)
   student_client.host! 'localhost'
   student_client.post '/api/v1/sessions.json', params: { session: { email: student.email, password: 'Testing1!Local' } }, as: :json

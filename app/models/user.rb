@@ -47,7 +47,7 @@ class User < ApplicationRecord
             length: { minimum: 5, maximum: 255 }
 
   validate do
-    errors.add(:email, 'must belong to srishakthi.ac.in') unless email.to_s.split('@').last&.downcase == InstitutionPolicy::DOMAIN
+    errors.add(:email, 'must belong to siet.ac.in') unless email.to_s.split('@').last&.downcase == InstitutionPolicy::DOMAIN
   end
 
   validates :provider, presence: true

@@ -50,7 +50,7 @@ export default function App() {
 
   return (
     <>
-      <Title>Sri Shakthi Meetings</Title>
+      <Title>SIETConnect</Title>
       {(homePage || currentUser.signed_in) && <Header /> }
       <Container className={pageHeight}>
         <Outlet />

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InstitutionPolicy
-  DOMAIN = 'srishakthi.ac.in'
+  DOMAIN = 'siet.ac.in'
   HOST_ROLES = %w[Administrator Faculty Staff SuperAdmin].freeze
 
   def self.member?(user)

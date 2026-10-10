@@ -27,6 +27,7 @@ export function useSignUpFormValidation() {
       .max(255, 'forms.validations.full_name.max'),
 
     email: yup.string().required('forms.validations.email.required').email('forms.validations.email.email')
+      .matches(/^[^@\s]+@siet\.ac\.in$/i, 'Use your siet.ac.in email address')
       .min(6, 'forms.validations.email.min')
       .max(255, 'forms.validations.email.max'),
 
@@ -59,7 +60,7 @@ export default function useSignUpForm({ defaultValues: _defaultValues, ..._confi
     },
     email: {
       label: t('forms.user.signup.fields.email.label'),
-      placeHolder: t('forms.user.signup.fields.email.placeholder'),
+      placeHolder: 'name@siet.ac.in',
       controlId: 'signupFormEmail',
       hookForm: {
         id: 'email',

@@ -61,23 +61,17 @@ module Api
         # Users created by a user will have the creator language by default with a fallback to the server configured default_locale.
         create_user_params[:language] = current_user&.language || I18n.default_locale if create_user_params[:language].blank?
 
-        user = UserCreator.new(user_params: create_user_params.except(:invite_token), provider: current_provider, role: default_role).call
+        signup_params = create_user_params.except(:invite_token)
+        signup_params = signup_params.except(:role_id) unless admin_create
+        user = UserCreator.new(user_params: signup_params, provider: current_provider, role: default_role).call
 
-        smtp_enabled = ENV['SMTP_SERVER'].present?
-
-        user.verified = false
+        # Local institutional signup activates the account without an email challenge.
+        user.verified = true
 
         # Set to pending if registration method is approval
         user.pending! if !admin_create && registration_method == SiteSetting::REGISTRATION_METHODS[:approval]
 
         if user.save
-          if smtp_enabled
-            token = user.generate_activation_token!
-            UserMailer.with(user:,
-                            activation_url: activate_account_url(token), base_url: request.base_url,
-                            provider: current_provider).activate_account_email.deliver_later
-          end
-
           create_default_room(user)
 
           return render_data data: user, serializer: CurrentUserSerializer, status: :created unless user.verified?

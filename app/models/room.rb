@@ -46,8 +46,8 @@ class Room < ApplicationRecord
   end
 
   def validate_participants
-    invalid = participant_addresses.reject { |email| email.match?(/\A[\w.+-]+@srishakthi\.ac\.in\z/i) }
-    errors.add(:participant_emails, 'must contain only srishakthi.ac.in addresses') if invalid.any?
+    invalid = participant_addresses.reject { |email| email.match?(/\A[\w.+-]+@siet\.ac\.in\z/i) }
+    errors.add(:participant_emails, 'must contain only siet.ac.in addresses') if invalid.any?
   end
 
   validates :name, presence: true

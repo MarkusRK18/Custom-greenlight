@@ -18,7 +18,7 @@ class InstitutionPolicyTest
     def active? = active
   end
 
-  def user(email: 'student@srishakthi.ac.in', role: 'User', verified: true, active: true)
+  def user(email: 'student@siet.ac.in', role: 'User', verified: true, active: true)
     UserStub.new(email, OpenStruct.new(name: role), verified, active)
   end
 
@@ -33,7 +33,7 @@ class InstitutionPolicyTest
   end
 
   def test_domain_suffix_attack_and_subdomains_are_rejected
-    %w[user@srishakthi.ac.in.evil.test user@evil-srishakthi.ac.in user@sub.srishakthi.ac.in].each do |email|
+    %w[user@siet.ac.in.evil.test user@evil-siet.ac.in user@sub.siet.ac.in].each do |email|
       refute InstitutionPolicy.member?(user(email: email))
     end
   end
@@ -41,7 +41,7 @@ class InstitutionPolicyTest
   def test_unverified_and_inactive_staff_cannot_host
     refute InstitutionPolicy.host?(user(role: 'Faculty', verified: false))
     refute InstitutionPolicy.host?(user(role: 'Faculty', active: false))
-    assert InstitutionPolicy.member?(user(email: 'USER@SRISHAKTHI.AC.IN'))
+    assert InstitutionPolicy.member?(user(email: 'USER@SIET.AC.IN'))
   end
 end
 
