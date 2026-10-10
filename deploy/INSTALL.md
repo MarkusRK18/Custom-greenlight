@@ -1,0 +1,64 @@
+# Install custom SIETConnect on an existing BigBlueButton server
+
+Run the installer **on the target BBB server**, not on the local Omarchy test workstation. It uses the native server's existing HTTPS URL and API secret, and builds `MarkusRK18/Custom-greenlight` main. Docker Compose v2, git, Python 3 and curl must already be installed. The script does not install another BBB server or use the privileged development container.
+
+Download and inspect the script:
+
+```sh
+curl -fL https://raw.githubusercontent.com/MarkusRK18/Custom-greenlight/main/scripts/install-custom-greenlight.sh -o install-custom-greenlight.sh
+bash install-custom-greenlight.sh --help
+```
+
+## Replace existing Greenlight v3
+
+Locate the current Compose directory (often `/root/greenlight-v3` or the installing user's `~/greenlight-v3`). Replace the hostname and directory below:
+
+```sh
+sudo bash install-custom-greenlight.sh \
+  --greenlight-dir /root/greenlight-v3 \
+  --public-url https://bbb.example.com \
+  --check
+
+sudo bash install-custom-greenlight.sh \
+  --greenlight-dir /root/greenlight-v3 \
+  --public-url https://bbb.example.com
+```
+
+This mode requires a **Greenlight v3** installation, a PostgreSQL service, a Redis service, and `.env` containing `DATABASE_URL` and `SECRET_KEY_BASE`. If service names differ, supply `--app-service`, `--postgres-service` and `--redis-service`. The public URL's path must match the existing `RELATIVE_URL_ROOT` (omit the path for a root installation). Existing nginx routing and HTTPS certificates remain in place.
+
+The installer builds first, stops only the Greenlight app, backs up its PostgreSQL database and mounted uploads, then runs the custom migrations and starts the replacement. BBB meetings continue running, but Greenlight login/meeting creation is briefly unavailable. It preserves the existing `.env`, database/storage mounts, SMTP settings, and secret key. A generated Compose override selects the custom image and BBB credentials. No database volume is deleted.
+
+All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
+
+## BBB installed without Greenlight, or keep old Greenlight alongside the new portal
+
+```sh
+sudo bash install-custom-greenlight.sh --fresh \
+  --public-url https://bbb.example.com/connect
+```
+
+Fresh mode uses a separate database and upload volume, port `127.0.0.1:5051`, and `/connect` routing on the BBB domain's existing HTTPS nginx virtual host. Use `--port` if 5051 is occupied. It adds a managed nginx snippet and validates nginx before reloading. It does not replace the old portal or move old accounts. Sign up at `/connect/signup` using a `siet.ac.in` address; that account becomes Administrator. No default password is created.
+
+## Manage the installed portal
+
+Default installer directory: `/opt/sietconnect`. For fresh mode the original Compose directory is `/opt/sietconnect/portal`; in upgrade mode use the original Greenlight directory.
+
+```sh
+docker compose --project-directory /root/greenlight-v3 \
+  --env-file /root/greenlight-v3/.env \
+  --env-file /opt/sietconnect/installer.env \
+  -f /root/greenlight-v3/docker-compose.yml \
+  -f /opt/sietconnect/custom.override.json ps
+```
+
+Use the same command prefix with `logs --tail 100 greenlight-v3`, `stop greenlight-v3`, or `up -d greenlight-v3`. Always include the override; using the original Compose file alone would select the upstream image again. Rerunning the installer fetches the selected revision and rebuilds. Keep `/opt/sietconnect/installer.env` and backups private.
+
+The script verifies BBB authentication before stopping the portal and checks the public Greenlight health endpoint after deployment. Native BBB client settings (default PDF, client title and drawing tools) are separate from Greenlight: apply the server settings described in `SRI_SHAKTHI_SETUP.md` if the target server still shows its original welcome slide. BBB service restarts should be scheduled outside active meetings.
+
+## Recovery
+
+Backups live in `/opt/sietconnect/backups/<UTC timestamp>/`: `database.dump`, `storage.tar.gz`, original `.env`/Compose file, and generated deployment configuration. If an upgrade fails, the script reports this directory. Database migrations change account roles and some cannot be reversed, so do not run `db:rollback` as a substitute for restoring the backup.
+
+To restore, stop the custom app, restore `database.dump` to the original PostgreSQL database using `pg_restore --clean --if-exists`, restore the storage archive into the original mounted storage directory, and start the original Compose app without the custom override. Use the original database name and PostgreSQL account from that installation. Keep the failed migration stopped until the restore is complete. The script never automatically restores or discards a database.
+
+Validation performed during development: shell/Python syntax and generated Docker Compose configuration. Installation on your remote BBB server still needs to be run; it has not been executed against that server.

@@ -3,6 +3,7 @@
 Sri Shakthi Meetings customization of Greenlight, with institutional account restrictions, host roles, scheduled meetings and local Docker setup.
 
 - [Local portal setup](LOCAL_RUN.md)
+- [Install on your existing BBB server](deploy/INSTALL.md)
 - [Local BigBlueButton testing](LOCAL_BIGBLUEBUTTON.md)
 - [Sri Shakthi deployment notes](SRI_SHAKTHI_SETUP.md)
 
