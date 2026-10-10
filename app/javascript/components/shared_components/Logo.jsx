@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import useSiteSetting from '../../hooks/queries/site_settings/useSiteSetting';
 
-export default function Logo({ size }) {
+export default function Logo({ size, showName }) {
   const { isLoading, data: brandingImage } = useSiteSetting('BrandingImage');
   const navigate = useNavigate();
 
@@ -37,15 +37,17 @@ export default function Logo({ size }) {
         alt="Sri Shakthi"
         onClick={() => { navigate('/'); }}
       />
-      <span className="institution-brand-name">Sri Shakthi</span>
+      {showName && <span className="institution-brand-name">SIETConnect</span>}
     </div>
   );
 }
 
 Logo.propTypes = {
   size: PropTypes.string,
+  showName: PropTypes.bool,
 };
 
 Logo.defaultProps = {
   size: '',
+  showName: true,
 };

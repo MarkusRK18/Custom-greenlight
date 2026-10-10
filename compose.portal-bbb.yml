@@ -2,7 +2,7 @@ services:
   portal:
     environment:
       BBB_CALLBACK_BASE_URL: http://portal:3000
-      BBB_BRANDING_LOGO_URL: https://bbb.srishakthi.test/assets/images/logo.png
+      BBB_BRANDING_LOGO_URL: https://bbb.srishakthi.test/images/logo.png
     networks:
       - default
       - meeting_test

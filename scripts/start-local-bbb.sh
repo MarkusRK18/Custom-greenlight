@@ -10,7 +10,8 @@ properties = {
     'autoStartRecording': 'false',
     'allowStartStopRecording': 'false',
     'defaultKeepEvents': 'false',
-    'defaultWelcomeMessage': 'Welcome to Sri Shakthi',
+    'defaultWelcomeMessage': 'Welcome to SIETConnect',
+    'beans.presentationService.defaultUploadedPresentation': '',
     'defaultWelcomeMessageFooter': '',
     'defaultCopyright': 'Sri Shakthi',
 }
@@ -23,8 +24,8 @@ PY
 if [ ! -f /etc/bigbluebutton/bbb-html5.yml ]; then
   touch /etc/bigbluebutton/bbb-html5.yml
 fi
-yq e -i '.public.app.clientTitle = "Sri Shakthi Meetings" | .public.app.branding.displayBrandingArea = true | .public.app.copyright = "Sri Shakthi"' /etc/bigbluebutton/bbb-html5.yml
-yq e -i '.public.whiteboard.allowInfiniteWhiteboard = false | .public.whiteboard.toolbar.initialSelectedTool = "select" | .public.whiteboard.toolbar.presenterTools = ["select", "hand"] | .public.whiteboard.toolbar.multiUserTools = ["select", "hand"] | .public.whiteboard.lockToolbarTools = true' /etc/bigbluebutton/bbb-html5.yml
+yq e -i '.public.app.clientTitle = "SIETConnect" | .public.app.branding.displayBrandingArea = true | .public.app.copyright = "Sri Shakthi" | .public.layout.hidePresentationOnJoin = true | .public.layout.showSessionDetailsOnJoin = false' /etc/bigbluebutton/bbb-html5.yml
+yq e -i '.public.whiteboard.toolbar.initialSelectedTool = "select" | del(.public.whiteboard.toolbar.presenterTools) | del(.public.whiteboard.toolbar.multiUserTools) | del(.public.whiteboard.lockToolbarTools)' /etc/bigbluebutton/bbb-html5.yml
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/images/logo.png
 # This image's rc.local contains a LibreOffice Docker build; local testing
 # omits document conversion, so it does not need the host Docker socket.

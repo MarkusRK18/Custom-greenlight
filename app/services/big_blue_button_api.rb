@@ -51,6 +51,8 @@ class BigBlueButtonApi
       '', # empty password -> use the role passed ing
       {
         role:,
+        'userdata-bbb_hide_presentation_on_join': true,
+        'userdata-bbb_show_session_details_on_join': false,
         avatarURL: avatar_url,
         createTime: room.last_session&.to_datetime&.strftime('%Q')
       }.compact

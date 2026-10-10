@@ -12,7 +12,7 @@ The Ubuntu container can expose console login services when privileged. The star
 - Meeting server address: 172.30.50.10
 - Limits: 4 CPU cores, 8 GiB RAM, up to 2 GiB additional swap.
 - Recording is disabled server-side. The recording-processing services are masked.
-- Drawing tools and infinite whiteboard are disabled; presentation selection/panning remain available.
+- The presentation starts hidden and no default welcome deck is uploaded. Drawing tools remain available after the presenter opens/uploads a presentation. Session details do not open automatically.
 - Document conversion through LibreOffice is omitted; the host Docker socket is not mounted.
 - The development container uses systemd and privileged mode, as required by the upstream development setup. It publishes no host ports and is intended for testing on this machine.
 

@@ -62,10 +62,9 @@ class MeetingStarter
     {
       moderatorOnlyMessage: moderator_message,
       logo: ENV.fetch('BBB_BRANDING_LOGO_URL', "#{@base_url}#{File.join(Rails.configuration.relative_url_root, "sri-shakthi-logo.png")}"),
-      bannerText: 'Sri Shakthi',
+      bannerText: '',
       copyright: 'Sri Shakthi',
-      welcome: 'Welcome to Sri Shakthi',
-      disabledFeatures: 'infiniteWhiteboard',
+      welcome: 'Welcome to SIETConnect',
       multiUserWhiteboardEnabled: false,
       duration: [((@room.scheduled_at + @room.duration_minutes.minutes - Time.current) / 60).ceil, 1].max,
       logoutURL: room_url,

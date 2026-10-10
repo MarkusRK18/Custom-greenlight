@@ -19,6 +19,11 @@ ActiveRecord::Base.transaction do
   check(client.response.status == 201, 'Instant creation succeeds')
   instant = admin.rooms.find_by!(name: 'Instant test')
   check(instant.schedule_open? && (instant.scheduled_at - Time.current).abs < 10, 'Instant start uses server time and is immediately available')
+  options = MeetingStarter.new(room: instant, base_url: 'http://localhost:5050', current_user: admin, provider: admin.provider).send(:computed_options, access_code: '')
+  check(options[:bannerText].empty? && options[:welcome] == 'Welcome to SIETConnect', 'Meeting has SIETConnect welcome and no banner')
+  join = BigBlueButtonApi.new(provider: admin.provider).join_meeting(room: instant, role: 'Moderator', name: admin.name)
+  query = URI.decode_www_form(URI.parse(join).query).to_h
+  check(query['userdata-bbb_hide_presentation_on_join'] == 'true' && query['userdata-bbb_show_session_details_on_join'] == 'false', 'Presentation and session details start hidden')
   start = 1.day.from_now.change(usec: 0)
   client.post '/api/v1/rooms.json', params: { room: base.merge(name: 'Scheduled test', meeting_type: 'scheduled', scheduled_at: start.iso8601) }, as: :json
   check(client.response.status == 201, 'Scheduled creation succeeds')

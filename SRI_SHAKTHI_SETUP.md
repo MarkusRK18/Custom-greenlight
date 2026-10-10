@@ -18,7 +18,7 @@ Emails are queued using the existing Active Job configuration. No real participa
 
 Choose Instant meeting when creating a room to make it available immediately, or Scheduled meeting to choose a date/time. Both modes accept duration and participant emails. Instant meetings use server time at creation; the host then uses Start Meeting. Room settings allow the schedule to be changed later.
 
-The portal passes Sri Shakthi logo/banner/copyright, disables infiniteWhiteboard and automatic multi-user whiteboard access, and sets the session duration. Infinite whiteboard requires BBB 3.0+. Presenter annotations are not fully disabled by these options. Enable displayBrandingArea on the BBB server for the logo, and customize its default welcome message/footer, default presentation and client title/favicon to remove remaining upstream identity. The BBB server and browsers must reach the public logo URL.
+The portal passes the institutional logo, SIETConnect welcome text and no banner; it disables automatic multi-user whiteboard access and sets the session duration. Infinite whiteboard requires BBB 3.0+. Presenter annotations are not fully disabled by these options. Enable displayBrandingArea on the BBB server for the logo, and customize its default welcome message/footer, default presentation and client title/favicon to remove remaining upstream identity. The BBB server and browsers must reach the public logo URL.
 
 The portal welcome page displays the supplied logo and Welcome to SIETConnect. The portal join page remains in place for authentication, consent and waiting for a moderator. Hiding the BBB default welcome presentation or pre-meeting device screen requires confirming the installed BBB version and adjusting its server configuration; these screens are not managed by this repository.
 
@@ -29,3 +29,5 @@ The inspected execution environment exposed only the agent and inspection comman
 ## Verification
 
 Ruby syntax and policy unit tests can be checked without a database. Full Rails request/model tests and frontend builds require installing the project's dependencies and configuring PostgreSQL/Redis. Test student direct API start/create denial, outsider/unverified joining denial, moderator-code escalation denial, schedule boundaries, late-start duration, and SMTP delivery in staging before deployment.
+
+Meeting join requests minimize the presentation and skip the automatic session-details dialog. The local BBB configuration removes the default welcome PDF and restores presenter drawing tools. New sessions open without the default Slide 1. A presenter can use Upload/Manage presentations to open material and annotate when needed.

@@ -18,7 +18,6 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth/AuthProvider';
 import Logo from '../shared_components/Logo';
-import AuthButtons from './AuthButtons';
 
 export default function HomePage() {
   const currentUser = useAuth();
@@ -26,10 +25,9 @@ export default function HomePage() {
   if (!currentUser.signed_in) {
     return (
       <div className="vertical-center text-center">
-        <div className="pb-4"><Logo /></div>
+        <div className="pb-4"><Logo showName={false} /></div>
         <h1 className="mb-3" style={{ color: '#004d00' }}>Welcome to SIETConnect</h1>
         <p className="mb-4" style={{ color: '#004d00' }}>Sri Shakthi Institue of Engineering and Technology</p>
-        <div className="d-flex justify-content-center"><AuthButtons /></div>
       </div>
     );
   }
