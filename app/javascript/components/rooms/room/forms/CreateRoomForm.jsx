@@ -32,8 +32,10 @@ export default function CreateRoomForm({ mutation: useCreateRoomAPI, userId, han
   const createRoomAPI = useCreateRoomAPI({ onSettled: handleClose, user_id: currentUser.id });
   const { methods, fields } = useRoomForm({ defaultValues: { user_id: userId } });
   const meetingType = methods.watch('meeting_type');
+  const durationMode = methods.watch('duration_mode');
   const createMeeting = (values) => {
-    const payload = { ...values };
+    const payload = { ...values, duration_minutes: values.duration_mode === 'unlimited' ? 0 : values.duration_minutes };
+    delete payload.duration_mode;
     if (values.meeting_type === 'scheduled') {
       payload.scheduled_at = new Date(values.scheduled_at).toISOString();
     } else {
@@ -54,7 +56,13 @@ export default function CreateRoomForm({ mutation: useCreateRoomAPI, userId, han
       </BootstrapForm.Group>
       <FormControl field={fields.name} type="text" />
       {meetingType === 'scheduled' && <FormControl field={fields.scheduled_at} type="datetime-local" />}
-      <FormControl field={fields.duration_minutes} type="number" min="1" max="1440" />
+      <BootstrapForm.Group className="mb-3">
+        <BootstrapForm.Label>Duration mode</BootstrapForm.Label>
+        <BootstrapForm.Check type="radio" id="limited-duration" label="Limited time" value="limited" {...methods.register('duration_mode')} />
+        <BootstrapForm.Check type="radio" id="unlimited-duration" label="Unlimited time" value="unlimited" {...methods.register('duration_mode')} />
+      </BootstrapForm.Group>
+      {durationMode === 'limited' && <FormControl field={fields.duration_minutes} type="number" min="1" max="1440" />}
+      {durationMode === 'unlimited' && <p className="text-muted">No automatic time limit. The host can end the meeting.</p>}
       <FormControl field={fields.participant_emails} type="text" />
       <Stack className="mt-1" direction="horizontal" gap={1}>
         <Button variant="neutral" className="ms-auto" onClick={handleClose}>

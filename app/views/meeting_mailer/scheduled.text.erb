@@ -2,7 +2,7 @@ Sri Shakthi Meetings
 
 <%= @room.name %>
 Starts: <%= @room.scheduled_at.in_time_zone('Asia/Kolkata').strftime('%d %B %Y, %I:%M %p IST') %>
-Duration: <%= @room.duration_minutes %> minutes
+Duration: <%= @room.duration_minutes.zero? ? 'Unlimited' : "#{@room.duration_minutes} minutes" %>
 Join: <%= @join_url %>
 
 Sign in with your siet.ac.in email address.

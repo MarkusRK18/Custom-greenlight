@@ -31,12 +31,14 @@ export default function UpdateRoomNameForm({ friendlyId }) {
   const {
     register,
     handleSubmit,
+    watch,
   } = useForm();
   const { data: room } = useRoom(friendlyId);
   const updateRoom = useUpdateRoom({ friendlyId });
+  const durationMode = watch('duration_mode', room.duration_minutes === 0 ? 'unlimited' : 'limited');
 
   const updateSchedule = (values) => {
-    const updated = { ...values.room };
+    const updated = { ...values.room, duration_minutes: values.duration_mode === 'unlimited' ? 0 : values.room.duration_minutes };
     updated.scheduled_at = new Date(updated.scheduled_at).toISOString();
     updateRoom.mutate({ room: updated });
   };
@@ -50,8 +52,15 @@ export default function UpdateRoomNameForm({ friendlyId }) {
       <Form onSubmit={handleSubmit(updateSchedule)}>
         <Form.Label htmlFor="scheduled-start">Meeting date and time (your local time)</Form.Label>
         <Form.Control id="scheduled-start" type="datetime-local" defaultValue={localStart} {...register('room.scheduled_at', { required: true })} />
+        <Form.Label htmlFor="duration-mode">Duration mode</Form.Label>
+        <Form.Select id="duration-mode" defaultValue={room.duration_minutes === 0 ? 'unlimited' : 'limited'} {...register('duration_mode')}>
+          <option value="limited">Limited time</option>
+          <option value="unlimited">Unlimited time</option>
+        </Form.Select>
+        {durationMode === 'limited' && <>
         <Form.Label htmlFor="scheduled-duration">Duration (minutes)</Form.Label>
-        <Form.Control id="scheduled-duration" type="number" defaultValue={room.duration_minutes} {...register('room.duration_minutes', { required: true, min: 1, max: 1440 })} />
+        <Form.Control id="scheduled-duration" type="number" defaultValue={room.duration_minutes || 60} {...register('room.duration_minutes', { required: durationMode === 'limited', min: 1, max: 1440 })} />
+        </>}
         <Form.Label htmlFor="scheduled-participants">Participant emails (siet.ac.in only)</Form.Label>
         <Form.Control id="scheduled-participants" type="text" defaultValue={room.participant_emails} {...register('room.participant_emails')} />
         <Stack direction="horizontal">

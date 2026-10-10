@@ -100,6 +100,10 @@ class BigBlueButtonApi
     JWT.decode token, @secret, true, { algorithm: 'HS256' }
   end
 
+  def verify_analytics_token(token)
+    JWT.decode(token, @secret, true, algorithm: 'HS512')
+  end
+
   private
 
   def retrieve_credentials

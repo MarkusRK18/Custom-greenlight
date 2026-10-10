@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'external#create_user'
   get '/meeting_ended', to: 'external#meeting_ended'
   post '/recording_ready', to: 'external#recording_ready'
+  post '/analytics_callback', to: 'external#analytics_callback'
 
   # Health checks
   get '/health_check', to: 'health_checks#check'
@@ -45,6 +46,7 @@ Rails.application.routes.draw do
       resources :rooms, param: :friendly_id do
         member do
           get '/recordings', to: 'rooms#recordings'
+          get '/analytics', to: 'rooms#analytics'
           get '/public_recordings', to: 'rooms#public_recordings'
           get '/recordings_processing', to: 'rooms#recordings_processing'
           get '/public', to: 'rooms#public_show'

@@ -31,7 +31,7 @@ class Room < ApplicationRecord
   attr_accessor :meeting_type
   validates :meeting_type, inclusion: { in: %w[instant scheduled] }, allow_nil: true
   before_validation :set_instant_start, on: :create
-  validates :duration_minutes, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 1440 }
+  validates :duration_minutes, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 1440 }
   validate :validate_participants
   validate do
     errors.add(:user, 'must be an authorized Sri Shakthi host') unless InstitutionPolicy.host?(user)
@@ -42,7 +42,7 @@ class Room < ApplicationRecord
   end
 
   def schedule_open?
-    scheduled_at.present? && Time.current >= scheduled_at && Time.current < scheduled_at + duration_minutes.minutes
+    scheduled_at.present? && Time.current >= scheduled_at && (duration_minutes.zero? || Time.current < scheduled_at + duration_minutes.minutes)
   end
 
   def validate_participants

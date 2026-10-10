@@ -19,6 +19,7 @@ import { Tabs, Tab, Placeholder } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import Presentation from './presentation/Presentation';
+import Analytics from './Analytics';
 import RoomSettings from './room_settings/RoomSettings';
 import SharedAccess from './shared_access/SharedAccess';
 import { useAuth } from '../../../contexts/auth/AuthProvider';
@@ -65,6 +66,9 @@ export default function FeatureTabs() {
             <Presentation />
           </Tab>
         )}
+      <Tab className="background-whitesmoke" eventKey="analytics" title="Analytics">
+        <Analytics />
+      </Tab>
       {(settings?.ShareRooms && (!room?.shared || currentUser?.permissions?.ManageRooms === 'true'))
         && (
           <Tab className="background-whitesmoke" eventKey="access" title={t('room.shared_access.access')}>

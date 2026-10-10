@@ -44,4 +44,5 @@ if ! nginx -t; then
   exit 1
 fi
 systemctl reload nginx
+python3 "$source_dir/scripts/brand-bbb-client.py"
 printf 'College logo and browser icons installed. Backups: %s\n' "$backup"

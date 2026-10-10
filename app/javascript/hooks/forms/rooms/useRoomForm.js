@@ -27,7 +27,11 @@ export function useRoomFormValidation() {
       is: 'scheduled',
       then: (schema) => schema.required('Choose a meeting date and time'),
     }),
-    duration_minutes: yup.number().integer().min(1).max(1440).required(),
+    duration_mode: yup.string().oneOf(['limited', 'unlimited']).required(),
+    duration_minutes: yup.number().when('duration_mode', {
+      is: 'limited', then: (schema) => schema.integer().min(1).max(1440).required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     participant_emails: yup.string(),
     name: yup.string().required('forms.validations.room.name.required').min(2, 'forms.validations.room.name.min'),
   })), []);
@@ -60,6 +64,7 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
           name: '',
           meeting_type: 'instant',
           scheduled_at: '',
+          duration_mode: 'limited',
           duration_minutes: 60,
           participant_emails: '',
           user_id: '',

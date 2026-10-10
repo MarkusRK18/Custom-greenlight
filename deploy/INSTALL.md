@@ -64,6 +64,12 @@ To restore, stop the custom app, restore `database.dump` to the original Postgre
 Validation performed during development: shell/Python syntax and generated Docker Compose configuration. Installation on your remote BBB server still needs to be run; it has not been executed against that server.
 # College logo assets
 
+The meeting page includes an Analytics tab. New sessions request `keepEvents`
+and an authenticated analytics callback. BBB's recording/event processing
+services must be running for results to arrive after the meeting ends.
+Previously completed meetings have no saved analytics to import automatically.
+Unlimited time uses BBB duration zero; hosts can still end meetings manually.
+
 The installer includes the college logo, favicon, and Apple touch icons from
 the repository. It installs a dedicated `/sietconnect-assets/logo.png` route on
 the existing BBB hostname and uses it for both Greenlight and meeting branding.

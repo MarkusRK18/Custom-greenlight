@@ -16,6 +16,7 @@ services:
     volumes:
       - ./local-bbb/certs:/local/certs:ro
       - ./scripts/start-local-bbb.sh:/local/start-local.sh:ro
+      - ./scripts/brand-bbb-client.py:/local/brand-bbb-client.py:ro
       - ./public/sri-shakthi-logo.png:/local/sri-shakthi-logo.png:ro
       - ./public/favicon.ico:/local/college-favicon.ico:ro
       - ./local-bbb/private/api-secret:/local/private/api-secret:ro

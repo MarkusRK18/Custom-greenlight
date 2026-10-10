@@ -79,6 +79,31 @@ class ExternalController < ApplicationController
   end
 
   # POST /recording_ready
+  def analytics_callback
+    return head :payload_too_large if request.raw_post.bytesize > 10.megabytes
+
+    payload = JSON.parse(request.raw_post)
+    room = Room.includes(:user).find_by(meeting_id: payload['meeting_id'])
+    return head :not_found unless room
+
+    token = request.authorization.to_s.delete_prefix('Bearer ')
+    BigBlueButtonApi.new(provider: room.user.provider).verify_analytics_token(token)
+    return head :bad_request unless payload['data'].is_a?(Hash) && payload['internal_meeting_id'].is_a?(String)
+
+    # Ignore delayed callbacks from an older session in the same reusable room.
+    session_time = payload['internal_meeting_id'].split('-').last.to_i
+    if room.last_session && session_time < room.last_session.to_time.to_i * 1000
+      return head :ok
+    end
+    data = payload['data'].except('metadata') # Callback metadata can contain private URLs.
+    room.update_columns(analytics_data: data, analytics_session_id: payload['internal_meeting_id'])
+    head :ok
+  rescue JWT::DecodeError
+    head :unauthorized
+  rescue JSON::ParserError
+    head :bad_request
+  end
+
   # Creates the recording in Greenlight using information received from BigBlueButton
   def recording_ready
     response = BigBlueButtonApi.new(provider: current_provider).decode_jwt(params[:signed_parameters])

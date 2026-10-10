@@ -21,7 +21,7 @@ module Api
     class RoomsController < ApiController
       skip_before_action :ensure_authenticated, only: %i[public_show public_recordings]
 
-      before_action :find_room, only: %i[show update destroy recordings recordings_processing purge_presentation public_show public_recordings]
+      before_action :find_room, only: %i[show update destroy recordings analytics recordings_processing purge_presentation public_show public_recordings]
 
       before_action only: %i[create index] do
         ensure_authorized('CreateRoom')
@@ -29,7 +29,7 @@ module Api
       before_action only: %i[create] do
         ensure_authorized('ManageUsers', user_id: room_params[:user_id])
       end
-      before_action only: %i[show update recordings recordings_processing purge_presentation] do
+      before_action only: %i[show update recordings analytics recordings_processing purge_presentation] do
         ensure_authorized(%w[ManageRooms SharedRoom], friendly_id: params[:friendly_id])
       end
       before_action only: %i[destroy] do
@@ -64,6 +64,10 @@ module Api
         @room.shared = current_user.shared_rooms.include?(@room)
 
         render_data data: @room, serializer: CurrentRoomSerializer, status: :ok
+      end
+
+      def analytics
+        render_data data: @room.analytics_data, status: :ok
       end
 
       # GET /api/v1/rooms/:friendly_id/public.json

@@ -9,7 +9,7 @@ properties = {
     'breakoutRoomsRecord': 'false',
     'autoStartRecording': 'false',
     'allowStartStopRecording': 'false',
-    'defaultKeepEvents': 'false',
+    'defaultKeepEvents': 'true',
     'defaultWelcomeMessage': 'Welcome to SIETConnect',
     'beans.presentationService.defaultUploadedPresentation': '',
     'defaultWelcomeMessageFooter': '',
@@ -28,9 +28,21 @@ yq e -i '.public.app.clientTitle = "SIETConnect" | .public.app.branding.displayB
 yq e -i '.public.whiteboard.toolbar.initialSelectedTool = "select" | del(.public.whiteboard.toolbar.presenterTools) | del(.public.whiteboard.toolbar.multiUserTools) | del(.public.whiteboard.lockToolbarTools)' /etc/bigbluebutton/bbb-html5.yml
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/images/logo.png
 install -m 644 /local/college-favicon.ico /var/www/bigbluebutton-default/assets/favicon.ico
+install -d -m 755 /var/www/bigbluebutton-default/assets/sietconnect
+install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/sietconnect/logo.png
+python3 /local/brand-bbb-client.py
+cat > /etc/bigbluebutton/nginx/sietconnect-assets.nginx <<'NGINX'
+# Managed by SIETConnect assets
+location ^~ /sietconnect-assets/ {
+  alias /var/www/bigbluebutton-default/assets/sietconnect/;
+  add_header Cache-Control "no-cache";
+}
+NGINX
 # This image's rc.local contains a LibreOffice Docker build; local testing
 # omits document conversion, so it does not need the host Docker socket.
-systemctl mask bbb-rap-starter.service bbb-rap-resque-worker.service bbb-rap-caption-inbox.service >/dev/null
+systemctl unmask bbb-rap-starter.service bbb-rap-resque-worker.service >/dev/null
+systemctl enable bbb-rap-starter.service bbb-rap-resque-worker.service >/dev/null
+systemctl mask bbb-rap-caption-inbox.service >/dev/null
 # A privileged development container must not start logins on host virtual terminals.
 systemctl mask getty.service getty@.service autovt@.service serial-getty@.service console-getty.service container-getty@.service getty.target getty@tty1.service getty@tty2.service getty@tty3.service getty@tty4.service getty@tty5.service getty@tty6.service >/dev/null
 exec /bin/systemd --system --unit=multi-user.target
