@@ -9,6 +9,17 @@ curl -fL https://raw.githubusercontent.com/MarkusRK18/Custom-greenlight/main/scr
 bash install-custom-greenlight.sh --help
 ```
 
+To update an existing custom installation, download this script again and rerun
+it with the same `--greenlight-dir` and `--public-url` arguments. It fetches the
+latest `main`, rebuilds the portal, and applies the persistent session analytics
+migration while preserving existing users, meetings and saved session history.
+It verifies the analytics database schema after migrating. Both native BBB nginx
+include directories (`/etc/bigbluebutton/nginx` and `/usr/share/bigbluebutton/nginx`)
+are supported. The prerequisite check also verifies that BBB's event processing
+services are active; the installer never restarts BBB services automatically.
+If the check reports event recording disabled, update `disableRecordingDefault`
+to `false` in the BBB web override and reload BBB web during a maintenance window.
+
 ## Replace existing Greenlight v3
 
 Locate the current Compose directory (often `/root/greenlight-v3` or the installing user's `~/greenlight-v3`). Replace the hostname and directory below:

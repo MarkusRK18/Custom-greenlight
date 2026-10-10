@@ -22,7 +22,8 @@ Options:
   --check               Read-only prerequisite check; no deployment.
   -h, --help            Show help.
 
-Requires Ubuntu/Debian, Docker Compose v2, git, python3, curl, and a working native BBB install.
+Requires Ubuntu/Debian, Docker Compose v2, git, python3, curl, nginx, and a working native BBB install.
+Analytics requires BBB's recording/event processing services to be active.
 Upgrade: backs up the database and uploads, then migrates the existing database.
 Fresh: adds /connect routing to BBB's existing HTTPS nginx virtual host.
 Policy: all siet.ac.in signups become administrators; signup sends no activation email.
@@ -69,6 +70,29 @@ if any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.
 if sys.argv[2]=='1' and u.path!='/connect':
  raise SystemExit('Fresh mode requires https://your-BBB-domain/connect')
 PY
+command -v nginx >/dev/null || die 'nginx is required to serve the college branding assets.'
+nginx_dir=/usr/share/bigbluebutton/nginx
+if grep -Rqs '/etc/bigbluebutton/nginx/' /etc/nginx/sites-enabled; then
+  nginx_dir=/etc/bigbluebutton/nginx
+fi
+[[ -d $nginx_dir ]] || die 'BBB nginx includes directory is missing.'
+grep -Rqs "$nginx_dir/" /etc/nginx/sites-enabled || die 'BBB nginx includes are not enabled.'
+nginx -t
+for service in bbb-rap-starter.service bbb-rap-resque-worker.service; do
+  systemctl is-active --quiet "$service" || die "Analytics requires $service to be running. Enable BBB event processing during maintenance, then retry."
+done
+
+python3 - <<'PY'
+from pathlib import Path
+disabled = 'false'
+for filename in ['/usr/share/bbb-web/WEB-INF/classes/bigbluebutton.properties', '/etc/bigbluebutton/bbb-web.properties']:
+ for line in Path(filename).read_text().splitlines() if Path(filename).exists() else []:
+  if line.strip().startswith('disableRecordingDefault='):
+   disabled = line.split('=', 1)[1].strip().lower()
+if disabled == 'true':
+ raise SystemExit('BBB event recording is disabled. Set disableRecordingDefault=false and reload BBB web during maintenance before deploying session analytics.')
+PY
+
 if ((fresh)); then
   [[ $app_service == greenlight-v3 && $postgres_service == postgres && $redis_service == redis ]] || die 'Fresh mode uses the default service names.'
   [[ -z $gl_dir ]] || die 'Do not combine --fresh and --greenlight-dir.'
@@ -85,9 +109,6 @@ print(data['services']['greenlight-v3']['ports'][0].split(':')[1])
 PY
 )
   fi
-  command -v nginx >/dev/null || die 'nginx is required for fresh mode.'
-  [[ -d /usr/share/bigbluebutton/nginx ]] || die 'BBB nginx includes directory is missing.'
-  grep -Rqs '/usr/share/bigbluebutton/nginx/' /etc/nginx/sites-enabled || die 'BBB nginx includes are not enabled.'
   if [[ ! -f $base_file ]]; then
     python3 - "$port" <<'PY'
 import socket,sys
@@ -217,11 +238,12 @@ PY
   dc run --rm --no-deps --entrypoint tar "$app_service" -C /usr/src/app/storage -czf - . > "$backup/storage.tar.gz"
 fi
 dc run --rm --no-deps "$app_service" bundle exec rails db:create db:migrate:with_data
+dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "Analytics history migration missing" unless ActiveRecord::Base.connection.table_exists?(:meeting_analytics_sessions); required=%w[room_id internal_meeting_id data]; raise "Analytics schema incomplete" unless (required - MeetingAnalyticsSession.column_names).empty?; puts "Persistent session analytics schema: OK"'
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'api=BigBlueButtonApi.new(provider: "greenlight"); api.active_meetings; puts "Authenticated BigBlueButton API: OK"' > "$backup/bbb-api-check.log" 2>&1
 dc up -d "$app_service"
 
 if ((fresh)); then
-  snippet=/usr/share/bigbluebutton/nginx/sietconnect.nginx
+  snippet=$nginx_dir/sietconnect.nginx
   if [[ -e $snippet ]]; then
     grep -q '# Managed by SIETConnect installer' "$snippet" || die 'Existing unmanaged nginx snippet; refusing to overwrite.'
     cp "$snippet" "$backup/sietconnect.nginx.before"
@@ -255,4 +277,5 @@ done
 printf '\nSIETConnect installed: %s\nBackups: %s\nSource revision: ' "$public_url" "$backup"
 git -C "$source_dir" rev-parse --short HEAD
 printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
+printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
 printf 'Manage this deployment with both the original Compose file and %s\n' "$override"
