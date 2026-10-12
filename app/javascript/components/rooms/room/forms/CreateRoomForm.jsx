@@ -55,6 +55,7 @@ export default function CreateRoomForm({ mutation: useCreateRoomAPI, userId, han
         </BootstrapForm.Text>
       </BootstrapForm.Group>
       <FormControl field={fields.name} type="text" />
+      <FormControl field={fields.description} as="textarea" rows={3} maxLength={5000} />
       {meetingType === 'scheduled' && <FormControl field={fields.scheduled_at} type="datetime-local" />}
       <BootstrapForm.Group className="mb-3">
         <BootstrapForm.Label>Duration mode</BootstrapForm.Label>

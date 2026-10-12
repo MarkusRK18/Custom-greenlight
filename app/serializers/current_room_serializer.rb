@@ -20,6 +20,7 @@ class CurrentRoomSerializer < ApplicationSerializer
   include Presentable
 
   attribute :participant_emails
+  attribute :description
 
   attributes :scheduled_at, :duration_minutes, :id, :name, :presentation_name, :thumbnail, :online, :participants, :shared, :owner_name
 

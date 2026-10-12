@@ -50,6 +50,8 @@ export default function UpdateRoomNameForm({ friendlyId }) {
     <Row>
       <h6 className="text-brand">{ t('room.room_name') }</h6>
       <Form onSubmit={handleSubmit(updateSchedule)}>
+        <Form.Label htmlFor="meeting-description">Meeting description</Form.Label>
+        <Form.Control id="meeting-description" as="textarea" rows={3} maxLength={5000} defaultValue={room.description} {...register('room.description', { maxLength: 5000 })} />
         <Form.Label htmlFor="scheduled-start">Meeting date and time (your local time)</Form.Label>
         <Form.Control id="scheduled-start" type="datetime-local" defaultValue={localStart} {...register('room.scheduled_at', { required: true })} />
         <Form.Label htmlFor="duration-mode">Duration mode</Form.Label>

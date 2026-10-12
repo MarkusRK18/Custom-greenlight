@@ -83,6 +83,7 @@ class ExternalController < ApplicationController
     return head :payload_too_large if request.raw_post.bytesize > 10.megabytes
 
     payload = JSON.parse(request.raw_post)
+    return head :bad_request unless payload.is_a?(Hash)
     room = Room.includes(:user).find_by(meeting_id: payload['meeting_id'])
     return head :not_found unless room
 
@@ -92,14 +93,17 @@ class ExternalController < ApplicationController
 
     data = payload['data'].except('metadata') # Callback metadata can contain private URLs.
     data['meeting_name'] = payload['data'].dig('metadata', 'meeting_name') || room.name
+    data['meeting_description'] = room.description
     # Upsert makes repeated callbacks safe and preserves delayed older sessions.
     now = Time.current
     MeetingAnalyticsSession.upsert(
       { room_id: room.id, internal_meeting_id: payload['internal_meeting_id'], data: data, created_at: now, updated_at: now },
       unique_by: 'unique_room_analytics_session', update_only: %i[data updated_at], record_timestamps: false
     )
+    logger.info 'SIETConnect analytics callback saved successfully'
     head :ok
   rescue JWT::DecodeError
+    logger.warn 'SIETConnect analytics callback rejected: invalid or expired signature'
     head :unauthorized
   rescue JSON::ParserError
     head :bad_request

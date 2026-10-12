@@ -1,6 +1,7 @@
-Sri Shakthi Meetings
+SIETConnect
 
 <%= @room.name %>
+<%= @room.description %>
 Starts: <%= @room.scheduled_at.in_time_zone('Asia/Kolkata').strftime('%d %B %Y, %I:%M %p IST') %>
 Duration: <%= @room.duration_minutes.zero? ? 'Unlimited' : "#{@room.duration_minutes} minutes" %>
 Join: <%= @join_url %>

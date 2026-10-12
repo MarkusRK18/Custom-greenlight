@@ -24,7 +24,7 @@ export default function Analytics() {
   return (
     <div className="wide py-4">
       <h3 className="text-brand">Session history</h3>
-      {!sessions?.length ? <Alert variant="info">Saved sessions will appear after meetings end and BigBlueButton finishes processing their analytics.</Alert> : (
+      {!sessions?.length ? <Alert variant="info">Saved sessions will appear after meetings end and SIETConnect finishes processing their analytics.</Alert> : (
         <Table responsive striped hover>
           <thead><tr><th>Date and time</th><th>Start time</th><th>End time</th><th>Duration</th><th>No. of participants</th></tr></thead>
           <tbody>{sessions.map((session) => (
@@ -85,6 +85,7 @@ function SessionDashboard({ friendlyId, sessionId, onBack }) {
           <div>Duration: {duration(data.duration)}</div>
         </div>
       </div>
+      {data.meeting_description && <p className="meeting-description text-muted">{data.meeting_description}</p>}
       <Row className="g-3 mb-4">
         {cards.map(({ label, value, icon: Icon, color }) => (
           <Col xs={12} sm={6} xl={3} key={label}>
@@ -133,7 +134,7 @@ function SessionDashboard({ friendlyId, sessionId, onBack }) {
         <Modal.Header closeButton><Modal.Title>Analytics help</Modal.Title></Modal.Header>
         <Modal.Body>
           <p>This dashboard shows the saved data for this completed session. Online time is the participant’s total connection time; the bar shows their share of the meeting duration.</p>
-          <p>Messages, reactions and raised hands are recorded event counts. N/A means BigBlueButton did not include that metric in the saved data. Zero means the recorded count was zero.</p>
+          <p>Messages, reactions and raised hands are recorded event counts. N/A means SIETConnect did not include that metric in the saved data. Zero means the recorded count was zero.</p>
           <p>Use Download Session Data to export the saved JSON, or Back to sessions to open another meeting session.</p>
         </Modal.Body>
       </Modal>

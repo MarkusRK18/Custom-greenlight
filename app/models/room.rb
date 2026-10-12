@@ -52,6 +52,7 @@ class Room < ApplicationRecord
   end
 
   validates :name, presence: true
+  validates :description, length: { maximum: 5000 }
   validates :friendly_id, presence: true, uniqueness: true
   validates :meeting_id, presence: true, uniqueness: true
   validates :presentation,

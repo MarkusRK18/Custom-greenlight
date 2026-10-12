@@ -30,15 +30,15 @@
   "homepage": {
     "welcome_bbb": "Welcome to SIETConnect",
     "bigbluebutton_description": "Sri Shakthi is an open source web conferencing system for online classes. The platform maximizes time for applied learning by enabling students to collaborate and receive feedback in real-time.",
-    "greenlight_description": "Create your own rooms to host sessions, or join others using a short and convenient link.",
+    "greenlight_description": "Create your own meetings to host sessions, or join others using a short and convenient link.",
     "learn_more": "Learn more about Sri Shakthi",
     "explore_features": "Explore our features",
     "meeting_title": "Launch a meeting",
     "meeting_description": "Launch a virtual class with video, audio, screen sharing, chat, and all the tools required for applied learning.",
     "recording_title": "Record your meetings",
     "recording_description": "Record the Sri Shakthi meetings and share them with the students to review and reflect on the material.",
-    "settings_title": "Manage your rooms",
-    "settings_description": "Configure your rooms and meeting settings to be in charge of an effective classroom.",
+    "settings_title": "Manage your meetings",
+    "settings_description": "Configure your meetings and meeting settings to be in charge of an effective classroom.",
     "and_more_title": "And more!",
     "and_more_description": "Sri Shakthi offers built-in tools for applied learning and is designed to save you time during class.",
     "enter_meeting_url": "Enter Meeting URL",
@@ -88,7 +88,7 @@
       "new_password": "New Password",
       "confirm_password": "Confirm Password",
       "permanently_delete_account": "Permanently Delete Your Account",
-      "delete_account_description": "If you choose to delete your account, it will NOT be recoverable. \n All information regarding your account, including settings, rooms, and recordings will be removed.",
+      "delete_account_description": "If you choose to delete your account, it will NOT be recoverable. \n All information regarding your account, including settings, meetings, and recordings will be removed.",
       "delete_account_confirmation": "Yes, I would like to delete my account",
       "are_you_sure_delete_account": "Are you sure you want to delete your account?"
     },
@@ -103,20 +103,20 @@
     }
   },
   "room": {
-    "room": "Room",
-    "rooms": "Rooms",
-    "room_name": "Room Name",
-    "add_new_room": "+ New Room",
-    "create_room": "Create Room",
-    "delete_room": "Delete Room",
-    "create_new_room": "Create New Room",
-    "enter_room_name": "Enter the room name",
+    "room": "Meeting",
+    "rooms": "Meetings",
+    "room_name": "Meeting Name",
+    "add_new_room": "+ New Meeting",
+    "create_room": "Create Meeting",
+    "delete_room": "Delete Meeting",
+    "create_new_room": "Create New Meeting",
+    "enter_room_name": "Enter the meeting name",
     "shared_by": "shared by",
     "last_session": "Last Session: {{ localizedTime }}",
     "no_last_session": "No previous session created",
-    "search_not_found": "No Rooms Found",
-    "rooms_list_is_empty": "You don't have any rooms yet!",
-    "rooms_list_empty_create_room": "Create your first room by clicking on the button below and entering a room name.",
+    "search_not_found": "No Meetings Found",
+    "rooms_list_is_empty": "You don't have any meetings yet!",
+    "rooms_list_empty_create_room": "Create your first meeting by clicking on the button below and entering a meeting name.",
     "meeting": {
       "start_meeting": "Start Meeting",
       "join_meeting": "Join Meeting",
@@ -135,19 +135,19 @@
     "shared_access": {
       "access": "Access",
       "add_share_access": "+ Share Access",
-      "share_room_access": "Share Room Access",
+      "share_room_access": "Share Meeting Access",
       "add_some_users": "Time to add some users!",
-      "add_some_users_description": "To add new users, click the button below and search or select the users you want to share this room with.",
+      "add_some_users_description": "To add new users, click the button below and search or select the users you want to share this meeting with.",
       "delete_shared_access": "Delete Shared Access",
       "are_you_sure_delete_shared_access": "Are you sure you want to delete this Shared Access?"
     },
     "settings": {
       "settings": "Settings",
-      "room_name": "Room Name",
+      "room_name": "Meeting Name",
       "user_settings": "User Settings",
-      "allow_room_to_be_recorded": "Allow room to be recorded",
+      "allow_room_to_be_recorded": "Allow meeting to be recorded",
       "require_signed_in": "Require users to be signed in before joining",
-      "require_signed_in_message": "You must be signed in to join this room.",
+      "require_signed_in_message": "You must be signed in to join this meeting.",
       "require_mod_approval": "Require moderator approval before joining",
       "allow_any_user_to_start": "Allow any user to start this meeting",
       "all_users_join_as_mods": "All users join as moderators",
@@ -160,7 +160,7 @@
       "wrong_access_code": "Wrong Access Code",
       "generate_viewers_access_code": "Generate access code for viewers",
       "generate_mods_access_code": "Generate access code for moderators",
-      "are_you_sure_delete_room": "Are you sure you want to delete this room?"
+      "are_you_sure_delete_room": "Are you sure you want to delete this meeting?"
     }
   },
   "recording": {
@@ -211,8 +211,8 @@
       "delete_user": "Delete User",
       "users_edit_path": "Users/Edit",
       "create_account": "Create Account",
-      "create_room": "Create Room",
-      "create_new_room": "Create New Room",
+      "create_room": "Create Meeting",
+      "create_new_room": "Create New Meeting",
       "user_created_at": "Created: {{localizedTime}}",
       "are_you_sure_delete_account": "Are you sure you want to delete {{user.name}}'s account?",
       "delete_account_warning": "If you choose to delete this account, it will NOT be recoverable.",
@@ -230,10 +230,10 @@
       }
     },
     "server_rooms": {
-      "server_rooms": "Server Rooms",
+      "server_rooms": "Server Meetings",
       "name": "Name",
       "owner": "Owner",
-      "room_id": "Room ID",
+      "room_id": "Meeting ID",
       "participants": "Participants",
       "status": "Status",
       "running": "Running",
@@ -242,10 +242,10 @@
       "current_session": "Current Session: {{lastSession}}",
       "last_session": "Last Session: {{localizedTime}}",
       "no_meeting_yet": "No meeting yet.",
-      "delete_server_rooms": "Delete Server Room",
+      "delete_server_rooms": "Delete Server Meeting",
       "resync_recordings": "Re-Sync Recordings",
-      "empty_room_list": "There are no server rooms yet!",
-      "empty_room_list_subtext": "Rooms will appear here after creating your first room."
+      "empty_room_list": "There are no server meetings yet!",
+      "empty_room_list_subtext": "Meetings will appear here after creating your first meeting."
     },
     "server_recordings": {
       "server_recordings": "Server Recordings",
@@ -278,10 +278,10 @@
       },
       "settings": {
         "settings": "Settings",
-        "allow_users_to_share_rooms": "Allow Users to Share Rooms",
-        "allow_users_to_share_rooms_description": "Setting to disabled will remove the button from the room options dropdown, preventing users from sharing rooms",
+        "allow_users_to_share_rooms": "Allow Users to Share Meetings",
+        "allow_users_to_share_rooms_description": "Setting to disabled will remove the button from the meeting options dropdown, preventing users from sharing meetings",
         "allow_users_to_preupload_presentation": "Allow Users to Preupload Presentations",
-        "allow_users_to_preupload_presentation_description": "Users can preupload a presentation to be used as the default presentation for that specific room"
+        "allow_users_to_preupload_presentation_description": "Users can preupload a presentation to be used as the default presentation for that specific meeting"
       },
       "registration": {
         "registration": "Registration",
@@ -302,28 +302,28 @@
       }
     },
     "room_configuration": {
-      "room_configuration": "Room Configuration",
+      "room_configuration": "Meeting Configuration",
       "default": "Optional (default: enabled)",
       "optional": "Optional (default: disabled)",
       "enabled": "Force Enabled",
       "disabled": "Disabled",
       "configurations": {
-        "allow_room_to_be_recorded": "Allow Room to be recorded",
-        "allow_room_to_be_recorded_description": "Allows room owners to specify whether they want the option to record a room or not. If enabled, the moderator must still click the 'Record' button once the meeting has started.",
+        "allow_room_to_be_recorded": "Allow Meeting to be recorded",
+        "allow_room_to_be_recorded_description": "Allows meeting owners to specify whether they want the option to record a meeting or not. If enabled, the moderator must still click the 'Record' button once the meeting has started.",
         "require_user_signed_in": "Require users to be signed in before joining",
-        "require_user_signed_in_description": "Only allows users with a Sri Shakthi Meetings account to join the meeting. If they are not signed in, they will be redirected to the login page when attempting to join a room.",
+        "require_user_signed_in_description": "Only allows users with a Sri Shakthi Meetings account to join the meeting. If they are not signed in, they will be redirected to the login page when attempting to join a meeting.",
         "require_mod_approval": "Require moderator approval before joining",
         "require_mod_approval_description": "Prompts the moderator of the Sri Shakthi meeting when a user tries to join. If the user is approved, they will be able to join the meeting.",
         "allow_any_user_to_start_meeting": "Allow any user to start a meeting",
-        "allow_any_user_to_start_meeting_description": "Allow any user to start the meeting at any time. By default, only the room owner can start the meeting.",
+        "allow_any_user_to_start_meeting_description": "Allow any user to start the meeting at any time. By default, only the meeting owner can start the meeting.",
         "allow_users_to_join_as_mods": "All users join as moderators",
         "allow_users_to_join_as_mods_description": "Gives all users the moderator privileges in Sri Shakthi when they join the meeting",
         "mute_users_on_join": "Mute users when they join",
         "mute_users_on_join_description": "Automatically mutes the user when they join the Sri Shakthi meeting",
         "viewer_access_code": "Viewer Access Code",
-        "viewer_access_code_description": "Allows room owners to have a random alphanumeric code that can be shared with users. The code, if generated, will be required for users to join the room meetings.",
+        "viewer_access_code_description": "Allows meeting owners to have a random alphanumeric code that can be shared with users. The code, if generated, will be required for users to join the meeting meetings.",
         "mod_access_code": "Moderator Access Code",
-        "mod_access_code_description": "Allows room owners to have a random alphanumeric code that can be shared with users. The code, if generated, will not be required and when used on any room meeting will join the user as a moderator."
+        "mod_access_code_description": "Allows meeting owners to have a random alphanumeric code that can be shared with users. The code, if generated, will not be required and when used on any meeting meeting will join the user as a moderator."
       }
     },
     "roles": {
@@ -341,15 +341,15 @@
       "no_role_found": "No role found.",
       "search_not_found": "No Roles Found",
       "edit": {
-        "create_room": "Allow users with this role to create rooms",
+        "create_room": "Allow users with this role to create meetings",
         "record": "Allow users with this role to record their meetings",
         "manage_users": "Allow users with this role to manage users",
-        "manage_rooms": "Allow users with this role to manage server rooms",
+        "manage_rooms": "Allow users with this role to manage server meetings",
         "manage_recordings": "Allow users with this role to manage server recordings",
         "manage_site_settings": "Allow users with this role to manage site settings",
         "manage_roles": "Allow users with this role to edit other roles",
-        "shared_list": "Include users with this role in the dropdown for sharing rooms",
-        "room_limit": "Room Limit"
+        "shared_list": "Include users with this role in the dropdown for sharing meetings",
+        "room_limit": "Meeting Limit"
       }
     }
   },
@@ -370,14 +370,14 @@
         "signed_out": "You have been signed out."
       },
       "room": {
-        "room_created": "A new room has been created.",
-        "room_updated": "The room has been updated.",
-        "room_deleted": "The room has been deleted.",
-        "room_shared": "The room has been shared.",
-        "room_unshared": "The room has been unshared.",
-        "recordings_synced": "The room recordings have been synchronized.",
-        "room_configuration_updated": "The room configuration have been updated.",
-        "room_setting_updated": "The room setting has been updated.",
+        "room_created": "A new meeting has been created.",
+        "room_updated": "The meeting has been updated.",
+        "room_deleted": "The meeting has been deleted.",
+        "room_shared": "The meeting has been shared.",
+        "room_unshared": "The meeting has been unshared.",
+        "recordings_synced": "The meeting recordings have been synchronized.",
+        "room_configuration_updated": "The meeting configuration have been updated.",
+        "room_setting_updated": "The meeting setting has been updated.",
         "presentation_updated": "The presentation has been updated.",
         "presentation_deleted": "The presentation has been deleted.",
         "joining_meeting": "Joining the meeting...",
@@ -429,7 +429,7 @@
         "banned": "You do not have access to this application. Please contact your administrator if you believe this is a mistake."
       },
       "rooms": {
-        "room_limit": "The room can't be created due to reaching the room limit."
+        "room_limit": "The meeting can't be created due to reaching the meeting limit."
       },
       "session": {
         "invalid_credentials": "The username or password is invalid. Please verify your credentials and try again."
@@ -487,7 +487,7 @@
       },
       "role": {
         "limit": {
-          "required": "Please enter the room count limit",
+          "required": "Please enter the meeting count limit",
           "min": "Allowed minimum is 0",
           "max": "Allowed maximum is 100"
         },
@@ -497,7 +497,7 @@
       },
       "room": {
         "name": {
-          "required": "Please enter the room name.",
+          "required": "Please enter the meeting name.",
           "min": "Name must be at least 2 characters long"
         }
       },
@@ -513,8 +513,8 @@
     "room": {
       "fields": {
         "name": {
-          "label": "Room Name",
-          "placeholder": "Enter a room name..."
+          "label": "Meeting Name",
+          "placeholder": "Enter a meeting name..."
         }
       }
     },

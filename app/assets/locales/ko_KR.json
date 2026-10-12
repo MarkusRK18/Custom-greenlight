@@ -100,20 +100,20 @@
     }
   },
   "room": {
-    "room": "Room",
+    "room": "Meeting",
     "rooms": "Room들",
-    "room_name": "Room 이름",
-    "add_new_room": "새로운 Room",
-    "create_room": "Room 생성",
-    "delete_room": "Room 삭제",
-    "create_new_room": "새로운 Room 생성",
-    "enter_room_name": "Room 이름 입력",
+    "room_name": "Meeting 이름",
+    "add_new_room": "새로운 Meeting",
+    "create_room": "Meeting 생성",
+    "delete_room": "Meeting 삭제",
+    "create_new_room": "새로운 Meeting 생성",
+    "enter_room_name": "Meeting 이름 입력",
     "shared_by": "에 의해 공유",
     "last_session": "마지막 세션: {{ localizedTime }}",
     "no_last_session": "이전 세션이 생성되지 않았습니다",
     "search_not_found": "Room을 찾을 수 없음",
     "rooms_list_is_empty": "아직 소유한 Room이 없습니다.",
-    "rooms_list_empty_create_room": "아래 단추를 누른 후 Room 이름을 입력하여 첫 번째 Room을 생성할 수 있습니다.",
+    "rooms_list_empty_create_room": "아래 단추를 누른 후 Meeting 이름을 입력하여 첫 번째 Room을 생성할 수 있습니다.",
     "meeting": {
       "start_meeting": "미팅 시작",
       "join_meeting": "미팅 참여",
@@ -132,7 +132,7 @@
     "shared_access": {
       "access": "액세스",
       "add_share_access": "+ 액세스 공유",
-      "share_room_access": "공유 Room 액세스",
+      "share_room_access": "공유 Meeting 액세스",
       "add_some_users": "사용자를 추가할 시간입니다!",
       "add_some_users_description": "새 사용자를 추가하려면 아래 단추를 누른 후 Room을 공유할 사용자를 검색하거나 선택하십시오.",
       "delete_shared_access": "공유 액세스 삭제",
@@ -140,9 +140,9 @@
     },
     "settings": {
       "settings": "설정",
-      "room_name": "Room 이름",
+      "room_name": "Meeting 이름",
       "user_settings": "사용자 설정",
-      "allow_room_to_be_recorded": "Room 녹화 허용",
+      "allow_room_to_be_recorded": "Meeting 녹화 허용",
       "require_signed_in": "가입하기 전에 사용자가 로그인하도록 요구",
       "require_signed_in_message": "이 Room에 참가하려면 로그인해야 합니다.",
       "require_mod_approval": "참가하기 전에 진행자 승인 필요",
@@ -203,8 +203,8 @@
       "delete_user": "사용자 삭제",
       "users_edit_path": "사용자 / 편집",
       "create_account": "계정 생성",
-      "create_room": "Room 생성",
-      "create_new_room": "새로운 Room 생성",
+      "create_room": "Meeting 생성",
+      "create_new_room": "새로운 Meeting 생성",
       "user_created_at": "생성됨: {{localizedTime}}",
       "are_you_sure_delete_account": "{{user.name}}의 계정을 삭제하시겠습니까?",
       "delete_account_warning": "이 계정을 삭제하면 복구할 수 없습니다.",
@@ -222,10 +222,10 @@
       }
     },
     "server_rooms": {
-      "server_rooms": "서버 Rooms",
+      "server_rooms": "서버 Meetings",
       "name": "이름",
       "owner": "소유자",
-      "room_id": "Room ID",
+      "room_id": "Meeting ID",
       "participants": "참가자",
       "status": "상태",
       "running": "실행중",
@@ -234,7 +234,7 @@
       "current_session": "현재 세션: {{lastSession}}",
       "last_session": "마지막 세션: {{localizedTime}}",
       "no_meeting_yet": "아직 미팅이 없습니다.",
-      "delete_server_rooms": "Server Room 삭제",
+      "delete_server_rooms": "Server Meeting 삭제",
       "resync_recordings": "녹화 재동기화",
       "empty_room_list": "아직 Server Room이 없습니다!",
       "empty_room_list_subtext": "첫 번째 Room을 생성하면 Room이 여기에 나타납니다."
@@ -270,8 +270,8 @@
       },
       "settings": {
         "settings": "설정",
-        "allow_users_to_share_rooms": "사용자의 Room 공유 허용",
-        "allow_users_to_share_rooms_description": "사용 불가능으로 설정하면 Room 선택사항 드롭다운 메뉴에서 버튼이 제거되어 사용자가 Room을 공유할 수 없습니다",
+        "allow_users_to_share_rooms": "사용자의 Meeting 공유 허용",
+        "allow_users_to_share_rooms_description": "사용 불가능으로 설정하면 Meeting 선택사항 드롭다운 메뉴에서 버튼이 제거되어 사용자가 Room을 공유할 수 없습니다",
         "allow_users_to_preupload_presentation": "사용자에게 프레젠테이션 발표자료 사전 업로드 허용",
         "allow_users_to_preupload_presentation_description": "사용자는 특정 Room에서 발표자료로 사용할 프리젠테이션을 미리 업로드할 수 있습니다"
       },
@@ -294,28 +294,28 @@
       }
     },
     "room_configuration": {
-      "room_configuration": "Room 구성",
+      "room_configuration": "Meeting 구성",
       "default": "선택 사항(기본값: 사용)",
       "optional": "선택 사항(기본값: 사용 안 함)",
       "enabled": "강제 실행",
       "disabled": "사용 안함",
       "configurations": {
-        "allow_room_to_be_recorded": "Room 녹화 허용",
-        "allow_room_to_be_recorded_description": "Room 소유자가 녹화 기능의 사용 여부를 지정할 수 있습니다. 활성화된 경우 진행자는 미팅이 시작된 후 Room 상단에 '녹화' 버튼이 활성화 되고 이 버튼을 클릭하면 녹화를 진행할 수 있습니다.",
+        "allow_room_to_be_recorded": "Meeting 녹화 허용",
+        "allow_room_to_be_recorded_description": "Meeting 소유자가 녹화 기능의 사용 여부를 지정할 수 있습니다. 활성화된 경우 진행자는 미팅이 시작된 후 Meeting 상단에 '녹화' 버튼이 활성화 되고 이 버튼을 클릭하면 녹화를 진행할 수 있습니다.",
         "require_user_signed_in": "가입하기 전에 사용자가 로그인해야 함",
         "require_user_signed_in_description": "Sri Shakthi Meetings 계정을 가진 사용자만 미팅에 참여할 수 있습니다. 로그인하지 않은 경우, Room에 참여할 때 로그인 페이지로 되돌아 갑니다..",
         "require_mod_approval": "가입하기 전에 진행자 승인 필요",
         "require_mod_approval_description": "사용자가 참여하려고 할 때 Sri Shakthi 미팅의 진행자에게 메시지를 표시합니다. 진행자에 의해 사용자가 승인된 경우, 사용자는 미팅에 참여할 수 있습니다.",
         "allow_any_user_to_start_meeting": "누구나 미팅을 시작할 수 있도록 허용",
-        "allow_any_user_to_start_meeting_description": "누구나 언제든지 미팅을 시작할 수 있도록 허용합니다. 기본적으로는 Room 소유자만 미팅을 시작할 수 있습니다.",
+        "allow_any_user_to_start_meeting_description": "누구나 언제든지 미팅을 시작할 수 있도록 허용합니다. 기본적으로는 Meeting 소유자만 미팅을 시작할 수 있습니다.",
         "allow_users_to_join_as_mods": "모든 사용자가 진행자로 참여",
         "allow_users_to_join_as_mods_description": "모든 사용자가 미팅에 참여할 때 진행자 권한을 부여합니다",
         "mute_users_on_join": "사용자가 미팅에 참여할 때 음소거",
         "mute_users_on_join_description": "사용자가 미팅에 참여할 때 자동으로 음소거됨",
         "viewer_access_code": "참여자 액세스 코드",
-        "viewer_access_code_description": "Room 소유자가 참여자와 공유할 수 있는 임의의 영문,숫자 코드를 가질 수 있습니다. 생성된 코드는 사용자가 Room 미팅에 참여하는 데 필요합니다.",
+        "viewer_access_code_description": "Meeting 소유자가 참여자와 공유할 수 있는 임의의 영문,숫자 코드를 가질 수 있습니다. 생성된 코드는 사용자가 Meeting 미팅에 참여하는 데 필요합니다.",
         "mod_access_code": "진행자 액세스 코드",
-        "mod_access_code_description": "Room 소유자는 참여자와 공유할 수 있는 임의의 영문, 숫자 코드를 가질 수 있습니다. Room 미팅에서 사용자가 처음부터 진행자로 참여하면 작성된 코드는 필요하지 않습니다. "
+        "mod_access_code_description": "Meeting 소유자는 참여자와 공유할 수 있는 임의의 영문, 숫자 코드를 가질 수 있습니다. Meeting 미팅에서 사용자가 처음부터 진행자로 참여하면 작성된 코드는 필요하지 않습니다. "
       }
     },
     "roles": {
@@ -333,15 +333,15 @@
       "no_role_found": "역할을 찾을 수 없습니다.",
       "search_not_found": "역할을 찾을 수 없음",
       "edit": {
-        "create_room": "이 역할을 가진 사용자에게 Room 생성 허용",
+        "create_room": "이 역할을 가진 사용자에게 Meeting 생성 허용",
         "record": "이 역할을 가진 사용자에게 미팅 녹화 허용",
         "manage_users": "이 역할을 가진 사용자에게 사용자 관리 허용",
-        "manage_rooms": "이 역할을 가진 사용자에게 서버 Room 관리 허용",
+        "manage_rooms": "이 역할을 가진 사용자에게 서버 Meeting 관리 허용",
         "manage_recordings": "이 역할을 가진 사용자에게 서버 녹화 관리 허용",
         "manage_site_settings": "이 역할을 가진 사용자에게 사이트 설정 관리 허용",
         "manage_roles": "이 역할을 가진 사용자가 다른 역할을 편집하도록 허용",
-        "shared_list": "Room 공유 드롭다운 메뉴에 이 역할을 가진 사용자 포함",
-        "room_limit": "Room 제한"
+        "shared_list": "Meeting 공유 드롭다운 메뉴에 이 역할을 가진 사용자 포함",
+        "room_limit": "Meeting 제한"
       }
     }
   },
@@ -365,10 +365,10 @@
         "room_updated": "Room이 업데이트되었습니다.",
         "room_deleted": "Room이 삭제되었습니다.",
         "room_shared": "Room이 공유되었습니다.",
-        "room_unshared": "Room 공유가 해제되었습니다.",
-        "recordings_synced": "Room 녹화가 동기화되었습니다.",
-        "room_configuration_updated": "Room 환경설정이 업데이트되었습니다.",
-        "room_setting_updated": "Room 설정이 업데이트되었습니다.",
+        "room_unshared": "Meeting 공유가 해제되었습니다.",
+        "recordings_synced": "Meeting 녹화가 동기화되었습니다.",
+        "room_configuration_updated": "Meeting 환경설정이 업데이트되었습니다.",
+        "room_setting_updated": "Meeting 설정이 업데이트되었습니다.",
         "presentation_updated": "프레젠테이션이 업데이트되었습니다.",
         "presentation_deleted": "프레젠테이션이 삭제되었습니다.",
         "joining_meeting": "미팅에 참여하는 중...",
@@ -420,7 +420,7 @@
         "banned": "이 애플리케이션에 대한 액세스 권한이 없습니다. 이것이 오류라고 생각되면 관리자에게 문의하십시오."
       },
       "rooms": {
-        "room_limit": "Room 생성 한도에 도달하여 Room을 더 이상 만들 수 없습니다."
+        "room_limit": "Meeting 생성 한도에 도달하여 Room을 더 이상 만들 수 없습니다."
       },
       "session": {
         "invalid_credentials": "사용자 이름 또는 비밀번호가 유효하지 않습니다. 자격 증명을 확인하고 다시 시도하십시오."
@@ -488,7 +488,7 @@
       },
       "room": {
         "name": {
-          "required": "Room 이름을 입력해주세요.",
+          "required": "Meeting 이름을 입력해주세요.",
           "min": "이름은 최소 2자 이상이어야 합니다."
         }
       },
@@ -504,8 +504,8 @@
     "room": {
       "fields": {
         "name": {
-          "label": "Room 이름",
-          "placeholder": "Room 이름을 입력하세요..."
+          "label": "Meeting 이름",
+          "placeholder": "Meeting 이름을 입력하세요..."
         }
       }
     },

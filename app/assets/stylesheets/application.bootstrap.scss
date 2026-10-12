@@ -550,6 +550,8 @@ input[type='checkbox'] {
   line-height: 1.2;
 }
 
+.meeting-description { white-space: pre-wrap; overflow-wrap: anywhere; }
+
 .analytics-dashboard {
   max-width: 1800px;
   margin: auto;

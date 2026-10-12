@@ -33,6 +33,7 @@ export function useRoomFormValidation() {
       otherwise: (schema) => schema.notRequired(),
     }),
     participant_emails: yup.string(),
+    description: yup.string().max(5000),
     name: yup.string().required('forms.validations.room.name.required').min(2, 'forms.validations.room.name.min'),
   })), []);
 }
@@ -41,6 +42,7 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
   const { t, i18n } = useTranslation();
 
   const fields = useMemo(() => ({
+    description: { label: 'Meeting description', placeHolder: 'What is this meeting about?', controlId: 'meetingDescription', hookForm: { id: 'description' } },
     scheduled_at: { label: 'Meeting date and time (your local time)', controlId: 'meetingStart', hookForm: { id: 'scheduled_at' } },
     duration_minutes: { label: 'Duration (minutes)', controlId: 'meetingDuration', hookForm: { id: 'duration_minutes' } },
     participant_emails: { label: 'Participant emails (comma separated, siet.ac.in only)', controlId: 'meetingParticipants', hookForm: { id: 'participant_emails' } },
@@ -62,6 +64,7 @@ export default function useRoomForm({ defaultValues: _defaultValues, ..._config 
       defaultValues: {
         ...{
           name: '',
+          description: '',
           meeting_type: 'instant',
           scheduled_at: '',
           duration_mode: 'limited',

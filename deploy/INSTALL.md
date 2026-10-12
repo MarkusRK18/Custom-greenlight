@@ -39,6 +39,11 @@ This mode requires a **Greenlight v3** installation, a PostgreSQL service, a Red
 
 The installer builds first, stops only the Greenlight app, backs up its PostgreSQL database and mounted uploads, then runs the custom migrations and starts the replacement. BBB meetings continue running, but Greenlight login/meeting creation is briefly unavailable. It preserves the existing `.env`, database/storage mounts, SMTP settings, and secret key. A generated Compose override selects the custom image and BBB credentials. No database volume is deleted.
 
+Meeting descriptions are saved in the database (up to 5,000 characters), editable
+in creation and Settings, and shown on the meeting page and in future saved
+analytics. Visible Greenlight labels use Meeting/Meetings and SIETConnect.
+Internal API routes and translation keys retain their compatible names.
+
 All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
 
 ## BBB installed without Greenlight, or keep old Greenlight alongside the new portal
@@ -65,6 +70,25 @@ docker compose --project-directory /root/greenlight-v3 \
 Use the same command prefix with `logs --tail 100 greenlight-v3`, `stop greenlight-v3`, or `up -d greenlight-v3`. Always include the override; using the original Compose file alone would select the upstream image again. Rerunning the installer fetches the selected revision and rebuilds. Keep `/opt/sietconnect/installer.env` and backups private.
 
 The script verifies BBB authentication before stopping the portal and checks the public Greenlight health endpoint after deployment. Native BBB client settings (default PDF, client title and drawing tools) are separate from Greenlight: apply the server settings described in `SRI_SHAKTHI_SETUP.md` if the target server still shows its original welcome slide. BBB service restarts should be scheduled outside active meetings.
+
+## Empty analytics history on an installed server
+
+Run the safe diagnostic on the target Ubuntu server and share its output:
+
+```sh
+curl -fL https://raw.githubusercontent.com/MarkusRK18/Custom-greenlight/main/scripts/diagnose-analytics.sh -o diagnose-analytics.sh
+sudo bash diagnose-analytics.sh
+```
+
+It checks event processing, retention, callback delivery to the public hostname,
+and callback log summaries without printing secrets or participant data. If the
+server cannot reach its own public hostname, resolve DNS/routing/TLS first.
+Only newly started meetings request the custom callback; installing the portal
+cannot recreate analytics from old sessions whose events have been discarded.
+Branding updates alter HTML5 locales and client title settings; reload HTML5
+services during a maintenance window if cached settings still show the old title.
+Clear browser cache with Ctrl+Shift+R. Native analytics tabs now have an explicit
+college favicon with a versioned asset URL.
 
 ## Recovery
 

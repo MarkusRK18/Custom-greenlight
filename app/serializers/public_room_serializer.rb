@@ -19,6 +19,8 @@
 class PublicRoomSerializer < ApplicationSerializer
   include Avatarable
 
+  attribute :description
+
   attributes :scheduled_at, :duration_minutes, :name, :recording_consent, :require_authentication, :viewer_access_code, :moderator_access_code,
              :anyone_join_as_moderator, :friendly_id, :owner_name, :owner_id, :owner_avatar, :shared_user_ids
 

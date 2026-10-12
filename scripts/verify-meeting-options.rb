@@ -5,7 +5,8 @@ Room.transaction do
   password = "Verify-Aa1!#{SecureRandom.hex(12)}"
   user = User.create!(name: 'Analytics verification', email: "analytics-#{SecureRandom.hex(8)}@siet.ac.in",
                       password: password, password_confirmation: password, verified: true, provider: 'greenlight', language: 'en')
-  room = Room.create!(user: user, name: 'Duration verification', meeting_type: 'instant', duration_minutes: 0)
+  room = Room.create!(user: user, name: 'Duration verification', description: "Agenda\nDiscussion", meeting_type: 'instant', duration_minutes: 0)
+  raise 'Meeting description not persisted' unless room.reload.description == "Agenda\nDiscussion"
   room.update!(scheduled_at: 3.days.ago, last_session: Time.current)
   raise 'Unlimited schedule closed' unless room.schedule_open?
   room.duration_minutes = 60
@@ -46,6 +47,10 @@ Room.transaction do
   json_headers['HTTP_X_CSRF_TOKEN'] = Nokogiri::HTML(client.response.body).at_css('meta[name="csrf-token"]')['content']
   client.post('/api/v1/sessions.json', params: { session: { email: user.email, password: password } }.to_json, headers: json_headers)
   raise 'Fixture sign-in failed' unless client.response.status == 200
+  client.patch("/api/v1/rooms/#{room.friendly_id}.json", params: { room: { description: 'Updated agenda' } }.to_json, headers: json_headers)
+  raise 'Meeting description update failed' unless client.response.status == 200 && room.reload.description == 'Updated agenda'
+  client.get("/api/v1/rooms/#{room.friendly_id}.json", headers: json_headers)
+  raise 'Meeting description not exposed' unless JSON.parse(client.response.body)['data']['description'] == 'Updated agenda'
   client.get("/api/v1/rooms/#{room.friendly_id}/analytics.json", headers: json_headers)
   history = JSON.parse(client.response.body)['data']
   raise 'History list incorrect' unless client.response.status == 200 && history.length == 2 && history.first['participant_count'] == 1

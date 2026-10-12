@@ -27,10 +27,12 @@ fi
 yq e -i '.public.app.clientTitle = "SIETConnect" | .public.app.branding.displayBrandingArea = true | .public.app.copyright = "Sri Shakthi" | .public.layout.hidePresentationOnJoin = true | .public.layout.showSessionDetailsOnJoin = false' /etc/bigbluebutton/bbb-html5.yml
 yq e -i '.public.whiteboard.toolbar.initialSelectedTool = "select" | del(.public.whiteboard.toolbar.presenterTools) | del(.public.whiteboard.toolbar.multiUserTools) | del(.public.whiteboard.lockToolbarTools)' /etc/bigbluebutton/bbb-html5.yml
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/images/logo.png
-install -m 644 /local/college-favicon.ico /var/www/bigbluebutton-default/assets/favicon.ico
+if [[ -f /local/college-favicon.ico ]]; then
+  install -m 644 /local/college-favicon.ico /var/www/bigbluebutton-default/assets/favicon.ico
+fi
 install -d -m 755 /var/www/bigbluebutton-default/assets/sietconnect
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/sietconnect/logo.png
-python3 /local/brand-bbb-client.py
+if [[ -f /local/brand-bbb-client.py ]]; then python3 /local/brand-bbb-client.py; fi
 cat > /etc/bigbluebutton/nginx/sietconnect-assets.nginx <<'NGINX'
 # Managed by SIETConnect assets
 location ^~ /sietconnect-assets/ {

@@ -75,6 +75,7 @@ export default function Room() {
                           { room?.shared && <SharedBadge ownerName={room?.owner_name} /> }
                         </Stack>
                       </Stack>
+                      {room?.description && <p className="meeting-description text-muted">{room.description}</p>}
                       { room?.last_session ? (
                         <span className="text-muted"> { t('room.last_session', { localizedTime }) }  </span>
                       ) : (

@@ -179,7 +179,7 @@ module Api
       end
 
       def room_params
-        params.require(:room).permit(:name, :user_id, :presentation, :meeting_type, :scheduled_at, :duration_minutes, :participant_emails)
+        params.require(:room).permit(:name, :description, :user_id, :presentation, :meeting_type, :scheduled_at, :duration_minutes, :participant_emails)
       end
     end
   end

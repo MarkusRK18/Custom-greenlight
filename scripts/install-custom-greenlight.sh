@@ -274,6 +274,7 @@ for ((attempt=0; attempt<30; attempt++)); do
   sleep 2
 done
 ((ready)) || die 'Public health check failed. Inspect portal logs and nginx routing.'
+bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
 printf '\nSIETConnect installed: %s\nBackups: %s\nSource revision: ' "$public_url" "$backup"
 git -C "$source_dir" rev-parse --short HEAD
 printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
