@@ -274,6 +274,13 @@ for ((attempt=0; attempt<30; attempt++)); do
   sleep 2
 done
 ((ready)) || die 'Public health check failed. Inspect portal logs and nginx routing.'
+curl --fail --silent --show-error --output "$backup/homepage.html" "$public_url/" || die 'Public SIETConnect welcome page is unavailable.'
+grep -Fq '<title>SIETConnect</title>' "$backup/homepage.html" || die 'Public welcome page does not have the SIETConnect title.'
+for asset in favicon.ico sri-shakthi-logo.png; do
+  curl --fail --silent --show-error --output "$backup/$asset" "$public_url/$asset" || die "Public branding asset is unavailable: $asset"
+  cmp -s "$source_dir/public/$asset" "$backup/$asset" || die "Public branding asset does not match the repository: $asset"
+done
+printf 'SIETConnect welcome page, college favicon, and crest: OK\n'
 bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
 printf '\nSIETConnect installed: %s\nBackups: %s\nSource revision: ' "$public_url" "$backup"
 git -C "$source_dir" rev-parse --short HEAD

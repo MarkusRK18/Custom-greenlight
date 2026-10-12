@@ -34,7 +34,7 @@ export default function Logo({ size, showName }) {
       <Image
         src={brandingImage}
         className={sizeClass}
-        alt="Sri Shakthi"
+        alt="Sri Shakthi Institute of Engineering and Technology crest"
         onClick={() => { navigate('/'); }}
       />
       {showName && <span className="institution-brand-name">SIETConnect</span>}

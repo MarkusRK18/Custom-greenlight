@@ -19,6 +19,8 @@ are supported. The prerequisite check also verifies that BBB's event processing
 services are active; the installer never restarts BBB services automatically.
 If the check reports event recording disabled, update `disableRecordingDefault`
 to `false` in the BBB web override and reload BBB web during a maintenance window.
+After startup, the installer checks the public SIETConnect page and compares the
+served favicon and college crest with the repository assets.
 
 ## Replace existing Greenlight v3
 
@@ -43,6 +45,9 @@ Meeting descriptions are saved in the database (up to 5,000 characters), editabl
 in creation and Settings, and shown on the meeting page and in future saved
 analytics. Visible Greenlight labels use Meeting/Meetings and SIETConnect.
 Internal API routes and translation keys retain their compatible names.
+The public welcome page follows the four-card Greenlight layout with SIETConnect
+copy and the custom green theme. Its header, browser icon, and footer use the
+college branding included in this repository.
 
 All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
 

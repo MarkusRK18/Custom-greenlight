@@ -17,6 +17,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import useSiteSetting from '../../hooks/queries/site_settings/useSiteSetting';
 
 export default function Footer() {
@@ -26,6 +27,7 @@ export default function Footer() {
   return (
     <footer id="footer" className="footer background-whitesmoke text-center">
       <Container id="footer-container" className="py-3">
+        <Link to="/">SIETConnect</Link>
         { links?.Terms
           && (
             <a className="ps-3" href={links?.Terms} target="_blank" rel="noreferrer">

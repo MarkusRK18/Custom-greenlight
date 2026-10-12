@@ -16,19 +16,59 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import {
+  ArrowRightIcon, ComputerDesktopIcon, VideoCameraIcon, Cog6ToothIcon, WrenchScrewdriverIcon,
+} from '@heroicons/react/24/outline';
 import { useAuth } from '../../contexts/auth/AuthProvider';
-import Logo from '../shared_components/Logo';
+import HomepageFeatureCard from './HomepageFeatureCard';
 
 export default function HomePage() {
   const currentUser = useAuth();
   if (currentUser.stateChanging) return null;
   if (!currentUser.signed_in) {
     return (
-      <div className="vertical-center text-center">
-        <div className="pb-4"><Logo showName={false} /></div>
-        <h1 className="mb-3" style={{ color: '#004d00' }}>Welcome to SIETConnect</h1>
-        <p className="mb-4" style={{ color: '#004d00' }}>Sri Shakthi Institue of Engineering and Technology</p>
-      </div>
+      <main className="homepage">
+        <section className="homepage-hero-band">
+          <div className="homepage-content" id="homepage-hero">
+            <h1>Welcome to SIETConnect.</h1>
+            <p>
+              SIETConnect is the online classroom and meeting space for Sri Shakthi Institute of
+              Engineering and Technology. Collaborate, share ideas, and learn together in real time.
+            </p>
+            <p>Create your own rooms to host sessions, or join others using a short and convenient link.</p>
+            <a className="homepage-learn-link" href="https://bigbluebutton.org/teachers/" target="_blank" rel="noreferrer">
+              Explore online learning tools <ArrowRightIcon aria-hidden="true" />
+            </a>
+          </div>
+        </section>
+        <section className="homepage-features-band" aria-labelledby="homepage-features-title">
+          <div className="homepage-content">
+            <h2 id="homepage-features-title">EXPLORE OUR FEATURES</h2>
+            <div className="homepage-feature-grid">
+              <HomepageFeatureCard
+                title="Launch a meeting"
+                description="Start a virtual class with video, audio, screen sharing, chat, and tools for learning together."
+                icon={<ComputerDesktopIcon aria-hidden="true" />}
+              />
+              <HomepageFeatureCard
+                title="Record your meetings"
+                description="Record SIETConnect meetings and share them with students to review after class."
+                icon={<VideoCameraIcon aria-hidden="true" />}
+              />
+              <HomepageFeatureCard
+                title="Manage your rooms"
+                description="Configure your rooms and meeting settings to create an effective classroom."
+                icon={<Cog6ToothIcon aria-hidden="true" />}
+              />
+              <HomepageFeatureCard
+                title="And more!"
+                description="Use built-in learning tools designed to help you make the most of every session."
+                icon={<WrenchScrewdriverIcon aria-hidden="true" />}
+              />
+            </div>
+          </div>
+        </section>
+      </main>
     );
   }
   return <Navigate to={currentUser.permissions.CreateRoom === 'true' ? '/rooms' : '/home'} replace />;
