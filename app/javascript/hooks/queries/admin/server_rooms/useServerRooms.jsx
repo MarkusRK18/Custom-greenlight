@@ -33,6 +33,7 @@ export default function useServerRooms(input, page) {
     () => axios.get('/admin/server_rooms.json', { params }).then((resp) => resp.data),
     {
       keepPreviousData: true,
+      refetchInterval: 15000,
     },
   );
 }

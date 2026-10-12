@@ -27,16 +27,23 @@ module Api
         before_action :find_room, only: %i[resync]
 
         # GET /api/v1/admin/server_rooms.json
-        # Fetches a list of all server rooms
+        # Fetches only meetings currently running on the server
         def index
           sort_config = config_sorting(allowed_columns: %w[name users.name])
 
-          rooms = Room.includes(:user).where(users: { provider: current_provider }).order(sort_config, online: :desc)
+          active_meetings = Array(BigBlueButtonApi.new(provider: current_provider).active_meetings)
+                           .select { |meeting| meeting[:running].to_s == 'true' }
+          meetings_by_id = active_meetings.index_by { |meeting| meeting[:meetingID] }
+
+          rooms = Room.includes(:user).where(users: { provider: current_provider }, meeting_id: meetings_by_id.keys).order(sort_config)
                       .order('last_session DESC NULLS LAST')&.admin_search(params[:search])
 
           pagy, paged_rooms = pagy(rooms)
 
-          RunningMeetingChecker.new(rooms: paged_rooms.select(&:online)).call if paged_rooms.any?(&:online)
+          paged_rooms.each do |room|
+            room.online = true
+            room.participants = meetings_by_id.fetch(room.meeting_id)[:participantCount]
+          end
 
           render_data data: paged_rooms, meta: pagy_metadata(pagy), serializer: ServerRoomSerializer, status: :ok
         end

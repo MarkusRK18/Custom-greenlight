@@ -29,7 +29,13 @@ RSpec.describe Api::V1::Admin::ServerRoomsController, type: :controller do
   end
 
   describe '#index' do
-    it 'returns all the Server Rooms from all users' do
+    before do
+      allow_any_instance_of(BigBlueButtonApi).to receive(:active_meetings) do
+        Room.all.map { |room| { meetingID: room.meeting_id, running: true, participantCount: 2 } }
+      end
+    end
+
+    it 'returns running meetings from all users' do
       user_one = create(:user)
       user_two = create(:user)
 
@@ -39,6 +45,27 @@ RSpec.describe Api::V1::Admin::ServerRoomsController, type: :controller do
       get :index
       expect(response.parsed_body['data'].pluck('friendly_id'))
         .to match_array(Room.all.pluck(:friendly_id))
+    end
+
+    it 'excludes ended meetings and filters before pagination' do
+      running = create(:room, online: false)
+      create_list(:room, 12, online: true)
+      allow_any_instance_of(BigBlueButtonApi).to receive(:active_meetings).and_return([
+        { meetingID: running.meeting_id, running: true, participantCount: 3 },
+        { meetingID: Room.where.not(id: running.id).first.meeting_id, running: false, participantCount: 0 }
+      ])
+
+      get :index
+      expect(response.parsed_body['data'].pluck('friendly_id')).to eq([running.friendly_id])
+      expect(response.parsed_body['data'].first['participants']).to eq(3)
+      expect(response.parsed_body['data'].first['online']).to be(true)
+    end
+
+    it 'returns an empty list when no meetings are running' do
+      create(:room, online: true)
+      allow_any_instance_of(BigBlueButtonApi).to receive(:active_meetings).and_return([])
+      get :index
+      expect(response.parsed_body['data']).to eq([])
     end
 
     context 'SuperAdmin accessing rooms for provider other than current provider' do

@@ -244,8 +244,8 @@
       "no_meeting_yet": "No meeting yet.",
       "delete_server_rooms": "Delete Server Meeting",
       "resync_recordings": "Re-Sync Recordings",
-      "empty_room_list": "There are no server meetings yet!",
-      "empty_room_list_subtext": "Meetings will appear here after creating your first meeting."
+      "empty_room_list": "No meetings are currently running.",
+      "empty_room_list_subtext": "Meetings appear here while they are running."
     },
     "server_recordings": {
       "server_recordings": "Server Recordings",
