@@ -112,7 +112,7 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
 
       allow(RoomSettingsGetter).to receive(:new).and_return(fake_room_settings_getter)
       allow(fake_room_settings_getter).to receive(:call).and_return(
-        { 'glRequireAuthentication' => true, 'glViewerAccessCode' => true, 'glModeratorAccessCode' => false, 'glAnyoneJoinAsModerator' => true }
+        { 'glRequireAuthentication' => 'true', 'glViewerAccessCode' => true, 'glModeratorAccessCode' => false, 'glAnyoneJoinAsModerator' => true }
       )
     end
 
@@ -130,12 +130,22 @@ RSpec.describe Api::V1::RoomsController, type: :controller do
       get :public_show, params: { friendly_id: room.friendly_id }
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body['data']['name']).to eq(room.name)
-      expect(response.parsed_body['data']['require_authentication']).to be(true)
+      expect(response.parsed_body['data']['require_authentication']).to eq('true')
       expect(response.parsed_body['data']['viewer_access_code']).to be(true)
       expect(response.parsed_body['data']['moderator_access_code']).to be(false)
       expect(response.parsed_body['data']['anyone_join_as_moderator']).to be(true)
       expect(response.parsed_body['data']['owner_name']).to eq(user.name)
       expect(response.parsed_body['data']['owner_avatar']).to be_present
+    end
+
+    it 'allows invitees to enter a name when the room permits guests' do
+      room = create(:room, user:)
+      allow(fake_room_settings_getter).to receive(:call).and_return('glRequireAuthentication' => 'false')
+
+      get :public_show, params: { friendly_id: room.friendly_id }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['data']['require_authentication']).to eq('false')
     end
 
     it 'returns :not_found if the room doesnt exist' do

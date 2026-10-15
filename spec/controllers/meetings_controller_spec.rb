@@ -415,6 +415,17 @@ RSpec.describe Api::V1::MeetingsController, type: :controller do
 
       expect(response).to have_http_status(:ok)
     end
+
+    it 'lets an invitee join a running room with their name when guest access is enabled' do
+      session[:session_token] = nil
+      allow_any_instance_of(BigBlueButtonApi).to receive(:meeting_running?).and_return(true)
+      allow_any_instance_of(RoomSettingsGetter).to receive(:call).and_return('glRequireAuthentication' => 'false')
+      expect_any_instance_of(BigBlueButtonApi).to receive(:join_meeting).with(room:, name: 'Invitee', avatar_url: nil, role: 'Viewer')
+
+      post :status, params: { friendly_id: room.friendly_id, name: 'Invitee' }
+
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   private

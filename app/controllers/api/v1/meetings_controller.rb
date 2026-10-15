@@ -19,6 +19,7 @@
 module Api
   module V1
     class MeetingsController < ApiController
+      skip_before_action :ensure_authenticated, only: :status
       before_action :find_room, only: %i[start status running]
       before_action :ensure_institution_member
       before_action :ensure_schedule_open, only: %i[start status]
@@ -100,6 +101,8 @@ module Api
       private
 
       def ensure_institution_member
+        return if action_name == 'status' && current_user.nil?
+
         render_error status: :forbidden unless InstitutionPolicy.member?(current_user) && current_user.provider == @room.user.provider
       end
 

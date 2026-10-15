@@ -29,7 +29,7 @@ class PublicRoomSerializer < ApplicationSerializer
   end
 
   def require_authentication
-    'true'
+    @instance_options[:options][:settings]['glRequireAuthentication'] == 'true' ? 'true' : 'false'
   end
 
   def viewer_access_code

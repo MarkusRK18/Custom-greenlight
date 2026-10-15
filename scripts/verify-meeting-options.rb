@@ -21,6 +21,14 @@ Room.transaction do
 
   client = ActionDispatch::Integration::Session.new(Rails.application)
   client.host! 'localhost'
+  auth_option = MeetingOption.find_by!(name: 'glRequireAuthentication')
+  auth_setting = room.room_meeting_options.find_by!(meeting_option: auth_option)
+  client.get("/api/v1/rooms/#{room.friendly_id}/public.json", headers: { 'HTTP_ACCEPT' => 'application/json' })
+  raise 'Guest invitation requires sign-in' unless JSON.parse(client.response.body).dig('data', 'require_authentication') == 'false'
+  auth_setting.update!(value: 'true')
+  client.get("/api/v1/rooms/#{room.friendly_id}/public.json", headers: { 'HTTP_ACCEPT' => 'application/json' })
+  raise 'Protected invitation did not require sign-in' unless JSON.parse(client.response.body).dig('data', 'require_authentication') == 'true'
+  auth_setting.update!(value: 'false')
   payload = {
     meeting_id: room.meeting_id,
     internal_meeting_id: "test-#{room.last_session.to_time.to_i * 1000}",
@@ -89,6 +97,6 @@ Room.transaction do
   raise 'Speaker totals do not match this recording' unless recording.speaker_summary == [
     { name: 'Speaker A', talk_time_seconds: 42 }, { name: 'Speaker B', talk_time_seconds: 7 }
   ]
-  puts 'Timing, callbacks, analytics access, automatic recording and speaker summaries: OK'
+  puts 'Guest invitations, timing, callbacks, analytics access, automatic recording and speaker summaries: OK'
   raise ActiveRecord::Rollback
 end

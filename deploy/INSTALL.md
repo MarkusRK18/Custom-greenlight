@@ -14,8 +14,10 @@ it with the same `--greenlight-dir` and `--public-url` arguments. It fetches the
 latest `main`, rebuilds the portal, and applies the persistent session analytics
 migration while preserving existing users, meetings and saved session history.
 It verifies the analytics database schema, automatic recording options, analytics
-callbacks, and recording speaker summaries after migrating. Both native BBB nginx
-include directories (`/etc/bigbluebutton/nginx` and `/usr/share/bigbluebutton/nginx`)
+callbacks, recording speaker summaries, and guest invitations after migrating.
+Room invitations respect the room's Require users to be signed in setting: with
+that setting off, invitees enter their name and join through the link. Both native
+BBB nginx include directories (`/etc/bigbluebutton/nginx` and `/usr/share/bigbluebutton/nginx`)
 are supported. The prerequisite check also verifies that BBB's event processing
 services are active. If it removes an existing BBB welcome footer, it restarts
 `bbb-web`; run the upgrade during a maintenance window.
