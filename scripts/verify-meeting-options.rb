@@ -61,6 +61,34 @@ Room.transaction do
   other_session = other_room.meeting_analytics_sessions.create!(internal_meeting_id: 'other-123', data: { duration: 1 })
   client.get("/api/v1/rooms/#{room.friendly_id}/analytics/#{other_session.id}.json", headers: json_headers)
   raise 'Session was accessible through the wrong meeting' unless client.response.status == 404
-  puts 'Timing, callbacks, duplicate/delayed history, saved dashboards and session access: OK'
+
+  user.update!(role: Role.find_by!(name: 'Administrator', provider: user.provider))
+  record_option = MeetingOption.find_by!(name: 'record')
+  room.room_meeting_options.find_or_create_by!(meeting_option: record_option).update!(value: 'true')
+  captured_options = []
+  BigBlueButtonApi.prepend(Module.new do
+    define_method(:start_meeting) do |room:, options:, presentation_url:|
+      captured_options << options
+      { createTime: (Time.current.to_f * 1000).to_i }
+    end
+  end)
+  starter.call
+  raise 'Recordable meeting did not auto-start recording' unless captured_options.last['record'] == 'true' &&
+                                                                captured_options.last['autoStartRecording'] == 'true' &&
+                                                                captured_options.last['allowStartStopRecording'] == 'true'
+  room.room_meeting_options.find_by!(meeting_option: record_option).update!(value: 'false')
+  starter.call
+  raise 'Disabled recording was auto-started' if captured_options.last.key?('autoStartRecording')
+
+  record_id = "speaker-#{SecureRandom.hex(8)}"
+  recording = Recording.create!(room:, record_id:, name: 'Speaker verification', visibility: 'Unpublished',
+                                participants: 2, length: 1, recorded_at: Time.current)
+  room.meeting_analytics_sessions.create!(internal_meeting_id: record_id,
+                                          data: { attendees: [{ name: 'Speaker A', engagement: { talk_time: 42 } },
+                                                               { name: 'Speaker B', engagement: { talk_time: 7 } }] })
+  raise 'Speaker totals do not match this recording' unless recording.speaker_summary == [
+    { name: 'Speaker A', talk_time_seconds: 42 }, { name: 'Speaker B', talk_time_seconds: 7 }
+  ]
+  puts 'Timing, callbacks, analytics access, automatic recording and speaker summaries: OK'
   raise ActiveRecord::Rollback
 end

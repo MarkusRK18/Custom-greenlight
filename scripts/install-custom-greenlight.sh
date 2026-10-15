@@ -24,6 +24,9 @@ Options:
 
 Requires Ubuntu/Debian, Docker Compose v2, git, python3, curl, nginx, and a working native BBB install.
 Analytics requires BBB's recording/event processing services to be active.
+Recordable rooms start recording automatically when the host joins. Finished
+recordings show participant names and total talk time after analytics arrives.
+New recording playback pages receive SIETConnect branding through a managed timer.
 Upgrade: backs up the database and uploads, then migrates the existing database.
 Fresh: adds /connect routing to BBB's existing HTTPS nginx virtual host.
 Policy: all siet.ac.in signups become administrators; signup sends no activation email.
@@ -240,6 +243,12 @@ PY
 fi
 dc run --rm --no-deps "$app_service" bundle exec rails db:create db:migrate:with_data
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "Analytics history migration missing" unless ActiveRecord::Base.connection.table_exists?(:meeting_analytics_sessions); required=%w[room_id internal_meeting_id data]; raise "Analytics schema incomplete" unless (required - MeetingAnalyticsSession.column_names).empty?; puts "Persistent session analytics schema: OK"'
+if dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-meeting-options.rb > "$backup/features-check.log" 2>&1; then
+  printf 'Portal feature verification: OK\n'
+else
+  tail -n 50 "$backup/features-check.log" >&2
+  die 'Portal feature verification failed; see features-check.log in the backup directory.'
+fi
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'api=BigBlueButtonApi.new(provider: "greenlight"); api.active_meetings; puts "Authenticated BigBlueButton API: OK"' > "$backup/bbb-api-check.log" 2>&1
 dc up -d "$app_service"
 
@@ -285,10 +294,23 @@ for asset in favicon.ico sri-shakthi-logo.png; do
   curl --fail --silent --show-error --output "$backup/$asset" "$public_url/$asset" || die "Public branding asset is unavailable: $asset"
   cmp -s "$source_dir/public/$asset" "$backup/$asset" || die "Public branding asset does not match the repository: $asset"
 done
+python3 - "$config_env" "$source_dir" <<'PY'
+from pathlib import Path
+import sys,urllib.request
+env=dict(line.split('=',1) for line in Path(sys.argv[1]).read_text().splitlines() if '=' in line)
+base=env['SIET_BBB_ASSET_URL'].rsplit('/',1)[0]+'/'
+opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+for remote,local in [('logo.png','sri-shakthi-logo.png'),('favicon.ico','favicon.ico'),('theme.css','sietconnect-theme.css')]:
+ with opener.open(base+remote,timeout=15) as response:
+  if response.read()!= (Path(sys.argv[2])/'public'/local).read_bytes():
+   raise SystemExit('Meeting-server branding asset differs from repository: '+remote)
+print('Meeting-server crest, favicon and green theme: OK')
+PY
 printf 'SIETConnect welcome page, college favicon, and crest: OK\n'
 bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
 printf '\nSIETConnect installed: %s\nBackups: %s\nSource revision: ' "$public_url" "$backup"
 git -C "$source_dir" rev-parse --short HEAD
 printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
 printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
+printf 'Recordable rooms now start recording automatically; participant talk time appears after analytics processing.\n'
 printf 'Manage this deployment with both the original Compose file and %s\n' "$override"

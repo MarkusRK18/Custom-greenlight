@@ -17,7 +17,7 @@ docker compose --env-file .env.local -f compose.local.yml logs --tail 80 portal
 docker compose --env-file .env.local -f compose.local.yml stop
 ```
 
-The base local stack requires a running meeting server and its API credentials for meetings and recordings. For the local test server, follow LOCAL_BIGBLUEBUTTON.md and include compose.portal-bbb.yml when starting the portal. Recording must be enabled in the room settings and started by a moderator during the meeting; the recording processor publishes playback after the meeting ends. SMTP is also needed to deliver meeting invitations. Signup does not send verification emails.
+The base local stack requires a running meeting server and its API credentials for meetings and recordings. For the local test server, follow LOCAL_BIGBLUEBUTTON.md and include compose.portal-bbb.yml when starting the portal. Enable recording in room settings before the meeting; it starts automatically when the host joins. The recording processor publishes playback after the meeting ends, and participant talk time appears when analytics arrives. SMTP is needed to deliver meeting invitations. Signup does not send verification emails.
 
 A local administrator must be provisioned with your institutional email. The upstream seed account is not created because its email does not belong to siet.ac.in. New local siet.ac.in accounts are activated automatically without an email ownership check.
 

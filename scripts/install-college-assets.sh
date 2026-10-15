@@ -46,4 +46,45 @@ if ! nginx -t; then
 fi
 systemctl reload nginx
 python3 "$source_dir/scripts/brand-bbb-client.py"
-printf 'College logo and browser icons installed. Backups: %s\n' "$backup"
+brand_script=/usr/local/libexec/sietconnect-brand-bbb-client.py
+service_unit=/etc/systemd/system/sietconnect-playback-branding.service
+timer_unit=/etc/systemd/system/sietconnect-playback-branding.timer
+for unit in "$service_unit" "$timer_unit"; do
+  if [[ -e $unit ]]; then
+    grep -q '# Managed by SIETConnect assets' "$unit" || { echo "Unmanaged systemd unit exists: $unit" >&2; exit 1; }
+    cp -a "$unit" "$backup/$(basename "$unit").before"
+  fi
+done
+install -d -m 755 /usr/local/libexec
+if [[ -e $brand_script ]]; then
+  grep -q '# Managed by SIETConnect assets' "$brand_script" || { echo "Unmanaged branding script exists: $brand_script" >&2; exit 1; }
+  cp -a "$brand_script" "$backup/$(basename "$brand_script").before"
+fi
+install -m 755 "$source_dir/scripts/brand-bbb-client.py" "$brand_script"
+cat > "$service_unit" <<'UNIT'
+# Managed by SIETConnect assets
+[Unit]
+Description=Apply SIETConnect branding to newly published BBB recordings
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/local/libexec/sietconnect-brand-bbb-client.py
+UNIT
+cat > "$timer_unit" <<'UNIT'
+# Managed by SIETConnect assets
+[Unit]
+Description=Keep BBB recording playback branded as SIETConnect
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Persistent=true
+Unit=sietconnect-playback-branding.service
+
+[Install]
+WantedBy=timers.target
+UNIT
+chmod 644 "$service_unit" "$timer_unit"
+systemctl daemon-reload
+systemctl enable --now sietconnect-playback-branding.timer
+printf 'College logo, browser icons, theme and playback branding timer installed. Backups: %s\n' "$backup"

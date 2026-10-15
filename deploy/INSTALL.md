@@ -13,14 +13,18 @@ To update an existing custom installation, download this script again and rerun
 it with the same `--greenlight-dir` and `--public-url` arguments. It fetches the
 latest `main`, rebuilds the portal, and applies the persistent session analytics
 migration while preserving existing users, meetings and saved session history.
-It verifies the analytics database schema after migrating. Both native BBB nginx
+It verifies the analytics database schema, automatic recording options, analytics
+callbacks, and recording speaker summaries after migrating. Both native BBB nginx
 include directories (`/etc/bigbluebutton/nginx` and `/usr/share/bigbluebutton/nginx`)
 are supported. The prerequisite check also verifies that BBB's event processing
-services are active; the installer never restarts BBB services automatically.
+services are active. If it removes an existing BBB welcome footer, it restarts
+`bbb-web`; run the upgrade during a maintenance window.
 If the check reports event recording disabled, update `disableRecordingDefault`
 to `false` in the BBB web override and reload BBB web during a maintenance window.
 After startup, the installer checks the public SIETConnect page and compares the
 served favicon and college crest with the repository assets.
+It also compares the native BBB crest, favicon, and green theme with the files
+in the repository.
 
 ## Replace existing Greenlight v3
 
@@ -49,6 +53,15 @@ The public welcome page follows the four-card Greenlight layout with SIETConnect
 copy and the custom green theme. Its header, browser icon, and footer use the
 college branding included in this repository.
 
+For a room with recording enabled, SIETConnect starts recording when the host
+joins. Moderators can pause or resume it. After the meeting ends and BBB finishes
+processing, the Recordings tab shows playback. Its participant panel shows names
+and total talk time once the analytics callback arrives. These totals do not
+identify the exact moments each participant spoke during playback.
+The installer schedules a branding pass every five minutes so recordings
+published after installation receive the SIETConnect playback title, favicon,
+and theme. The managed timer is `sietconnect-playback-branding.timer`.
+
 All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
 
 ## BBB installed without Greenlight, or keep old Greenlight alongside the new portal
@@ -74,7 +87,7 @@ docker compose --project-directory /root/greenlight-v3 \
 
 Use the same command prefix with `logs --tail 100 greenlight-v3`, `stop greenlight-v3`, or `up -d greenlight-v3`. Always include the override; using the original Compose file alone would select the upstream image again. Rerunning the installer fetches the selected revision and rebuilds. Keep `/opt/sietconnect/installer.env` and backups private.
 
-The script verifies BBB authentication before stopping the portal and checks the public Greenlight health endpoint after deployment. Native BBB client settings (default PDF, client title and drawing tools) are separate from Greenlight: apply the server settings described in `SRI_SHAKTHI_SETUP.md` if the target server still shows its original welcome slide. BBB service restarts should be scheduled outside active meetings.
+The script verifies BBB authentication before stopping the portal and checks the public Greenlight health endpoint after deployment. It applies the SIETConnect title, college icon, and green theme to the native BBB client and existing recording pages. Native presentation and drawing settings are separate from Greenlight: apply the server settings described in `SRI_SHAKTHI_SETUP.md` if the target server still shows its original welcome slide. BBB service restarts should be scheduled outside active meetings.
 
 ## Empty analytics history on an installed server
 
@@ -90,6 +103,14 @@ and callback log summaries without printing secrets or participant data. If the
 server cannot reach its own public hostname, resolve DNS/routing/TLS first.
 Only newly started meetings request the custom callback; installing the portal
 cannot recreate analytics from old sessions whose events have been discarded.
+If the diagnostic finds retained ended sessions whose callback already points
+to this portal, replay them with:
+
+```sh
+sudo python3 /opt/sietconnect/source/scripts/recover-analytics.py https://bbb.example.com
+```
+
+Use the portal's actual public URL, including `/connect` for fresh installs.
 Branding updates alter HTML5 locales and client title settings; reload HTML5
 services during a maintenance window if cached settings still show the old title.
 Clear browser cache with Ctrl+Shift+R. Native analytics tabs now have an explicit
@@ -131,8 +152,9 @@ To install only the native BBB logo files and icons from a checked-out repositor
 sudo bash scripts/install-college-assets.sh
 ```
 
-This reloads nginx and keeps backups under `/var/backups/sietconnect-assets.*`.
-It does not restart BBB or alter functional microphone/headphone icons.
+This reloads nginx, installs the playback branding timer, and keeps backups
+under `/var/backups/sietconnect-assets.*`. It does not restart BBB or alter
+functional microphone/headphone icons.
 Meeting logos apply to newly started meetings after the portal upgrade. If the
 native BBB client has its branding area disabled, enable
 `public.app.branding.displayBrandingArea: true` in

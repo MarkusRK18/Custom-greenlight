@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Managed by SIETConnect assets
 """Set an explicit college favicon in BBB's HTML entrypoint; retain a backup."""
 from pathlib import Path
 import gzip
@@ -30,7 +31,8 @@ pages.extend(Path('/var/bigbluebutton/playback').glob('*/*/index.html'))
 for page in pages:
     if not page.exists():
         continue
-    text = page.read_text()
+    original = page.read_text()
+    text = original
     backup = page.with_name('index.html.before-sietconnect')
     if not backup.exists():
         shutil.copy2(page, backup)
@@ -40,7 +42,8 @@ for page in pages:
     text = re.sub(r'<link\b[^>]*data-sietconnect-theme=["\']true["\'][^>]*>', '', text, flags=re.I)
     text = text.replace('</head>', '<link rel="icon" type="image/x-icon" href="/sietconnect-assets/favicon.ico?v=7">'
                         '<link rel="stylesheet" data-sietconnect-theme="true" href="/sietconnect-assets/theme.css?v=8"></head>')
-    save(page, text)
+    if text != original:
+        save(page, text)
 
 # Replace only the packaged recording-player placeholder, never meeting content.
 logo = Path('/var/www/bigbluebutton-default/assets/sietconnect/logo.png')
