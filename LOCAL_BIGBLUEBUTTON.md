@@ -1,6 +1,6 @@
 # BigBlueButton local testing
 
-The BigBlueButton Docker development image referenced by https://github.com/bigbluebutton/docker-dev was downloaded and started. Its authenticated HTTPS API passed verification, and the portal was connected. Real meeting/client verification was interrupted by reboot. A snapshot boot temporarily hid the installed containers; the workstation has since returned to its normal Omarchy boot, and Greenlight was verified to return HTTP 200 again. Use the normal boot for continued installation and verification.
+This isolated setup uses the BigBlueButton Docker development image referenced by https://github.com/bigbluebutton/docker-dev. The portal at `localhost:5050` needs this separate meeting server before meetings or recordings can work. The private certificates, API secret, and container are recreated locally and are not stored in Git.
 
 The Ubuntu container can expose console login services when privileged. The startup script now masks console/getty services, and the Compose configuration disables automatic restart. Apply the Compose configuration after returning to the normal boot. The user requested using available disk space for a reduced local test rather than waiting for the standard 50 GiB VM setup.
 
@@ -11,16 +11,19 @@ The Ubuntu container can expose console login services when privileged. The star
 - Private Docker bridge: sri-shakthi-bbb-test, 172.30.50.0/24
 - Meeting server address: 172.30.50.10
 - Limits: 4 CPU cores, 8 GiB RAM, up to 2 GiB additional swap.
-- Recording is disabled server-side. The recording-processing services are masked.
+- Recording is enabled for testing. Moderators can start and stop recording, and the recording-processing services are enabled.
 - The presentation starts hidden and no default welcome deck is uploaded. Drawing tools remain available after the presenter opens/uploads a presentation. Session details do not open automatically.
 - Document conversion through LibreOffice is omitted; the host Docker socket is not mounted.
 - The development container uses systemd and privileged mode, as required by the upstream development setup. It publishes no host ports and is intended for testing on this machine.
 
-The local CA and keys are in ignored local-bbb/ files. /etc/hosts contains the test hostname. The CA is trusted through the host certificate store and the existing Chromium NSS database. Host and Chromium certificate backups are under local-bbb/private/.
+The local CA and keys live in ignored `local-bbb/` files. Generate them with `bash scripts/setup-local-bbb.sh`. Configure the test hostname and CA trust with `sudo python3 scripts/configure-local-bbb-host.py`, then trust the CA in Chromium with `bash scripts/trust-local-bbb-browser.sh`.
 
 ## Start and stop
 
 ```sh
+bash scripts/setup-local-bbb.sh
+sudo python3 scripts/configure-local-bbb-host.py
+bash scripts/trust-local-bbb-browser.sh
 docker compose -f compose.bbb-local.yml up -d
 # Connect the portal only after the server API is healthy:
 python3 scripts/connect-local-bbb.py
@@ -32,8 +35,8 @@ docker exec sri-shakthi-bbb-test bbb-conf --status
 docker compose -f compose.bbb-local.yml stop
 ```
 
-Keep at least 8 GiB free for this reduced setup (`bash scripts/check-local-bbb-space.sh`). Stopping preserves the test container state. Recreating the meeting-server container reruns the local settings script and restores configuration from the development image; no recording data needs to be retained.
+Keep at least 8 GiB free for this reduced setup (`bash scripts/check-local-bbb-space.sh`). Stopping preserves the test container state. Recreating the meeting-server container reruns the local settings script and restores configuration from the development image. Recordings made in this disposable development container are lost if it is recreated.
 
 The existing portal database and user accounts remain in their separate persistent volumes. The API secret is generated locally, stored privately, and copied to .env.local after verification. Do not share the secret or join URLs.
 
-Authenticated HTTPS API verification passed before reboot. Meeting-start, client-loading and media checks remain pending; the portal/server need to be checked again after returning to the normal boot.
+For a recording, open the room's Settings and enable **Allow room to be recorded** before starting a new meeting. Recording starts automatically when the host joins the new meeting; moderators may still pause or resume it. End the meeting and wait for the recording processor to publish playback. The room's Recordings tab then shows the recording and, once the analytics callback arrives, a participant list with each person's total talk time. Recording requires both a running meeting server and active recording-processing services. Speaker totals come from meeting analytics and do not identify speech at exact playback timestamps.

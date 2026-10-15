@@ -95,6 +95,18 @@ export default function RecordingRow({
               }
             </strong>
             <span className="small text-muted"> {localizedTime} </span>
+            <details className="small mt-1">
+              <summary>Participants and talk time</summary>
+              {recording.speaker_summary?.length > 0 ? (
+                <ul className="mb-0 ps-3">
+                  {recording.speaker_summary.map((speaker, index) => (
+                    <li key={`${speaker.name}-${index}`}>
+                      {speaker.name}: {Math.floor(speaker.talk_time_seconds / 60)}m {speaker.talk_time_seconds % 60}s
+                    </li>
+                  ))}
+                </ul>
+              ) : <span className="text-muted">Available after meeting analytics are processed.</span>}
+            </details>
             {adminTable && <span className="small text-muted fw-bold"> {recording?.user_name} </span>}
           </Stack>
         </Stack>

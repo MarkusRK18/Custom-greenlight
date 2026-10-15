@@ -19,6 +19,7 @@ services:
       - ./scripts/brand-bbb-client.py:/local/brand-bbb-client.py:ro
       - ./public/sri-shakthi-logo.png:/local/sri-shakthi-logo.png:ro
       - ./public/favicon.ico:/local/college-favicon.ico:ro
+      - ./public/sietconnect-theme.css:/local/sietconnect-theme.css:ro
       - ./local-bbb/private/api-secret:/local/private/api-secret:ro
     networks:
       meeting_test:

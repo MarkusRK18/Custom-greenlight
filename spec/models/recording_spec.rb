@@ -124,4 +124,31 @@ RSpec.describe Recording, type: :model do
       create(:recording).destroy
     end
   end
+
+  describe '#speaker_summary' do
+    it 'shows participants and talk time from the matching meeting session' do
+      recording = create(:recording, record_id: 'meeting-123')
+      recording.room.meeting_analytics_sessions.create!(
+        internal_meeting_id: 'meeting-123',
+        data: { attendees: [
+          { name: 'Student', engagement: { talk_time: 20 } },
+          { name: 'Teacher', engagement: { talk_time: 95 } }
+        ] }
+      )
+
+      expect(recording.speaker_summary).to eq([
+        { name: 'Teacher', talk_time_seconds: 95 },
+        { name: 'Student', talk_time_seconds: 20 }
+      ])
+    end
+
+    it 'does not use analytics from another recording' do
+      recording = create(:recording, record_id: 'meeting-123')
+      recording.room.meeting_analytics_sessions.create!(
+        internal_meeting_id: 'meeting-456', data: { attendees: [{ name: 'Other', engagement: { talk_time: 60 } }] }
+      )
+
+      expect(recording.speaker_summary).to eq([])
+    end
+  end
 end

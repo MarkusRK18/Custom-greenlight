@@ -19,7 +19,7 @@ import {
   Button, Nav, Navbar, NavDropdown, Stack,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { IdentificationIcon, QuestionMarkCircleIcon, StarIcon } from '@heroicons/react/24/outline';
+import { IdentificationIcon, StarIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
@@ -61,10 +61,6 @@ export default function NavbarSignedIn({ currentUser }) {
             <IdentificationIcon className="hi-s me-3" />
             {t('user.profile.profile')}
           </Nav.Link>
-          <Nav.Link eventKey={2} href="https://docs.bigbluebutton.org/greenlight/v3/install">
-            <QuestionMarkCircleIcon className="hi-s me-3" />
-            {t('help_center')}
-          </Nav.Link>
           {
             adminAccess()
             && (
@@ -102,10 +98,6 @@ export default function NavbarSignedIn({ currentUser }) {
           <NavDropdown.Item as={Link} to="/profile">
             <IdentificationIcon className="hi-s me-3" />
             { t('user.profile.profile') }
-          </NavDropdown.Item>
-          <NavDropdown.Item href="https://docs.bigbluebutton.org/greenlight/v3/install">
-            <QuestionMarkCircleIcon className="hi-s me-3" />
-            {t('help_center')}
           </NavDropdown.Item>
           {
             adminAccess()

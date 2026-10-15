@@ -54,14 +54,14 @@ eu:
   email:
     activation:
       account_activation: Kontua aktibatzea
-      welcome_to_bbb: Ongi etorri BigBlueButtonera!
+      welcome_to_bbb: Ongi etorri SIETConnectera!
       get_started: "Hasteko, aktibatu zure kontua botoi honetan klik eginez."
       activate_account: Aktibatu kontua
       link_expires: Esteka 24 ordutan iraungiko da.
       if_link_expires: "Esteka iraungiz gero, hasi saioa eta eskatu aktibazio mezu berria."
     invitation:
       invitation_to_join: SIETConnect gonbidapena
-      you_have_been_invited: "%{name}(e)k BigBlueButtoneko kontu bat zabaltzera gonbidatu zaitu."
+      you_have_been_invited: "%{name}(e)k SIETConnecteko kontu bat zabaltzera gonbidatu zaitu."
       get_started: "Izena emateko, egin klik beheko botoian eta jarraitu urratsei."
       valid_invitation: Gonbita 24 ordukoa da.
       sign_up: Izena eman

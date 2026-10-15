@@ -208,6 +208,7 @@ dc config --quiet
 printf 'Building custom Greenlight (BBB services continue running)...\n'
 dc build "$app_service"
 bash "$source_dir/scripts/install-college-assets.sh"
+python3 "$source_dir/scripts/remove-bbb-welcome-footer.py"
 dc up -d "$postgres_service" "$redis_service"
 
 backup=$install_dir/backups/$(date -u +%Y%m%dT%H%M%SZ)
@@ -268,12 +269,16 @@ NGINX
   fi
   systemctl reload nginx
 fi
-ready=0
-for ((attempt=0; attempt<30; attempt++)); do
-  if curl --fail --silent --output /dev/null "$public_url/health_check"; then ready=1; break; fi
-  sleep 2
-done
-((ready)) || die 'Public health check failed. Inspect portal logs and nginx routing.'
+if ((fresh)); then
+  python3 "$source_dir/scripts/verify-portal-health.py" --port "$port" --public-url "$public_url" || die 'Portal health verification failed.'
+else
+  ready=0
+  for ((attempt=0; attempt<30; attempt++)); do
+    if curl --fail --silent --output /dev/null "$public_url/health_check"; then ready=1; break; fi
+    sleep 2
+  done
+  ((ready)) || die 'Public health check failed. Inspect portal logs and nginx routing.'
+fi
 curl --fail --silent --show-error --output "$backup/homepage.html" "$public_url/" || die 'Public SIETConnect welcome page is unavailable.'
 grep -Fq '<title>SIETConnect</title>' "$backup/homepage.html" || die 'Public welcome page does not have the SIETConnect title.'
 for asset in favicon.ico sri-shakthi-logo.png; do

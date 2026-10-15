@@ -38,6 +38,12 @@ class MeetingStarter
     ).call
 
     options.merge!(computed_options(access_code: viewer_code['glViewerAccessCode']))
+    # Preserve the room's recording permission while starting capture as soon as
+    # the host creates and joins a recordable meeting.
+    if options['record'].to_s == 'true'
+      options['autoStartRecording'] = 'true'
+      options['allowStartStopRecording'] = 'true'
+    end
 
     retries = 0
     begin

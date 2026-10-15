@@ -17,7 +17,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import {
-  ArrowRightIcon, ComputerDesktopIcon, VideoCameraIcon, Cog6ToothIcon, WrenchScrewdriverIcon,
+  ComputerDesktopIcon, VideoCameraIcon, Cog6ToothIcon, WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../contexts/auth/AuthProvider';
 import HomepageFeatureCard from './HomepageFeatureCard';
@@ -36,9 +36,6 @@ export default function HomePage() {
               Engineering and Technology. Collaborate, share ideas, and learn together in real time.
             </p>
             <p>Create your own rooms to host sessions, or join others using a short and convenient link.</p>
-            <a className="homepage-learn-link" href="https://bigbluebutton.org/teachers/" target="_blank" rel="noreferrer">
-              Explore online learning tools <ArrowRightIcon aria-hidden="true" />
-            </a>
           </div>
         </section>
         <section className="homepage-features-band" aria-labelledby="homepage-features-title">

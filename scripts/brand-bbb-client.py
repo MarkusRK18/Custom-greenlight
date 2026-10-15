@@ -6,14 +6,14 @@ import re
 import shutil
 import json
 
-def save(path, text):
+def save_bytes(path, data):
     backup = path.with_name(path.name + '.before-sietconnect')
     if not backup.exists():
         shutil.copy2(path, backup)
-    path.write_text(text)
+    path.write_bytes(data)
     compressed = path.with_name(path.name + '.gz')
     if compressed.exists():
-        compressed.write_bytes(gzip.compress(text.encode()))
+        compressed.write_bytes(gzip.compress(data))
     brotli = path.with_name(path.name + '.br')
     if brotli.exists():
         backup_br = brotli.with_name(brotli.name + '.before-sietconnect')
@@ -21,7 +21,13 @@ def save(path, text):
             shutil.copy2(brotli, backup_br)
         brotli.unlink()
 
-for page in [Path('/usr/share/bigbluebutton/html5-client/index.html'), Path('/var/bigbluebutton/learning-dashboard/index.html')]:
+def save(path, text):
+    save_bytes(path, text.encode())
+
+pages = [Path('/usr/share/bigbluebutton/html5-client/index.html'), Path('/var/bigbluebutton/learning-dashboard/index.html')]
+pages.extend(Path('/var/bigbluebutton/playback').glob('*/index.html'))
+pages.extend(Path('/var/bigbluebutton/playback').glob('*/*/index.html'))
+for page in pages:
     if not page.exists():
         continue
     text = page.read_text()
@@ -30,8 +36,19 @@ for page in [Path('/usr/share/bigbluebutton/html5-client/index.html'), Path('/va
         shutil.copy2(page, backup)
     text = re.sub(r'<link\b[^>]*rel=["\'](?:shortcut )?icon["\'][^>]*>', '', text, flags=re.I)
     text = re.sub(r'<title>.*?</title>', '<title>SIETConnect</title>', text, flags=re.S)
-    text = text.replace('</head>', '<link rel="icon" type="image/png" href="/sietconnect-assets/logo.png?v=3"></head>')
+    text = text.replace('BigBlueButton recording playback', 'SIETConnect recording playback')
+    text = re.sub(r'<link\b[^>]*data-sietconnect-theme=["\']true["\'][^>]*>', '', text, flags=re.I)
+    text = text.replace('</head>', '<link rel="icon" type="image/x-icon" href="/sietconnect-assets/favicon.ico?v=7">'
+                        '<link rel="stylesheet" data-sietconnect-theme="true" href="/sietconnect-assets/theme.css?v=8"></head>')
     save(page, text)
+
+# Replace only the packaged recording-player placeholder, never meeting content.
+logo = Path('/var/www/bigbluebutton-default/assets/sietconnect/logo.png')
+if logo.is_file():
+    crest = logo.read_bytes()
+    for placeholder in Path('/var/bigbluebutton/playback').glob('**/static/media/logo*.png'):
+        if placeholder.read_bytes() != crest:
+            save_bytes(placeholder, crest)
 
 def brand_values(value):
     if isinstance(value, dict):
@@ -56,6 +73,9 @@ for settings in [Path('/usr/share/bigbluebutton/html5-client/private/config/sett
     if settings.exists():
         text = settings.read_text()
         branded = re.sub(r'^(\s*clientTitle:\s*).+$', r'\1SIETConnect', text, flags=re.M)
+        for key, value in {'skipMeetingEnded': 'true', 'displayBbbServerVersion': 'false',
+                           'showHelpButton': 'false', 'copyright': "'Sri Shakthi'"}.items():
+            branded = re.sub(r'^(\s*' + key + r':\s*).+$', lambda match: match[1] + value, branded, flags=re.M)
         if text != branded:
             save(settings, branded)
 

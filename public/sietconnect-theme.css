@@ -1,0 +1,8 @@
+:root {
+  --sietconnect-green: #004d00;
+  --sietconnect-green-light: #e7f1e7;
+}
+
+a { color: var(--sietconnect-green); }
+a:hover { color: #003b00; }
+button:focus-visible, a:focus-visible { outline-color: var(--sietconnect-green); }

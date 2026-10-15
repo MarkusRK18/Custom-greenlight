@@ -90,6 +90,26 @@ describe MeetingStarter, type: :service do
       service.call
     end
 
+    it 'starts recording automatically only when the room allows recording' do
+      allow(room_setting_getter_service).to receive(:call).and_return({ 'record' => 'true' }, {})
+      expect_any_instance_of(BigBlueButtonApi).to receive(:start_meeting)
+        .with(room:, options: hash_including('record' => 'true', 'autoStartRecording' => 'true',
+                                             'allowStartStopRecording' => 'true'), presentation_url: nil)
+        .and_return(meeting_starter_response)
+
+      service.call
+    end
+
+    it 'does not auto-record a room where recording is disabled' do
+      allow(room_setting_getter_service).to receive(:call).and_return({ 'record' => 'false' }, {})
+      expect_any_instance_of(BigBlueButtonApi).to receive(:start_meeting)
+        .with(room:, options: satisfy { |value| value['record'] == 'false' && !value.key?('autoStartRecording') },
+              presentation_url: nil)
+        .and_return(meeting_starter_response)
+
+      service.call
+    end
+
     it 'broadcasts to ActionCable that the meeting has started' do
       allow_any_instance_of(BigBlueButtonApi)
         .to receive(:start_meeting)

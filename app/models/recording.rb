@@ -40,6 +40,20 @@ class Recording < ApplicationRecord
 
   after_destroy :destroy_bbb_recording
 
+  def speaker_summary
+    session = room.meeting_analytics_sessions.find_by(internal_meeting_id: record_id)
+    return [] unless session
+
+    Array(session.data['attendees']).filter_map do |attendee|
+      next unless attendee.is_a?(Hash)
+
+      name = attendee['name'].to_s.strip
+      next if name.blank?
+
+      { name:, talk_time_seconds: attendee.dig('engagement', 'talk_time').to_f.round }
+    end.sort_by { |speaker| [-speaker[:talk_time_seconds], speaker[:name]] }
+  end
+
   def self.search(input)
     if input
       return joins(:formats).where('recordings.name ILIKE :input OR recordings.visibility ILIKE :input OR formats.recording_type ILIKE :input',

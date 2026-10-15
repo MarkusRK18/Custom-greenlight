@@ -7,8 +7,8 @@ properties = {
     'securitySalt': secret,
     'disableRecordingDefault': 'false',
     'breakoutRoomsRecord': 'false',
-    'autoStartRecording': 'false',
-    'allowStartStopRecording': 'false',
+    'autoStartRecording': 'true',
+    'allowStartStopRecording': 'true',
     'defaultKeepEvents': 'true',
     'defaultWelcomeMessage': 'Welcome to SIETConnect',
     'beans.presentationService.defaultUploadedPresentation': '',
@@ -32,6 +32,8 @@ if [[ -f /local/college-favicon.ico ]]; then
 fi
 install -d -m 755 /var/www/bigbluebutton-default/assets/sietconnect
 install -m 644 /local/sri-shakthi-logo.png /var/www/bigbluebutton-default/assets/sietconnect/logo.png
+install -m 644 /local/college-favicon.ico /var/www/bigbluebutton-default/assets/sietconnect/favicon.ico
+install -m 644 /local/sietconnect-theme.css /var/www/bigbluebutton-default/assets/sietconnect/theme.css
 if [[ -f /local/brand-bbb-client.py ]]; then python3 /local/brand-bbb-client.py; fi
 cat > /etc/bigbluebutton/nginx/sietconnect-assets.nginx <<'NGINX'
 # Managed by SIETConnect assets

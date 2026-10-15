@@ -26,6 +26,7 @@ services:
       SECRET_KEY_BASE: ${LOCAL_SECRET_KEY_BASE}
       DATABASE_URL: postgres://greenlight:${LOCAL_DATABASE_PASSWORD}@postgres:5432/greenlight_local
       REDIS_URL: redis://redis:6379/0
+      SMTP_HEALTH_CHECK_DISABLED: 'true'
       BIGBLUEBUTTON_ENDPOINT: ${BIGBLUEBUTTON_ENDPOINT:-http://127.0.0.1:9/bigbluebutton/api/}
       BIGBLUEBUTTON_SECRET: ${BIGBLUEBUTTON_SECRET:-not-configured}
     ports:

@@ -7,7 +7,7 @@ import os
 
 if os.geteuid() != 0:
     raise SystemExit('Root authorization is required to configure /etc/hosts and CA trust.')
-project = Path('/home/cys03/greenlight')
+project = Path(__file__).resolve().parent.parent
 hosts = Path('/etc/hosts')
 backup = project / 'local-bbb/private/hosts.before-bbb'
 if not backup.exists():

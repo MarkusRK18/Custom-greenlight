@@ -8,7 +8,8 @@ context=ssl.create_default_context(cafile=str(project/'local-bbb/certs/sri-shakt
 query=urllib.parse.urlencode({})
 checksum=hashlib.sha1(('getMeetings'+query+secret).encode()).hexdigest()
 url='https://bbb.srishakthi.test/bigbluebutton/api/getMeetings?checksum='+checksum
-with urllib.request.urlopen(url,context=context,timeout=30) as response:
+opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), urllib.request.HTTPSHandler(context=context))
+with opener.open(url, timeout=30) as response:
  root=ET.fromstring(response.read())
 if root.findtext('returncode')!='SUCCESS':raise SystemExit('BBB API verification failed: '+str(root.findtext('messageKey')))
 print('BigBlueButton authenticated API: SUCCESS')
