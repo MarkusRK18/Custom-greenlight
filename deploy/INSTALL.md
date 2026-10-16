@@ -81,6 +81,9 @@ total talk time once the analytics callback arrives. Playback displays the
 active speaker's name when BBB captured timed talking events; recordings with
 no captured media show an explanatory notice.
 Recording playback includes a participant column with circular initials avatars.
+When a meeting ends, participants return directly to the portal room invitation
+without the meeting-ended popup. The installer configures BBB's native
+`public.app.skipMeetingEnded` override and restarts `bbb-web` if it changes.
 A green ring highlights each active speaker using the recording's media clock;
 it follows seeks and clears when playback is paused. Users with the same name
 remain separate participants. Older recordings without timed speech events can
