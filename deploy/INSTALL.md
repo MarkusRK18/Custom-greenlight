@@ -88,6 +88,9 @@ The live client also receives a fallback script that hides the end dialog and
 triggers its native return action if it still renders. Installation verifies
 both the served script and its inclusion in `/html5client/`. After upgrading,
 reload the meeting tab before joining a new session to load this script.
+If the native YAML and its backup are invalid, the installer leaves them intact
+and deploys the early client redirect without restarting BBB web for that setting.
+The invalid native configuration still needs a separate repair.
 A green ring highlights each active speaker using the recording's media clock;
 it follows seeks and clears when playback is paused. Users with the same name
 remain separate participants. Older recordings without timed speech events can

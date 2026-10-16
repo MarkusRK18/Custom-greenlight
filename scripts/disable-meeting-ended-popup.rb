@@ -7,12 +7,16 @@ require 'tmpdir'
 abort 'Run with sudo on the meeting server.' unless Process.uid.zero?
 path = '/etc/bigbluebutton/bbb-html5.yml'
 before = File.exist?(path) ? File.binread(path) : nil
+def use_client_redirect(message)
+  warn "#{message} Native YAML left unchanged; installing the early client redirect instead."
+  exit 0
+end
 recovered = false
 begin
   settings = YAML.safe_load(before || '', permitted_classes: [Symbol], aliases: true) || {}
 rescue Psych::SyntaxError => error
   original_path = path + '.before-sietconnect'
-  abort "Invalid YAML in #{path} at line #{error.line}. No changes made; repair the YAML before retrying." unless File.file?(original_path)
+  use_client_redirect("Invalid YAML in #{path} at line #{error.line}.") unless File.file?(original_path)
   original = File.binread(original_path)
   # Recover only when the old branding substitutions exactly explain the damage.
   damaged = original.gsub(/^(\s*clientTitle:\s*).+$/, '\\1SIETConnect')
@@ -20,11 +24,11 @@ rescue Psych::SyntaxError => error
     'showHelpButton' => 'false', 'copyright' => "'Sri Shakthi'" }.each do |key, value|
     damaged = damaged.gsub(/^(\s*#{key}:\s*).+$/) { Regexp.last_match(1) + value }
   end
-  abort "Invalid YAML in #{path} at line #{error.line}. Backup does not explain the damage; no changes made. Repair the YAML before retrying." unless damaged == before
+  use_client_redirect("Invalid YAML in #{path} at line #{error.line}; backup does not explain the damage.") unless damaged == before
   begin
     settings = YAML.safe_load(original, permitted_classes: [Symbol], aliases: true) || {}
   rescue Psych::Exception
-    abort "The saved backup #{original_path} is also invalid. No changes made."
+    use_client_redirect("The saved backup #{original_path} is also invalid.")
   end
   recovered = true
 end

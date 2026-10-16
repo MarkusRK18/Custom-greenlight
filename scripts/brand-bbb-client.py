@@ -6,6 +6,7 @@ import gzip
 import re
 import shutil
 import json
+import subprocess
 
 def save_bytes(path, data):
     backup = path.with_name(path.name + '.before-sietconnect')
@@ -84,6 +85,14 @@ for locale in Path('/usr/share/bigbluebutton/html5-client/locales').glob('*.json
 for settings in [Path('/usr/share/bigbluebutton/html5-client/private/config/settings.yml'), Path('/etc/bigbluebutton/bbb-html5.yml')]:
     if settings.exists():
         text = settings.read_text()
+        validation = subprocess.run(
+            ['ruby', '-ryaml', '-e',
+             'begin; YAML.safe_load(STDIN.read, permitted_classes: [Symbol], aliases: true); rescue Psych::Exception; exit 1; end'],
+            input=text, text=True, capture_output=True,
+        )
+        if validation.returncode:
+            print(f'Skipping invalid YAML without modifying it: {settings}')
+            continue
         branded = re.sub(r'^([ \t]*clientTitle:)[ \t]*[^\n]*$', r'\1 SIETConnect', text, flags=re.M)
         for key, value in {'skipMeetingEnded': 'true', 'displayBbbServerVersion': 'false',
                            'showHelpButton': 'false', 'copyright': "'Sri Shakthi'"}.items():
