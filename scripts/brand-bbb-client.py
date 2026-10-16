@@ -81,10 +81,10 @@ for locale in Path('/usr/share/bigbluebutton/html5-client/locales').glob('*.json
 for settings in [Path('/usr/share/bigbluebutton/html5-client/private/config/settings.yml'), Path('/etc/bigbluebutton/bbb-html5.yml')]:
     if settings.exists():
         text = settings.read_text()
-        branded = re.sub(r'^(\s*clientTitle:\s*).+$', r'\1SIETConnect', text, flags=re.M)
+        branded = re.sub(r'^([ \t]*clientTitle:)[ \t]*[^\n]*$', r'\1 SIETConnect', text, flags=re.M)
         for key, value in {'skipMeetingEnded': 'true', 'displayBbbServerVersion': 'false',
                            'showHelpButton': 'false', 'copyright': "'Sri Shakthi'"}.items():
-            branded = re.sub(r'^(\s*' + key + r':\s*).+$', lambda match: match[1] + value, branded, flags=re.M)
+            branded = re.sub(r'^([ \t]*' + key + r':)[ \t]*[^\n]*$', lambda match: match[1] + ' ' + value, branded, flags=re.M)
         if text != branded:
             save(settings, branded)
 

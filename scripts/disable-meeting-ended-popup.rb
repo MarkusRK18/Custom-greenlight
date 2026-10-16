@@ -7,14 +7,34 @@ require 'tmpdir'
 abort 'Run with sudo on the meeting server.' unless Process.uid.zero?
 path = '/etc/bigbluebutton/bbb-html5.yml'
 before = File.exist?(path) ? File.binread(path) : nil
-settings = YAML.safe_load(before || '', permitted_classes: [Symbol], aliases: true) || {}
+recovered = false
+begin
+  settings = YAML.safe_load(before || '', permitted_classes: [Symbol], aliases: true) || {}
+rescue Psych::SyntaxError => error
+  original_path = path + '.before-sietconnect'
+  abort "Invalid YAML in #{path} at line #{error.line}. No changes made; repair the YAML before retrying." unless File.file?(original_path)
+  original = File.binread(original_path)
+  # Recover only when the old branding substitutions exactly explain the damage.
+  damaged = original.gsub(/^(\s*clientTitle:\s*).+$/, '\\1SIETConnect')
+  { 'skipMeetingEnded' => 'true', 'displayBbbServerVersion' => 'false',
+    'showHelpButton' => 'false', 'copyright' => "'Sri Shakthi'" }.each do |key, value|
+    damaged = damaged.gsub(/^(\s*#{key}:\s*).+$/) { Regexp.last_match(1) + value }
+  end
+  abort "Invalid YAML in #{path} at line #{error.line}. Backup does not explain the damage; no changes made. Repair the YAML before retrying." unless damaged == before
+  begin
+    settings = YAML.safe_load(original, permitted_classes: [Symbol], aliases: true) || {}
+  rescue Psych::Exception
+    abort "The saved backup #{original_path} is also invalid. No changes made."
+  end
+  recovered = true
+end
 abort 'Expected a mapping in bbb-html5.yml.' unless settings.is_a?(Hash)
 settings['public'] ||= {}
 abort 'Expected public settings to be a mapping.' unless settings['public'].is_a?(Hash)
 settings['public']['app'] ||= {}
 app = settings['public']['app']
 abort 'Expected public.app settings to be a mapping.' unless app.is_a?(Hash)
-if app['skipMeetingEnded'] == true
+if app['skipMeetingEnded'] == true && !recovered
   puts 'Meeting-ended popup is already disabled.'
   exit
 end

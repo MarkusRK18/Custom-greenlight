@@ -217,10 +217,10 @@ dc() { docker compose --project-directory "$gl_dir" --env-file "$gl_dir/.env" --
 dc config --quiet
 printf 'Building custom Greenlight (BBB services continue running)...\n'
 dc build "$app_service"
+ruby "$source_dir/scripts/disable-meeting-ended-popup.rb"
 bash "$source_dir/scripts/install-college-assets.sh"
 ruby "$source_dir/scripts/enable-bbb-video-recording.rb" --apply
 python3 "$source_dir/scripts/remove-bbb-welcome-footer.py"
-ruby "$source_dir/scripts/disable-meeting-ended-popup.rb"
 dc up -d "$postgres_service" "$redis_service"
 
 backup=$install_dir/backups/$(date -u +%Y%m%dT%H%M%SZ)
