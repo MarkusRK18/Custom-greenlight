@@ -14,6 +14,8 @@ Room.transaction do
   room.duration_minutes = 0
   starter = MeetingStarter.new(room: room, base_url: 'http://localhost:5050', current_user: user, provider: user.provider)
   options = starter.send(:computed_options, access_code: nil)
+  raise 'Empty meetings do not expire' unless options[:meetingExpireWhenLastUserLeftInMinutes] == 1 &&
+                                            options[:meetingExpireIfNoUserJoinedInMinutes] == 1
   captions = JSON.parse(options.fetch(:clientSettingsOverride)).dig('public', 'app', 'audioCaptions')
   raise 'Live English transcription not enabled' unless captions['enabled'] && captions['alwaysVisible'] &&
                                                          captions['provider'] == 'webspeech' &&

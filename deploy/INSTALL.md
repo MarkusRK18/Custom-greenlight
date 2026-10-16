@@ -117,6 +117,10 @@ All `siet.ac.in` accounts become administrators. New institutional accounts acti
 Live English captions are enabled with the free browser `webspeech` provider.
 See [Live transcription](LIVE_TRANSCRIPTION.md) for speaker activation, browser
 requirements, privacy behavior and the two-device acceptance check.
+Newly started sessions expire one minute after the last participant leaves,
+or one minute after creation if nobody joins. Existing room links keep working;
+the expiry options apply when the next session is created. Zero is not used
+because BBB treats zero as disabling empty-meeting expiry.
 
 ```sh
 sudo bash install-custom-greenlight.sh --fresh \

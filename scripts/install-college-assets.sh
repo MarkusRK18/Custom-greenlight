@@ -48,6 +48,7 @@ if ! nginx -t; then
 fi
 systemctl reload nginx
 python3 "$source_dir/scripts/brand-bbb-client.py"
+python3 "$source_dir/scripts/tune-live-transcription.py"
 brand_script=/usr/local/libexec/sietconnect-brand-bbb-client.py
 speaker_script=/usr/local/libexec/sietconnect-publish-speakers.py
 service_unit=/etc/systemd/system/sietconnect-playback-branding.service

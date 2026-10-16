@@ -85,6 +85,8 @@ class MeetingStarter
       }.to_json,
       multiUserWhiteboardEnabled: false,
       duration: @room.duration_minutes.zero? ? 0 : [((@room.scheduled_at + @room.duration_minutes.minutes - Time.current) / 60).ceil, 1].max,
+      meetingExpireWhenLastUserLeftInMinutes: 1,
+      meetingExpireIfNoUserJoinedInMinutes: 1,
       keepEvents: true,
       'meta_analytics-callback-url': analytics_callback_url(host: ENV.fetch('BBB_CALLBACK_BASE_URL', @base_url)),
       logoutURL: room_url,

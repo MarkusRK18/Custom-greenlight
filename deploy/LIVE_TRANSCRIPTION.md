@@ -30,6 +30,13 @@ accuracy, and latency are controlled partly by the browser and its service.
 There is no promise of perfect text or zero delay. Headsets, clear speech and a
 stable network help; test local accents and course terminology before rollout.
 
+The installer removes BBB 3's extra 200 ms caption-submit debounce when the
+installed bundle matches the verified code pattern. Interim results then go
+directly to BBB's existing caption mutation, and finalized text still uses its
+original path. Backups are retained; unrecognized bundle versions are not edited.
+This does not speed up the browser vendor's recognition or eliminate network
+latency. Reload/rejoin after installation to fetch the updated bundle.
+
 This feature does not add a second custom microphone capture implementation,
 replace meeting audio, or modify the recording speaker-highlight timeline.
 Caption availability in recordings remains subject to BBB's native processing.
