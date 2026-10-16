@@ -36,6 +36,14 @@ served favicon and college crest with the repository assets.
 It also compares the native BBB crest, favicon, and green theme with the files
 in the repository.
 
+If the optional combined-video format is missing, the installer installs
+`bbb-playback-video` from the server's configured BBB APT repository before
+stopping the portal. It requires the same BBB release series as the installed
+presentation format and checks the APT plan first. It refuses package removals
+or changes to other installed packages. Existing recording workflow overrides
+are backed up before package installation. If no matching package is available,
+check the server's BBB repository configuration and rerun the installer.
+
 ## Replace existing Greenlight v3
 
 Locate the current Compose directory (often `/root/greenlight-v3` or the installing user's `~/greenlight-v3`). Replace the hostname and directory below:

@@ -147,6 +147,7 @@ else
   git clone --branch "$ref" --single-branch https://github.com/MarkusRK18/Custom-greenlight.git "$source_dir"
 fi
 [[ -f $source_dir/deploy/Dockerfile ]] || die 'The selected repository revision has no deployment Dockerfile.'
+python3 "$source_dir/scripts/ensure-bbb-video-package.py"
 ruby "$source_dir/scripts/enable-bbb-video-recording.rb" --check
 
 config_env=$install_dir/installer.env
