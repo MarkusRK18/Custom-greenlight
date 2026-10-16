@@ -46,7 +46,7 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false, scope: :provider },
             length: { minimum: 5, maximum: 255 }
 
-  validate do
+  validate if: -> { new_record? || will_save_change_to_email? } do
     errors.add(:email, 'must belong to siet.ac.in') unless email.to_s.split('@').last&.downcase == InstitutionPolicy::DOMAIN
   end
 

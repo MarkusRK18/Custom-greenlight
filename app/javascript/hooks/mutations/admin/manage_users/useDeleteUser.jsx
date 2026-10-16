@@ -24,14 +24,18 @@ export default function useDeleteUser(userId) {
   const queryClient = useQueryClient();
 
   return useMutation(
-    (data) => axios.delete(`/users/${userId}.json`, data),
+    () => axios.delete(`/users/${userId}.json`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('getAdminUsers');
+        queryClient.invalidateQueries('getBannedUsers');
+        queryClient.invalidateQueries('getPendingUsers');
         toast.success(t('toast.success.user.user_deleted'));
       },
-      onError: () => {
-        toast.error(t('toast.error.problem_completing_action'));
+      onError: (error) => {
+        const errors = error.response?.data?.errors;
+        const message = Array.isArray(errors) ? errors.join(', ') : errors;
+        toast.error(typeof message === 'string' && message ? message : t('toast.error.problem_completing_action'));
       },
     },
   );

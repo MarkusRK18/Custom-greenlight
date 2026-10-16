@@ -253,6 +253,7 @@ fi
 dc run --rm --no-deps "$app_service" bundle exec rails db:create db:migrate:with_data
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "Analytics history migration missing" unless ActiveRecord::Base.connection.table_exists?(:meeting_analytics_sessions); required=%w[room_id internal_meeting_id data]; raise "Analytics schema incomplete" unless (required - MeetingAnalyticsSession.column_names).empty?; puts "Persistent session analytics schema: OK"'
 if { dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-meeting-options.rb &&
+     dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-user-management.rb &&
      dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-link-start.rb; } > "$backup/features-check.log" 2>&1; then
   printf 'Portal feature verification: OK\n'
 else

@@ -24,15 +24,15 @@ module Api
           ensure_authorized('ManageUsers')
         end
 
-        # GET /api/v1/admin/users/:id.json
+        # PATCH /api/v1/admin/users/:id.json
         # Updates the specified user's status
         def update
-          user = User.find(params[:id])
+          user = User.with_provider(current_provider).find(params[:id])
 
           if user.update(user_params)
             render_data status: :ok
           else
-            render_error errors: user.errors.to_a
+            render_error errors: user.errors.full_messages
           end
         end
 

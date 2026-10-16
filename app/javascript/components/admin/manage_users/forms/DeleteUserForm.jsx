@@ -42,7 +42,7 @@ export default function DeleteUserForm({ user, handleClose }) {
           <p className="mt-0"><strong> { t('action_permanent') } </strong></p>
         </Stack>
       </Stack>
-      <Form methods={methods} onSubmit={deleteUserAPI.mutate}>
+      <Form methods={methods} onSubmit={() => deleteUserAPI.mutate(undefined, { onSuccess: handleClose })}>
         <Stack direction="horizontal" gap={1} className="float-end">
           <Button variant="neutral" onClick={handleClose}>
             { t('close') }

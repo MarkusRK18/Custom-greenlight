@@ -113,7 +113,7 @@ module Api
         if user.destroy
           render_data  status: :ok
         else
-          render_error errors: Rails.configuration.custom_error_msgs[:record_invalid]
+          render_error errors: user.errors.full_messages
         end
       end
 

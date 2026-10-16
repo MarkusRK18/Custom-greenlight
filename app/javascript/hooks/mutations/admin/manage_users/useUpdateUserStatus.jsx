@@ -33,8 +33,10 @@ export default function useUpdateUserStatus() {
 
         toast.success(t('toast.success.user.user_updated'));
       },
-      onError: () => {
-        toast.error(t('toast.error.problem_completing_action'));
+      onError: (error) => {
+        const errors = error.response?.data?.errors;
+        const message = Array.isArray(errors) ? errors.join(', ') : errors;
+        toast.error(typeof message === 'string' && message ? message : t('toast.error.problem_completing_action'));
       },
     },
   );

@@ -76,6 +76,7 @@ class ApplicationController < ActionController::Base
 
   # Checks if the user's session_token matches the session and that it is not expired
   def invalid_session?(user)
+    return true unless user.active?
     return true if user&.session_token != session[:session_token]
     return true if user&.session_expiry && DateTime.now > user&.session_expiry
     return true if !user.super_admin? && user.provider != current_provider
