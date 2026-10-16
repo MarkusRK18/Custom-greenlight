@@ -1,6 +1,30 @@
 /* Return through BBB's own logout action if a client still renders its end dialog. */
 (() => {
   if (!window.location.pathname.startsWith('/html5client/')) return;
+  const skipDialog = (settings) => {
+    const app = settings?.public?.app;
+    if (!app) return;
+    const descriptor = Object.getOwnPropertyDescriptor(app, 'skipMeetingEnded');
+    if (!descriptor || descriptor.configurable) {
+      Object.defineProperty(app, 'skipMeetingEnded', {
+        configurable: true, enumerable: true, get: () => true, set: () => {},
+      });
+    }
+  };
+  // Run before the application bundle: apply the flag to both bundled defaults
+  // and the settings object subsequently supplied by the meeting server.
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'meetingClientSettings');
+  if (!descriptor || (descriptor.configurable && !descriptor.get && !descriptor.set)) {
+    let settings = window.meetingClientSettings;
+    skipDialog(settings);
+    Object.defineProperty(window, 'meetingClientSettings', {
+      configurable: true, enumerable: true,
+      get: () => settings,
+      set: (value) => { skipDialog(value); settings = value; },
+    });
+  } else {
+    skipDialog(window.meetingClientSettings);
+  }
   const handled = new WeakSet();
   const redirect = () => {
     const modal = document.querySelector('[data-test="meetingEndedModal"]');
