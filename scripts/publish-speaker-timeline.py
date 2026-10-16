@@ -2,6 +2,9 @@
 """Publish names and timed speaking events alongside BBB recording media."""
 from pathlib import Path
 import json
+import argparse
+import os
+import tempfile
 import xml.etree.ElementTree as ET
 
 RAW = Path('/var/bigbluebutton/recording/raw')
@@ -96,21 +99,47 @@ def timeline(raw_dir, published_dir):
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--meeting-id')
+    parser.add_argument('--format', choices=('presentation', 'video'))
+    args = parser.parse_args()
+    if args.meeting_id and (Path(args.meeting_id).name != args.meeting_id or args.meeting_id in ('.', '..')):
+        parser.error('Invalid meeting id.')
     count = 0
-    for published_dir in PUBLISHED.glob('presentation/*'):
+    if args.meeting_id:
+        candidates = [PUBLISHED / (args.format or 'presentation') / args.meeting_id]
+    else:
+        candidates = list(PUBLISHED.glob('presentation/*'))
+        candidates += [p for p in PUBLISHED.glob('video/*') if not (PUBLISHED / 'presentation' / p.name).is_dir()]
+    for published_dir in candidates:
         raw_dir = RAW / published_dir.name
         if not (raw_dir / 'events.xml').is_file() or not (published_dir / 'metadata.xml').is_file():
+            if args.meeting_id:
+                raise SystemExit('Recording events or published metadata are not ready for speaker publication.')
             continue
         try:
             data = timeline(raw_dir, published_dir)
         except (ET.ParseError, OSError, ValueError):
+            if args.meeting_id:
+                raise SystemExit('Recording events or published metadata could not be read for speaker publication.')
             continue
         serialized = json.dumps(data, ensure_ascii=False, separators=(',', ':')).encode()
         for format_name in ('presentation', 'video'):
             destination = PUBLISHED / format_name / published_dir.name / 'speakers.json'
             if not destination.parent.is_dir() or (destination.is_file() and destination.read_bytes() == serialized):
                 continue
-            destination.write_bytes(serialized)
+            # Readers must never see a partial JSON file, even when the timer
+            # overlaps a publish hook. Explicit permissions also handle umask 077.
+            temporary = None
+            try:
+                with tempfile.NamedTemporaryFile(dir=destination.parent, prefix='.speakers-', delete=False) as stream:
+                    temporary = Path(stream.name)
+                    stream.write(serialized)
+                    os.fchmod(stream.fileno(), 0o644)
+                temporary.replace(destination)
+            finally:
+                if temporary is not None:
+                    temporary.unlink(missing_ok=True)
             count += 1
     print(f'Published SIETConnect speaker data for {count} recording formats.')
 

@@ -69,6 +69,13 @@ if [[ -e $speaker_script ]]; then
   cp -a "$speaker_script" "$backup/$(basename "$speaker_script").before"
 fi
 install -m 755 "$source_dir/scripts/publish-speaker-timeline.py" "$speaker_script"
+hook=/usr/local/bigbluebutton/core/scripts/post_publish/00_sietconnect_speakers.rb
+[[ -d ${hook%/*} ]] || { echo 'Native BBB post-publish directory is missing.' >&2; exit 1; }
+if [[ -e $hook ]]; then
+  grep -q '# Managed by SIETConnect assets' "$hook" || { echo "Unmanaged publish hook exists: $hook" >&2; exit 1; }
+  cp -a "$hook" "$backup/$(basename "$hook").before"
+fi
+install -m 644 "$source_dir/scripts/post-publish-speakers.rb" "$hook"
 cat > "$service_unit" <<'UNIT'
 # Managed by SIETConnect assets
 [Unit]

@@ -5,10 +5,19 @@
   if (!id || document.getElementById('sietconnect-speakers')) return;
   const dataUrl = path.includes('/playback/video/')
     ? `/playback/video/${id}/speakers.json` : `/presentation/${id}/speakers.json`;
-  fetch(dataUrl).then((response) => {
-    if (!response.ok) throw new Error('Speaker data unavailable');
-    return response.json();
-  }).then((data) => {
+  const loadData = async () => {
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+      try {
+        const response = await fetch(dataUrl, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+        if (!response.ok) throw new Error('Speaker data unavailable');
+        return await response.json();
+      } catch {
+        if (attempt < 59) await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
+    return { participants: [], unavailable: true };
+  };
+  loadData().then((data) => {
     const participants = Array.isArray(data.participant_details) ? data.participant_details
       : (data.participants || []).map((name) => ({ id: name, name }));
     const cues = (Array.isArray(data.speakers) ? data.speakers : []).filter((cue) => (
@@ -81,7 +90,9 @@
       panel.appendChild(row);
       return { participant, row, state };
     });
-    if (!rows.length) notice.textContent = 'No participant information is available for this recording.';
+    if (!rows.length) notice.textContent = data.unavailable
+      ? 'Participant data is not available yet. Reload to retry.'
+      : 'No participant information is available for this recording.';
     document.body.appendChild(panel);
     const player = () => stage.querySelector('audio') || stage.querySelector('video');
     const update = () => {
@@ -108,6 +119,7 @@
     new MutationObserver(bindMedia).observe(stage, { childList: true, subtree: true });
     bindMedia();
     update();
-    setInterval(update, 200);
+    const tick = () => { update(); requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
   }).catch(() => {});
 })();

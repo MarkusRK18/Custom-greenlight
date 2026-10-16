@@ -95,7 +95,13 @@ A green ring highlights each active speaker using the recording's media clock;
 it follows seeks and clears when playback is paused. Users with the same name
 remain separate participants. Older recordings without timed speech events can
 show participants but cannot identify who spoke at a particular moment.
-The installer schedules a branding pass every five minutes so recordings
+The installer adds `post_publish/00_sietconnect_speakers.rb` to publish participant
+and speaker timelines before BBB's recording-ready callback. JSON files are
+replaced atomically and are readable by nginx. Playback retries missing data
+without caching and updates speaker rings on animation frames using the media
+clock. Media encoding still takes time after a meeting ends; a recording cannot
+be ready immediately or identify speakers when no timed speech events exist.
+The installer also schedules a recovery branding pass every five minutes so recordings
 published after installation receive the SIETConnect playback title, favicon,
 theme and speaker metadata. Installation refreshes existing retained speaker
 timelines immediately and verifies the served playback script matches the source.
