@@ -25,7 +25,8 @@ def recording_intervals(events, end_time):
         if when is None:
             continue
         if event.findtext('status') == 'true':
-            started = when
+            if started is None:
+                started = when
         elif started is not None and when > started:
             intervals.append((started, when))
             started = None
@@ -53,14 +54,17 @@ def timeline(raw_dir, published_dir):
     active = {}
     talking = []
     for event in events:
-        if event.get('eventname') != 'ParticipantTalkingEvent':
+        kind = event.get('eventname')
+        if kind not in ('ParticipantTalkingEvent', 'ParticipantJoinedEvent', 'ParticipantLeftEvent', 'ParticipantMutedEvent'):
             continue
         user_id, when = event.findtext('participant'), event_time(event)
         if not user_id or when is None:
             continue
-        if event.findtext('talking') == 'true':
+        if kind in ('ParticipantTalkingEvent', 'ParticipantJoinedEvent') and event.findtext('talking') == 'true':
             active.setdefault(user_id, when)
-        elif user_id in active:
+        elif user_id in active and (kind == 'ParticipantLeftEvent' or
+                                    (kind == 'ParticipantMutedEvent' and event.findtext('muted') == 'true') or
+                                    (kind == 'ParticipantTalkingEvent' and event.findtext('talking') == 'false')):
             talking.append((user_id, active.pop(user_id), when))
     talking.extend((user_id, start, end_time) for user_id, start in active.items())
 
@@ -71,7 +75,7 @@ def timeline(raw_dir, published_dir):
             clipped_begin, clipped_end = max(begin, talk_begin), min(end, talk_end)
             if clipped_end <= clipped_begin or user_id not in names:
                 continue
-            speakers.append({'name': names[user_id], 'start': round((elapsed + clipped_begin - begin) / 1000, 2),
+            speakers.append({'participant_id': user_id, 'name': names[user_id], 'start': round((elapsed + clipped_begin - begin) / 1000, 2),
                              'end': round((elapsed + clipped_end - begin) / 1000, 2)})
         elapsed += end - begin
     speakers.sort(key=lambda item: item['start'])
@@ -86,7 +90,9 @@ def timeline(raw_dir, published_dir):
         'screen': has_files('deskshare'),
         'slides': has_slides,
     }
-    return {'participants': list(dict.fromkeys(names.values())), 'speakers': speakers, 'media': media}
+    return {'participants': list(dict.fromkeys(names.values())),
+            'participant_details': [{'id': user_id, 'name': name} for user_id, name in names.items()],
+            'speakers': speakers, 'media': media}
 
 
 def main():

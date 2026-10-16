@@ -47,7 +47,7 @@ for page in pages:
     if '/playback/' in str(page) or '/published/video/' in str(page):
         text = re.sub(r'<footer>Recorded with <a href="http://bigbluebutton.org">BigBlueButton</a>\.</footer>',
                       '<footer>SIETConnect</footer>', text)
-        text = text.replace('</body>', '<script data-sietconnect-speakers="true" src="/sietconnect-assets/recording-speakers.js?v=1"></script></body>')
+        text = text.replace('</body>', '<script data-sietconnect-speakers="true" src="/sietconnect-assets/recording-speakers.js?v=2"></script></body>')
     if text != original:
         save(page, text)
 

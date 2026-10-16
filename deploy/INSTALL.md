@@ -72,6 +72,11 @@ must join meeting audio with a microphone. The participant panel shows names and
 total talk time once the analytics callback arrives. Playback displays the
 active speaker's name when BBB captured timed talking events; recordings with
 no captured media show an explanatory notice.
+Recording playback includes a participant column with circular initials avatars.
+A green ring highlights each active speaker using the recording's media clock;
+it follows seeks and clears when playback is paused. Users with the same name
+remain separate participants. Older recordings without timed speech events can
+show participants but cannot identify who spoke at a particular moment.
 The installer schedules a branding pass every five minutes so recordings
 published after installation receive the SIETConnect playback title, favicon,
 theme and speaker metadata. The managed timer is `sietconnect-playback-branding.timer`.
