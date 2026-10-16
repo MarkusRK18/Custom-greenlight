@@ -9,9 +9,6 @@ docker compose --env-file .env.local -f compose.local.yml exec portal bundle exe
 
 Open http://localhost:5050. PostgreSQL and Redis are private to this stack. Persistent database and upload volumes survive restarts.
 
-For phones and laptops on the same Wi-Fi, follow [local Wi-Fi setup](LOCAL_WIFI.md).
-It provides HTTPS portal access and the meeting media ports on the host's LAN IP.
-
 Invitation links allow a guest to enter a name and click Join Meeting to start an
 available meeting as a Viewer. Existing and new rooms enable **Allow any user to
 start** by default; hosts can turn it off in room settings. Scheduled times,

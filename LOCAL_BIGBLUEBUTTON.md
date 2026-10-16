@@ -15,7 +15,7 @@ The Ubuntu container can expose console login services when privileged. The star
 - Raw and published recordings use Docker volumes so restarting the local test container preserves them. The combined video workflow publishes shared slides, cameras, screen share and meeting audio when those streams are present.
 - The presentation starts hidden and no default welcome deck is uploaded. Drawing tools remain available after the presenter opens/uploads a presentation. Session details do not open automatically.
 - Document conversion through LibreOffice is omitted; the host Docker socket is not mounted.
-- The development container uses systemd and privileged mode, as required by the upstream development setup. The default mode publishes no host ports. Optional [Wi-Fi mode](LOCAL_WIFI.md) exposes only the selected LAN address for phones and laptops.
+- The development container uses systemd and privileged mode, as required by the upstream development setup. It publishes no host ports and is intended for testing on this machine.
 
 The local CA and keys live in ignored `local-bbb/` files. Generate them with `bash scripts/setup-local-bbb.sh`. Configure the test hostname and CA trust with `sudo python3 scripts/configure-local-bbb-host.py`, then trust the CA in Chromium with `bash scripts/trust-local-bbb-browser.sh`.
 
@@ -36,7 +36,7 @@ docker exec sri-shakthi-bbb-test bbb-conf --status
 docker compose -f compose.bbb-local.yml stop
 ```
 
-Keep at least 8 GiB free for this reduced setup (`bash scripts/check-local-bbb-space.sh`). Stopping preserves the test container state. Recreating the meeting-server container reruns the local settings script and restores configuration from the development image. Current recording and media volumes survive recreation; do not remove these volumes if recordings are needed.
+Keep at least 8 GiB free for this reduced setup (`bash scripts/check-local-bbb-space.sh`). Stopping preserves the test container state. Recreating the meeting-server container reruns the local settings script and restores configuration from the development image. Recordings made in this disposable development container are lost if it is recreated.
 
 The existing portal database and user accounts remain in their separate persistent volumes. The API secret is generated locally, stored privately, and copied to .env.local after verification. Do not share the secret or join URLs.
 

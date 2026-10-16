@@ -19,7 +19,6 @@ services:
       - bbb_video_capture:/var/lib/bbb-webrtc-recorder
       - ./local-bbb/certs:/local/certs:ro
       - ./scripts/start-local-bbb.sh:/local/start-local.sh:ro
-      - ./scripts/configure-local-bbb-lan.py:/local/configure-local-bbb-lan.py:ro
       - ./scripts/brand-bbb-client.py:/local/brand-bbb-client.py:ro
       - ./scripts/enable-bbb-video-recording.rb:/local/enable-bbb-video-recording.rb:ro
       - ./scripts/publish-speaker-timeline.py:/local/publish-speaker-timeline.py:ro
