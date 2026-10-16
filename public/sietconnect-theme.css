@@ -7,6 +7,13 @@ a { color: var(--sietconnect-green); }
 a:hover { color: #003b00; }
 button:focus-visible, a:focus-visible { outline-color: var(--sietconnect-green); }
 
+/* Hide the native analytics shortcut and its preceding label in the end dialog.
+   Keep the portal's analytics and the dialog's redirect/OK button available. */
+[data-test="meetingEndedModal"] button[aria-details]:not([data-test="redirectButton"]),
+[data-test="meetingEndedModal"] :has(+ button[aria-details]:not([data-test="redirectButton"])) {
+  display: none !important;
+}
+
 /* Only the recording player's empty-presentation placeholder, never slides. */
 #sietconnect-recording-stage .presentation.logo {
   background-position: center;

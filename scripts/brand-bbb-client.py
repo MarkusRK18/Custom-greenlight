@@ -43,7 +43,7 @@ for page in pages:
     text = re.sub(r'<link\b[^>]*data-sietconnect-theme=["\']true["\'][^>]*>', '', text, flags=re.I)
     text = re.sub(r'<script\b[^>]*data-sietconnect-speakers=["\']true["\'][^>]*></script>', '', text, flags=re.I)
     text = text.replace('</head>', '<link rel="icon" type="image/x-icon" href="/sietconnect-assets/favicon.ico?v=7">'
-                        '<link rel="stylesheet" data-sietconnect-theme="true" href="/sietconnect-assets/theme.css?v=9"></head>')
+                        '<link rel="stylesheet" data-sietconnect-theme="true" href="/sietconnect-assets/theme.css?v=10"></head>')
     if '/playback/' in str(page) or '/published/video/' in str(page):
         text = re.sub(r'<footer>Recorded with <a href="http://bigbluebutton.org">BigBlueButton</a>\.</footer>',
                       '<footer>SIETConnect</footer>', text)
