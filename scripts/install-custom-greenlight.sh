@@ -309,11 +309,11 @@ import sys,urllib.request
 env=dict(line.split('=',1) for line in Path(sys.argv[1]).read_text().splitlines() if '=' in line)
 base=env['SIET_BBB_ASSET_URL'].rsplit('/',1)[0]+'/'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
-for remote,local in [('logo.png','sri-shakthi-logo.png'),('favicon.ico','favicon.ico'),('theme.css','sietconnect-theme.css')]:
+for remote,local in [('logo.png','sri-shakthi-logo.png'),('favicon.ico','favicon.ico'),('theme.css','sietconnect-theme.css'),('recording-speakers.js','recording-speakers.js')]:
  with opener.open(base+remote,timeout=15) as response:
   if response.read()!= (Path(sys.argv[2])/'public'/local).read_bytes():
    raise SystemExit('Meeting-server branding asset differs from repository: '+remote)
-print('Meeting-server crest, favicon and green theme: OK')
+print('Meeting-server crest, favicon, green theme and recording speaker player: OK')
 PY
 printf 'SIETConnect welcome page, college favicon, and crest: OK\n'
 bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
@@ -323,4 +323,5 @@ printf 'Sign up with your siet.ac.in address. All institutional accounts are adm
 printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
 printf 'Recordable rooms now start recording automatically; participant talk time appears after analytics processing.\n'
 printf 'New recordings also publish a combined video format and timed speaker names when BBB captures speaking events.\n'
+printf 'Recording playback highlights active speakers with a green circle; silence and pause clear the highlight. Existing retained event timelines are refreshed at deployment and every five minutes.\n'
 printf 'Manage this deployment with both the original Compose file and %s\n' "$override"

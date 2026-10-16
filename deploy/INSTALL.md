@@ -87,7 +87,12 @@ remain separate participants. Older recordings without timed speech events can
 show participants but cannot identify who spoke at a particular moment.
 The installer schedules a branding pass every five minutes so recordings
 published after installation receive the SIETConnect playback title, favicon,
-theme and speaker metadata. The managed timer is `sietconnect-playback-branding.timer`.
+theme and speaker metadata. Installation refreshes existing retained speaker
+timelines immediately and verifies the served playback script matches the source.
+The managed timer is `sietconnect-playback-branding.timer`; it refreshes newly
+published recordings every five minutes. Speaker circles appear only in recording
+playback, and clear during silence or pause. Existing recordings require retained
+raw speaking events to generate their highlights.
 
 All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
 

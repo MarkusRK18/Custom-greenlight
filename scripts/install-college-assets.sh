@@ -94,5 +94,7 @@ WantedBy=timers.target
 UNIT
 chmod 644 "$service_unit" "$timer_unit"
 systemctl daemon-reload
+systemctl start sietconnect-playback-branding.service
 systemctl enable --now sietconnect-playback-branding.timer
-printf 'College logo, browser icons, theme and playback branding timer installed. Backups: %s\n' "$backup"
+systemctl is-active --quiet sietconnect-playback-branding.timer
+printf 'College assets and recording speaker highlights installed; existing timelines refreshed and five-minute timer active. Backups: %s\n' "$backup"
