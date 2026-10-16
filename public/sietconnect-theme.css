@@ -6,3 +6,10 @@
 a { color: var(--sietconnect-green); }
 a:hover { color: #003b00; }
 button:focus-visible, a:focus-visible { outline-color: var(--sietconnect-green); }
+
+/* Only the recording player's empty-presentation placeholder, never slides. */
+#sietconnect-recording-stage .presentation.logo {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto min(65%, 320px);
+}
