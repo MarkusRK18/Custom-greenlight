@@ -67,6 +67,9 @@ Unit=sietconnect-speakers.service
 WantedBy=timers.target
 UNIT
 systemctl enable sietconnect-speakers.timer >/dev/null
+if [[ -n ${LOCAL_BBB_LAN_IP:-} ]]; then
+  python3 /local/configure-local-bbb-lan.py "$LOCAL_BBB_LAN_IP"
+fi
 systemctl mask bbb-rap-caption-inbox.service >/dev/null
 # A privileged development container must not start logins on host virtual terminals.
 systemctl mask getty.service getty@.service autovt@.service serial-getty@.service console-getty.service container-getty@.service getty.target getty@tty1.service getty@tty2.service getty@tty3.service getty@tty4.service getty@tty5.service getty@tty6.service >/dev/null

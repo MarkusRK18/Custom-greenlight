@@ -1,0 +1,6 @@
+services:
+  portal:
+    environment:
+      BIGBLUEBUTTON_ENDPOINT: https://${LOCAL_BBB_LAN_IP:?Run scripts/enable-local-wifi.sh first}/bigbluebutton/api/
+      BBB_BRANDING_LOGO_URL: https://${LOCAL_BBB_LAN_IP}/sietconnect-assets/logo.png
+      URL_HOST: https://${LOCAL_BBB_LAN_IP}:8443
