@@ -327,7 +327,7 @@ git -C "$source_dir" rev-parse --short HEAD
 printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
 printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
 printf 'Recordable rooms now start recording automatically; participant talk time appears after analytics processing.\n'
-printf 'Live English captions enabled using browser speech recognition (no paid API key). Join microphone audio in Chrome/Edge, select English, and use the native captions control. Browser recognition may use an external service.\n'
+printf 'Live English captions start automatically on unmuted microphone audio, using Indian English recognition (no paid API key). Use Chrome/Edge and the native captions control. Browser recognition may use an external service.\n'
 printf 'New recordings also publish a combined video format and timed speaker names when BBB captures speaking events.\n'
 printf 'Recording playback highlights active speakers with a green circle; silence and pause clear the highlight. Existing retained event timelines are refreshed at deployment and every five minutes.\n'
 printf 'Manage this deployment with both the original Compose file and %s\n' "$override"

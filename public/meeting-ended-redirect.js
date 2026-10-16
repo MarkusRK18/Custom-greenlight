@@ -5,13 +5,13 @@
     const app = settings?.public?.app;
     if (!app) return;
     // Also cover existing rooms when the server's native YAML cannot be loaded.
-    // Keep the microphone dialog's language/off selector available to speakers.
+    // Start English recognition when native microphone audio is connected.
     app.audioCaptions = {
       ...app.audioCaptions,
       enabled: true, alwaysVisible: true, mobile: true, provider: 'webspeech',
       language: {
         ...app.audioCaptions?.language,
-        available: ['en-US'], locale: 'en-US', defaultSelectLocale: true, forceLocale: false,
+        available: ['en-IN', 'en-US'], locale: 'en-IN', defaultSelectLocale: true, forceLocale: true,
       },
     };
     for (const [key, value] of [['skipMeetingEnded', true], ['clientTitle', 'SIETConnect']]) {

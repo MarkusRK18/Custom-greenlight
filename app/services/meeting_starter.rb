@@ -80,7 +80,7 @@ class MeetingStarter
       clientSettingsOverride: {
         public: { app: { audioCaptions: {
           enabled: true, alwaysVisible: true, mobile: true, provider: 'webspeech',
-          language: { available: ['en-US'], locale: 'en-US', defaultSelectLocale: true, forceLocale: false }
+          language: { available: %w[en-IN en-US], locale: 'en-IN', defaultSelectLocale: true, forceLocale: true }
         } } }
       }.to_json,
       multiUserWhiteboardEnabled: false,

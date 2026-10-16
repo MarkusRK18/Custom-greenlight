@@ -19,7 +19,8 @@ Room.transaction do
   captions = JSON.parse(options.fetch(:clientSettingsOverride)).dig('public', 'app', 'audioCaptions')
   raise 'Live English transcription not enabled' unless captions['enabled'] && captions['alwaysVisible'] &&
                                                          captions['provider'] == 'webspeech' &&
-                                                         captions.dig('language', 'locale') == 'en-US'
+                                                         captions.dig('language', 'locale') == 'en-IN' &&
+                                                         captions.dig('language', 'forceLocale') == true
   raise 'Live transcription excluded by server defaults' unless options[:disabledFeaturesExclude] == 'liveTranscription'
   raise 'Wrong BBB unlimited duration' unless options[:duration] == 0 && options[:keepEvents]
   raise 'Negative duration accepted' if room.tap { |r| r.duration_minutes = -1 }.valid?

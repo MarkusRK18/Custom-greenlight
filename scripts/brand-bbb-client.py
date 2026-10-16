@@ -45,7 +45,7 @@ for page in pages:
     text = re.sub(r'<script\b[^>]*data-sietconnect-speakers=["\']true["\'][^>]*></script>', '', text, flags=re.I)
     text = re.sub(r'<script\b[^>]*data-sietconnect-meeting-end=["\']true["\'][^>]*></script>', '', text, flags=re.I)
     if str(page) == '/usr/share/bigbluebutton/html5-client/index.html':
-        text = text.replace('<head>', '<head><script data-sietconnect-meeting-end="true" src="/sietconnect-assets/meeting-ended-redirect.js?v=4"></script>', 1)
+        text = text.replace('<head>', '<head><script data-sietconnect-meeting-end="true" src="/sietconnect-assets/meeting-ended-redirect.js?v=5"></script>', 1)
         # Native loader creates the bundle URL at runtime. Version its request so
         # clients fetch the caption latency fix even when the packaged hash stays.
         marker = "script.src += '?sietconnect-captions=1';"
