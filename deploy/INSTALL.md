@@ -57,12 +57,16 @@ college branding included in this repository.
 
 For a room with recording enabled, SIETConnect starts recording when the host
 joins. Moderators can pause or resume it. After the meeting ends and BBB finishes
-processing, the Recordings tab shows playback. Its participant panel shows names
-and total talk time once the analytics callback arrives. These totals do not
-identify the exact moments each participant spoke during playback.
+processing, the Recordings tab shows presentation playback and a combined video
+format. The video combines meeting audio, uploaded slides, shared screens and
+cameras when participants actually use them. To capture speech, participants
+must join meeting audio with a microphone. The participant panel shows names and
+total talk time once the analytics callback arrives. Playback displays the
+active speaker's name when BBB captured timed talking events; recordings with
+no captured media show an explanatory notice.
 The installer schedules a branding pass every five minutes so recordings
 published after installation receive the SIETConnect playback title, favicon,
-and theme. The managed timer is `sietconnect-playback-branding.timer`.
+theme and speaker metadata. The managed timer is `sietconnect-playback-branding.timer`.
 
 All `siet.ac.in` accounts become administrators. New institutional accounts activate without verification emails. Older accounts in other domains stay in the database but cannot sign in under this policy. Existing rooms without a schedule must be scheduled in room settings before starting them.
 

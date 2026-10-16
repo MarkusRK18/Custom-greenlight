@@ -22,11 +22,14 @@ Options:
   --check               Read-only prerequisite check; no deployment.
   -h, --help            Show help.
 
-Requires Ubuntu/Debian, Docker Compose v2, git, python3, curl, nginx, and a working native BBB install.
+Requires Ubuntu/Debian, Docker Compose v2, git, python3, Ruby, curl, nginx, and a working native BBB install.
 Analytics requires BBB's recording/event processing services to be active.
 Recordable rooms start recording automatically when the host joins. Finished
 recordings show participant names and total talk time after analytics arrives.
 New recording playback pages receive SIETConnect branding through a managed timer.
+BBB's combined video format captures the shared presentation, cameras and screen
+share with meeting audio. Playback displays participant names and timed speakers
+when BBB records speaking events; an empty capture is marked explicitly.
 Upgrade: backs up the database and uploads, then migrates the existing database.
 Fresh: adds /connect routing to BBB's existing HTTPS nginx virtual host.
 Policy: all siet.ac.in signups become administrators; signup sends no activation email.
@@ -60,7 +63,7 @@ done
 for service in "$app_service" "$postgres_service" "$redis_service"; do
   [[ $service =~ ^[a-zA-Z0-9][a-zA-Z0-9_.-]*$ ]] || die 'Invalid service name.'
 done
-for command in docker git python3 curl bbb-conf; do command -v "$command" >/dev/null || die "Install prerequisite: $command"; done
+for command in docker git python3 ruby curl bbb-conf; do command -v "$command" >/dev/null || die "Install prerequisite: $command"; done
 docker compose version >/dev/null || die 'Docker Compose v2 plugin is required.'
 docker info >/dev/null 2>&1 || die 'Docker daemon is unavailable.'
 python3 - "$public_url" "$fresh" <<'PY'
@@ -142,6 +145,7 @@ else
   git clone --branch "$ref" --single-branch https://github.com/MarkusRK18/Custom-greenlight.git "$source_dir"
 fi
 [[ -f $source_dir/deploy/Dockerfile ]] || die 'The selected repository revision has no deployment Dockerfile.'
+ruby "$source_dir/scripts/enable-bbb-video-recording.rb" --check
 
 config_env=$install_dir/installer.env
 override=$install_dir/custom.override.json
@@ -211,6 +215,7 @@ dc config --quiet
 printf 'Building custom Greenlight (BBB services continue running)...\n'
 dc build "$app_service"
 bash "$source_dir/scripts/install-college-assets.sh"
+ruby "$source_dir/scripts/enable-bbb-video-recording.rb" --apply
 python3 "$source_dir/scripts/remove-bbb-welcome-footer.py"
 dc up -d "$postgres_service" "$redis_service"
 
@@ -313,4 +318,5 @@ git -C "$source_dir" rev-parse --short HEAD
 printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
 printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
 printf 'Recordable rooms now start recording automatically; participant talk time appears after analytics processing.\n'
+printf 'New recordings also publish a combined video format and timed speaker names when BBB captures speaking events.\n'
 printf 'Manage this deployment with both the original Compose file and %s\n' "$override"

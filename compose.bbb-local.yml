@@ -14,9 +14,15 @@ services:
     mem_limit: 8g
     memswap_limit: 10g
     volumes:
+      - bbb_recordings:/var/bigbluebutton
+      - bbb_voice_capture:/var/freeswitch/meetings
+      - bbb_video_capture:/var/lib/bbb-webrtc-recorder
       - ./local-bbb/certs:/local/certs:ro
       - ./scripts/start-local-bbb.sh:/local/start-local.sh:ro
       - ./scripts/brand-bbb-client.py:/local/brand-bbb-client.py:ro
+      - ./scripts/enable-bbb-video-recording.rb:/local/enable-bbb-video-recording.rb:ro
+      - ./scripts/publish-speaker-timeline.py:/local/publish-speaker-timeline.py:ro
+      - ./public/recording-speakers.js:/local/recording-speakers.js:ro
       - ./public/sri-shakthi-logo.png:/local/sri-shakthi-logo.png:ro
       - ./public/favicon.ico:/local/college-favicon.ico:ro
       - ./public/sietconnect-theme.css:/local/sietconnect-theme.css:ro
@@ -37,3 +43,7 @@ networks:
     ipam:
       config:
         - subnet: 172.30.50.0/24
+volumes:
+  bbb_recordings:
+  bbb_voice_capture:
+  bbb_video_capture:

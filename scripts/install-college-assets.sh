@@ -10,7 +10,7 @@ if grep -Rqs '/etc/bigbluebutton/nginx/' /etc/nginx/sites-enabled; then
 fi
 [[ -d $assets && -d ${snippet%/*} ]] || { echo 'Native BBB asset directories are missing.' >&2; exit 1; }
 grep -Rqs "${snippet%/*}/" /etc/nginx/sites-enabled || { echo 'BBB nginx includes are not enabled.' >&2; exit 1; }
-for file in sri-shakthi-logo.png favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png sietconnect-theme.css; do
+for file in sri-shakthi-logo.png favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png sietconnect-theme.css recording-speakers.js; do
   [[ -s $source_dir/public/$file ]] || { echo "Missing tracked asset: $file" >&2; exit 1; }
 done
 nginx -t
@@ -27,6 +27,7 @@ done
 install -d -m 755 "$assets/sietconnect"
 install -m 644 "$source_dir/public/sri-shakthi-logo.png" "$assets/sietconnect/logo.png"
 install -m 644 "$source_dir/public/sietconnect-theme.css" "$assets/sietconnect/theme.css"
+install -m 644 "$source_dir/public/recording-speakers.js" "$assets/sietconnect/recording-speakers.js"
 for file in favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png; do
   install -m 644 "$source_dir/public/$file" "$assets/sietconnect/$file"
   install -m 644 "$source_dir/public/$file" "$assets/$file"
@@ -47,6 +48,7 @@ fi
 systemctl reload nginx
 python3 "$source_dir/scripts/brand-bbb-client.py"
 brand_script=/usr/local/libexec/sietconnect-brand-bbb-client.py
+speaker_script=/usr/local/libexec/sietconnect-publish-speakers.py
 service_unit=/etc/systemd/system/sietconnect-playback-branding.service
 timer_unit=/etc/systemd/system/sietconnect-playback-branding.timer
 for unit in "$service_unit" "$timer_unit"; do
@@ -61,6 +63,11 @@ if [[ -e $brand_script ]]; then
   cp -a "$brand_script" "$backup/$(basename "$brand_script").before"
 fi
 install -m 755 "$source_dir/scripts/brand-bbb-client.py" "$brand_script"
+if [[ -e $speaker_script ]]; then
+  grep -q 'Publish names and timed speaking events' "$speaker_script" || { echo "Unmanaged speaker script exists: $speaker_script" >&2; exit 1; }
+  cp -a "$speaker_script" "$backup/$(basename "$speaker_script").before"
+fi
+install -m 755 "$source_dir/scripts/publish-speaker-timeline.py" "$speaker_script"
 cat > "$service_unit" <<'UNIT'
 # Managed by SIETConnect assets
 [Unit]
@@ -69,6 +76,7 @@ Description=Apply SIETConnect branding to newly published BBB recordings
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/python3 /usr/local/libexec/sietconnect-brand-bbb-client.py
+ExecStart=/usr/bin/python3 /usr/local/libexec/sietconnect-publish-speakers.py
 UNIT
 cat > "$timer_unit" <<'UNIT'
 # Managed by SIETConnect assets
