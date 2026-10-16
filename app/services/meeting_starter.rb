@@ -75,6 +75,14 @@ class MeetingStarter
       bannerText: '',
       copyright: 'Sri Shakthi',
       welcome: 'Welcome to SIETConnect',
+      # Native live captions: browser speech recognition, no paid API credentials.
+      disabledFeaturesExclude: 'liveTranscription',
+      clientSettingsOverride: {
+        public: { app: { audioCaptions: {
+          enabled: true, alwaysVisible: true, mobile: true, provider: 'webspeech',
+          language: { available: ['en-US'], locale: 'en-US', defaultSelectLocale: true, forceLocale: false }
+        } } }
+      }.to_json,
       multiUserWhiteboardEnabled: false,
       duration: @room.duration_minutes.zero? ? 0 : [((@room.scheduled_at + @room.duration_minutes.minutes - Time.current) / 60).ceil, 1].max,
       keepEvents: true,

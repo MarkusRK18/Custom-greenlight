@@ -114,6 +114,10 @@ All `siet.ac.in` accounts become administrators. New institutional accounts acti
 
 ## BBB installed without Greenlight, or keep old Greenlight alongside the new portal
 
+Live English captions are enabled with the free browser `webspeech` provider.
+See [Live transcription](LIVE_TRANSCRIPTION.md) for speaker activation, browser
+requirements, privacy behavior and the two-device acceptance check.
+
 ```sh
 sudo bash install-custom-greenlight.sh --fresh \
   --public-url https://bbb.example.com/connect

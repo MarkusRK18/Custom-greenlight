@@ -4,6 +4,16 @@
   const applySettings = (settings) => {
     const app = settings?.public?.app;
     if (!app) return;
+    // Also cover existing rooms when the server's native YAML cannot be loaded.
+    // Keep the microphone dialog's language/off selector available to speakers.
+    app.audioCaptions = {
+      ...app.audioCaptions,
+      enabled: true, alwaysVisible: true, mobile: true, provider: 'webspeech',
+      language: {
+        ...app.audioCaptions?.language,
+        available: ['en-US'], locale: 'en-US', defaultSelectLocale: true, forceLocale: false,
+      },
+    };
     for (const [key, value] of [['skipMeetingEnded', true], ['clientTitle', 'SIETConnect']]) {
       const descriptor = Object.getOwnPropertyDescriptor(app, key);
       if (!descriptor || descriptor.configurable) {

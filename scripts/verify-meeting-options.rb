@@ -14,6 +14,11 @@ Room.transaction do
   room.duration_minutes = 0
   starter = MeetingStarter.new(room: room, base_url: 'http://localhost:5050', current_user: user, provider: user.provider)
   options = starter.send(:computed_options, access_code: nil)
+  captions = JSON.parse(options.fetch(:clientSettingsOverride)).dig('public', 'app', 'audioCaptions')
+  raise 'Live English transcription not enabled' unless captions['enabled'] && captions['alwaysVisible'] &&
+                                                         captions['provider'] == 'webspeech' &&
+                                                         captions.dig('language', 'locale') == 'en-US'
+  raise 'Live transcription excluded by server defaults' unless options[:disabledFeaturesExclude] == 'liveTranscription'
   raise 'Wrong BBB unlimited duration' unless options[:duration] == 0 && options[:keepEvents]
   raise 'Negative duration accepted' if room.tap { |r| r.duration_minutes = -1 }.valid?
   room.duration_minutes = 0
