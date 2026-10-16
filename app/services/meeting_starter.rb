@@ -27,7 +27,11 @@ class MeetingStarter
   end
 
   def call
-    raise ArgumentError, 'Meeting cannot be started' unless InstitutionPolicy.host?(@current_user) && @room.schedule_open?
+    start_settings = RoomSettingsGetter.new(room_id: @room.id, provider: @room.user.provider, current_user: @current_user,
+                                            settings: %w[glAnyoneCanStart glRequireAuthentication]).call
+    link_start_allowed = start_settings['glAnyoneCanStart'] == 'true' &&
+                         (start_settings['glRequireAuthentication'] != 'true' || @current_user.present?)
+    raise ArgumentError, 'Meeting cannot be started' unless @room.schedule_open? && (InstitutionPolicy.host?(@current_user) || link_start_allowed)
     options = RoomSettingsGetter.new(room_id: @room.id, provider: @room.user.provider, current_user: @current_user, only_bbb_options: true).call
     viewer_code = RoomSettingsGetter.new(
       room_id: @room.id,

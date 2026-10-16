@@ -9,6 +9,11 @@ docker compose --env-file .env.local -f compose.local.yml exec portal bundle exe
 
 Open http://localhost:5050. PostgreSQL and Redis are private to this stack. Persistent database and upload volumes survive restarts.
 
+Invitation links allow a guest to enter a name and click Join Meeting to start an
+available meeting as a Viewer. Existing and new rooms enable **Allow any user to
+start** by default; hosts can turn it off in room settings. Scheduled times,
+access codes and any room sign-in requirement still apply.
+
 ```sh
 # Status and logs
 docker compose --env-file .env.local -f compose.local.yml ps

@@ -27,6 +27,8 @@ Analytics requires BBB's recording/event processing services to be active.
 Recordable rooms start recording automatically when the host joins. Finished
 recordings show participant names and total talk time after analytics arrives.
 New recording playback pages receive SIETConnect branding through a managed timer.
+Invitees can start an available meeting through its link and join as Viewers.
+The upgrade enables Allow any user to start; hosts can disable it per room.
 BBB's combined video format captures the shared presentation, cameras and screen
 share with meeting audio. Playback displays participant names and timed speakers
 when BBB records speaking events; an empty capture is marked explicitly.
@@ -248,7 +250,8 @@ PY
 fi
 dc run --rm --no-deps "$app_service" bundle exec rails db:create db:migrate:with_data
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "Analytics history migration missing" unless ActiveRecord::Base.connection.table_exists?(:meeting_analytics_sessions); required=%w[room_id internal_meeting_id data]; raise "Analytics schema incomplete" unless (required - MeetingAnalyticsSession.column_names).empty?; puts "Persistent session analytics schema: OK"'
-if dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-meeting-options.rb > "$backup/features-check.log" 2>&1; then
+if { dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-meeting-options.rb &&
+     dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-link-start.rb; } > "$backup/features-check.log" 2>&1; then
   printf 'Portal feature verification: OK\n'
 else
   tail -n 50 "$backup/features-check.log" >&2

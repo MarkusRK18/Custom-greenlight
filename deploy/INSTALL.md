@@ -21,6 +21,14 @@ BBB nginx include directories (`/etc/bigbluebutton/nginx` and `/usr/share/bigblu
 are supported. The prerequisite check also verifies that BBB's event processing
 services are active. If it removes an existing BBB welcome footer, it restarts
 `bbb-web`; run the upgrade during a maintenance window.
+
+The upgrade enables **Allow any user to start** for existing and new rooms.
+An invitee who enters a name and clicks Join Meeting starts an available meeting
+and joins as a Viewer; waiting invitees then join automatically. Hosts can disable
+this option in room settings. Sign-in requirements, access codes and scheduled
+times continue to apply. The installer verifies these checks without starting a
+real meeting.
+
 If the check reports event recording disabled, update `disableRecordingDefault`
 to `false` in the BBB web override and reload BBB web during a maintenance window.
 After startup, the installer checks the public SIETConnect page and compares the

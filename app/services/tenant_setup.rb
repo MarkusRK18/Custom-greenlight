@@ -61,7 +61,7 @@ class TenantSetup
       { meeting_option: MeetingOption.find_by(name: 'record'), value: 'default_enabled', provider: @provider },
       { meeting_option: MeetingOption.find_by(name: 'muteOnStart'), value: 'optional', provider: @provider },
       { meeting_option: MeetingOption.find_by(name: 'guestPolicy'), value: 'optional', provider: @provider },
-      { meeting_option: MeetingOption.find_by(name: 'glAnyoneCanStart'), value: 'optional', provider: @provider },
+      { meeting_option: MeetingOption.find_by(name: 'glAnyoneCanStart'), value: 'default_enabled', provider: @provider },
       { meeting_option: MeetingOption.find_by(name: 'glAnyoneJoinAsModerator'), value: 'optional', provider: @provider },
       { meeting_option: MeetingOption.find_by(name: 'glRequireAuthentication'), value: 'optional', provider: @provider },
       { meeting_option: MeetingOption.find_by(name: 'glViewerAccessCode'), value: 'optional', provider: @provider },

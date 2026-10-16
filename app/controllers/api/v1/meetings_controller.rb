@@ -133,7 +133,7 @@ module Api
       end
 
       def authorized_to_start_meeting?(settings, bbb_role)
-        InstitutionPolicy.host?(current_user) && bbb_role == 'Moderator'
+        settings['glAnyoneCanStart'] == 'true' || (InstitutionPolicy.host?(current_user) && bbb_role == 'Moderator')
       end
 
       def unauthorized_access?(settings)
