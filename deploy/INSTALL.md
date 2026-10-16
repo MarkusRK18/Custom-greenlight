@@ -84,6 +84,10 @@ Recording playback includes a participant column with circular initials avatars.
 When a meeting ends, participants return directly to the portal room invitation
 without the meeting-ended popup. The installer configures BBB's native
 `public.app.skipMeetingEnded` override and restarts `bbb-web` if it changes.
+The live client also receives a fallback script that hides the end dialog and
+triggers its native return action if it still renders. Installation verifies
+both the served script and its inclusion in `/html5client/`. After upgrading,
+reload the meeting tab before joining a new session to load this script.
 A green ring highlights each active speaker using the recording's media clock;
 it follows seeks and clears when playback is paused. Users with the same name
 remain separate participants. Older recordings without timed speech events can

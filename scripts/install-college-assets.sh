@@ -10,7 +10,7 @@ if grep -Rqs '/etc/bigbluebutton/nginx/' /etc/nginx/sites-enabled; then
 fi
 [[ -d $assets && -d ${snippet%/*} ]] || { echo 'Native BBB asset directories are missing.' >&2; exit 1; }
 grep -Rqs "${snippet%/*}/" /etc/nginx/sites-enabled || { echo 'BBB nginx includes are not enabled.' >&2; exit 1; }
-for file in sri-shakthi-logo.png favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png sietconnect-theme.css recording-speakers.js; do
+for file in sri-shakthi-logo.png favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png sietconnect-theme.css recording-speakers.js meeting-ended-redirect.js; do
   [[ -s $source_dir/public/$file ]] || { echo "Missing tracked asset: $file" >&2; exit 1; }
 done
 nginx -t
@@ -28,6 +28,7 @@ install -d -m 755 "$assets/sietconnect"
 install -m 644 "$source_dir/public/sri-shakthi-logo.png" "$assets/sietconnect/logo.png"
 install -m 644 "$source_dir/public/sietconnect-theme.css" "$assets/sietconnect/theme.css"
 install -m 644 "$source_dir/public/recording-speakers.js" "$assets/sietconnect/recording-speakers.js"
+install -m 644 "$source_dir/public/meeting-ended-redirect.js" "$assets/sietconnect/meeting-ended-redirect.js"
 for file in favicon.ico apple-touch-icon.png apple-touch-icon-precomposed.png; do
   install -m 644 "$source_dir/public/$file" "$assets/sietconnect/$file"
   install -m 644 "$source_dir/public/$file" "$assets/$file"

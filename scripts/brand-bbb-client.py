@@ -42,6 +42,9 @@ for page in pages:
     text = text.replace('BigBlueButton recording playback', 'SIETConnect recording playback')
     text = re.sub(r'<link\b[^>]*data-sietconnect-theme=["\']true["\'][^>]*>', '', text, flags=re.I)
     text = re.sub(r'<script\b[^>]*data-sietconnect-speakers=["\']true["\'][^>]*></script>', '', text, flags=re.I)
+    text = re.sub(r'<script\b[^>]*data-sietconnect-meeting-end=["\']true["\'][^>]*></script>', '', text, flags=re.I)
+    if str(page) == '/usr/share/bigbluebutton/html5-client/index.html':
+        text = text.replace('</head>', '<script defer data-sietconnect-meeting-end="true" src="/sietconnect-assets/meeting-ended-redirect.js?v=1"></script></head>')
     text = text.replace('</head>', '<link rel="icon" type="image/x-icon" href="/sietconnect-assets/favicon.ico?v=7">'
                         '<link rel="stylesheet" data-sietconnect-theme="true" href="/sietconnect-assets/theme.css?v=10"></head>')
     if '/playback/' in str(page) or '/published/video/' in str(page):

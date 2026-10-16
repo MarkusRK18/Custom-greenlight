@@ -310,11 +310,15 @@ import sys,urllib.request
 env=dict(line.split('=',1) for line in Path(sys.argv[1]).read_text().splitlines() if '=' in line)
 base=env['SIET_BBB_ASSET_URL'].rsplit('/',1)[0]+'/'
 opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
-for remote,local in [('logo.png','sri-shakthi-logo.png'),('favicon.ico','favicon.ico'),('theme.css','sietconnect-theme.css'),('recording-speakers.js','recording-speakers.js')]:
+for remote,local in [('logo.png','sri-shakthi-logo.png'),('favicon.ico','favicon.ico'),('theme.css','sietconnect-theme.css'),('recording-speakers.js','recording-speakers.js'),('meeting-ended-redirect.js','meeting-ended-redirect.js')]:
  with opener.open(base+remote,timeout=15) as response:
   if response.read()!= (Path(sys.argv[2])/'public'/local).read_bytes():
    raise SystemExit('Meeting-server branding asset differs from repository: '+remote)
 print('Meeting-server crest, favicon, green theme and recording speaker player: OK')
+with opener.open(base.split('/sietconnect-assets/')[0]+'/html5client/',timeout=15) as response:
+ if b'data-sietconnect-meeting-end="true"' not in response.read():
+  raise SystemExit('Live meeting entrypoint is missing the meeting-ended redirect script.')
+print('Live meeting-ended redirect script: OK')
 PY
 printf 'SIETConnect welcome page, college favicon, and crest: OK\n'
 bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
