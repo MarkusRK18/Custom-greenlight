@@ -9,6 +9,6 @@ RUN npm install --global yarn@1.22.22 && npm ci --no-audit --no-fund
 COPY . .
 ARG RELATIVE_URL_ROOT=""
 ENV RELATIVE_URL_ROOT=${RELATIVE_URL_ROOT}
-RUN SECRET_KEY_BASE=build-placeholder bundle exec rails assets:precompile
+RUN SKIP_YARN_INSTALL=1 SECRET_KEY_BASE=build-placeholder bundle exec rails assets:precompile
 EXPOSE 3000
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]

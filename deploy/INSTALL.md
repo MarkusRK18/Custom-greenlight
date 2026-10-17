@@ -13,6 +13,9 @@ To update an existing custom installation, download this script again and rerun
 it with the same `--greenlight-dir` and `--public-url` arguments. It fetches the
 latest `main`, rebuilds the portal, and applies the persistent session analytics
 migration while preserving existing users, meetings and saved session history.
+It also creates the encrypted SMTP configuration table and checks administrator
+permissions, credential encryption, and email configuration using simulated
+SMTP. No verification/test emails are sent during installer checks.
 It verifies the analytics database schema, automatic recording options, analytics
 callbacks, recording speaker summaries, and guest invitations after migrating.
 Room invitations respect the room's Require users to be signed in setting: with
@@ -28,6 +31,22 @@ and joins as a Viewer; waiting invitees then join automatically. Hosts can disab
 this option in room settings. Sign-in requirements, access codes and scheduled
 times continue to apply. The installer verifies these checks without starting a
 real meeting.
+
+## Configure outgoing email in Administration
+
+After installation, sign in as an existing administrator and open
+**Administration → Site Settings → Email / SMTP**. Enter your mail provider's
+SMTP settings, save, then use **Test connection** and **Send test email to me**.
+The saved configuration applies immediately, including to password reset and
+email verification messages. Blank passwords preserve the saved credential.
+
+Installation can complete without SMTP so you can reach this setup screen.
+Self-signup and password recovery remain unavailable until mail is configured.
+An enabled but failing SMTP configuration still fails its health check; the
+installer does not silently ignore broken configured mail services.
+Existing environment SMTP settings are retained until GUI settings are saved.
+The database and existing secret key must be backed up together to retain access
+to encrypted SMTP passwords. See [account and email setup](ACCOUNTS_AND_INVITES.md).
 
 If the check reports event recording disabled, update `disableRecordingDefault`
 to `false` in the BBB web override and reload BBB web during a maintenance window.

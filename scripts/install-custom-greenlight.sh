@@ -34,7 +34,10 @@ share with meeting audio. Playback displays participant names and timed speakers
 when BBB records speaking events; an empty capture is marked explicitly.
 Upgrade: backs up the database and uploads, then migrates the existing database.
 Fresh: adds /connect routing to BBB's existing HTTPS nginx virtual host.
-Policy: all siet.ac.in signups become administrators; signup sends no activation email.
+Email: configure SMTP in Administration > Site Settings > Email / SMTP.
+Self-signup requires email verification; password recovery also requires SMTP.
+SMTP settings are encrypted and preserved across upgrades with the existing secret key.
+Policy: verified siet.ac.in signups become administrators.
 HELP
 }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
@@ -252,6 +255,7 @@ PY
 fi
 dc run --rm --no-deps "$app_service" bundle exec rails db:create db:migrate:with_data
 dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "Analytics history migration missing" unless ActiveRecord::Base.connection.table_exists?(:meeting_analytics_sessions); required=%w[room_id internal_meeting_id data]; raise "Analytics schema incomplete" unless (required - MeetingAnalyticsSession.column_names).empty?; puts "Persistent session analytics schema: OK"'
+dc run --rm --no-deps "$app_service" bundle exec rails runner 'raise "SMTP settings migration missing" unless ActiveRecord::Base.connection.table_exists?(:smtp_configurations); required=%w[provider enabled host port encrypted_password authentication security sender_email]; raise "SMTP settings schema incomplete" unless (required - SmtpConfiguration.column_names).empty?; puts "Administration SMTP settings schema: OK"'
 if { dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-meeting-options.rb &&
      dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-account-flows.rb &&
      dc run --rm --no-deps "$app_service" bundle exec rails runner scripts/verify-smtp-settings.rb &&
@@ -327,7 +331,9 @@ printf 'SIETConnect welcome page, college favicon, and crest: OK\n'
 bash "$source_dir/scripts/diagnose-analytics.sh" "$install_dir"
 printf '\nSIETConnect installed: %s\nBackups: %s\nSource revision: ' "$public_url" "$backup"
 git -C "$source_dir" rev-parse --short HEAD
-printf 'Sign up with your siet.ac.in address. All institutional accounts are administrators.\n'
+printf 'Email setup: Administration > Site Settings > Email / SMTP. Save credentials, test the connection, then send a test email.\n'
+printf 'Self-signup and password recovery require configured SMTP. Existing verified accounts can still sign in.\n'
+printf 'Saved SMTP passwords remain encrypted using the existing secret key; keep that key with your database backups.\n'
 printf 'Analytics history and full saved-session dashboards are installed; new sessions appear after BBB event processing completes.\n'
 printf 'Recordable rooms now start recording automatically; participant talk time appears after analytics processing.\n'
 printf 'Live English captions start automatically on unmuted microphone audio, using Indian English recognition (no paid API key). Use Chrome/Edge and the native captions control. Browser recognition may use an external service.\n'

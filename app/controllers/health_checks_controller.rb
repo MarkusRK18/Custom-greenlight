@@ -51,26 +51,14 @@ class HealthChecksController < ApplicationController
   end
 
   def check_smtp
-    config = SmtpConfiguration.find_by(provider: current_provider)
-    if config
-      config.test_connection!
-      return
-    end
-    settings = ActionMailer::Base.smtp_settings
+    config = SmtpConfiguration.for_provider(current_provider)
+    # An unconfigured/disabled mail service must not block access to its setup GUI.
+    return unless config.enabled?
 
-    smtp = Net::SMTP.new(settings[:address], settings[:port])
-    smtp.enable_starttls_auto if settings[:openssl_verify_mode] != OpenSSL::SSL::VERIFY_NONE && smtp.respond_to?(:enable_starttls_auto)
-
-    if settings[:authentication].present? && settings[:authentication] != 'none'
-      smtp.start(settings[:domain]) do |s|
-        s.authenticate(settings[:user_name], settings[:password], settings[:authentication])
-      end
-    else
-      smtp.start(settings[:domain])
-    end
-    smtp.finish
+    config.test_connection!
   rescue StandardError => e
-    raise "Unable to connect to SMTP Server - #{e}"
+    logger.warn "SMTP health check failed (#{e.class.name})"
+    raise 'smtp health check failed'
   end
 
   def check_big_blue_button

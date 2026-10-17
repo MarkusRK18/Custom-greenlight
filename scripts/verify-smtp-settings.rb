@@ -12,6 +12,7 @@ connections = []
 SmtpConfiguration.prepend(Module.new do
   define_method(:test_connection!) do
     raise 'Invalid SMTP settings' unless configured?
+    raise Net::SMTPAuthenticationError, 'Simulated SMTP failure' if host == 'smtp-failure.invalid'
 
     connections << provider
   end
@@ -68,6 +69,22 @@ User.transaction do
   raise 'Disable failed' unless client.response.status == 200 && !SmtpConfiguration.configured?(provider: 'greenlight')
   client.post("#{endpoint}/test_email.json", as: :json)
   raise 'Disabled SMTP sent email' unless client.response.status == 422 && sent.size == 1
+
+  health = HealthChecksController.new
+  health.define_singleton_method(:current_provider) { 'greenlight' }
+  health.send(:check_smtp)
+  raise 'Disabled SMTP blocked setup page health' unless connections.size == 1
+  config.reload.update!(enabled: true)
+  health.send(:check_smtp)
+  raise 'Configured SMTP was not health checked' unless connections.size == 2
+  config.update!(host: 'smtp-failure.invalid')
+  begin
+    health.send(:check_smtp)
+    raise 'Broken configured SMTP was ignored'
+  rescue RuntimeError => error
+    raise unless error.message == 'smtp health check failed'
+  end
+  config.update!(enabled: false, host: 'smtp.example.invalid')
 
   admin.update!(role: Role.find_by!(name: 'User', provider: 'greenlight'))
   client.get("#{endpoint}.json", as: :json)
