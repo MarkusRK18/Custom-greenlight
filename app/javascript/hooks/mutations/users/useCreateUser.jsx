@@ -47,7 +47,9 @@ export default function useCreateUser() {
         }
       },
       onError: (err) => {
-        if (err.response.data.errors === 'InviteInvalid') {
+        if (err.response.data.errors === 'MailNotConfigured') {
+          toast.error(t('mail_not_configured'));
+        } else if (err.response.data.errors === 'InviteInvalid') {
           toast.error(t('toast.error.users.invalid_invite'));
         } else if (err.response.data.errors === 'EmailAlreadyExists') {
           toast.error(t('toast.error.users.email_exists'));

@@ -14,6 +14,12 @@ Room.transaction do
   room.duration_minutes = 0
   starter = MeetingStarter.new(room: room, base_url: 'http://localhost:5050', current_user: user, provider: user.provider)
   options = starter.send(:computed_options, access_code: nil)
+  raise 'Invitees bypass host approval' unless options[:guestPolicy] == 'ASK_MODERATOR'
+  api = BigBlueButtonApi.new(provider: user.provider)
+  guest_query = URI.decode_www_form(URI(api.join_meeting(room:, role: 'Viewer', name: 'Guest')).query).to_h
+  host_query = URI.decode_www_form(URI(api.join_meeting(room:, role: 'Moderator', name: 'Host')).query).to_h
+  raise 'Viewer is not marked as a guest' unless guest_query['guest'] == 'true'
+  raise 'Host was put in the waiting room' if host_query.key?('guest')
   raise 'Empty meetings do not expire' unless options[:meetingExpireWhenLastUserLeftInMinutes] == 1 &&
                                             options[:meetingExpireIfNoUserJoinedInMinutes] == 1
   captions = JSON.parse(options.fetch(:clientSettingsOverride)).dig('public', 'app', 'audioCaptions')

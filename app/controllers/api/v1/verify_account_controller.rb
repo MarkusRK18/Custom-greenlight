@@ -27,6 +27,8 @@ module Api
       # POST /api/v1/verify_account.json
       # Creates a unique token, saves its digest to the user and emails it
       def create
+        return render_error errors: 'MailNotConfigured', status: :service_unavailable if ENV['SMTP_SERVER'].blank?
+
         token = @user.generate_activation_token!
 
         UserMailer.with(user: @user,
@@ -46,12 +48,13 @@ module Api
         return render_error status: :bad_request if token.blank?
 
         user = User.verify_activation_token(token)
-        return render_error status: :forbidden unless user
+        return render_error status: :forbidden unless user && user.provider == current_provider
 
-        # TODO: Amir - optimise this.
-        return render_error status: :internal_server_error unless user.invalidate_activation_token
+        user.with_lock do
+          return render_error status: :forbidden unless User.verify_activation_token(token) == user
 
-        user.verify!
+          user.update!(verified: true, verification_sent_at: nil, verification_digest: nil)
+        end
 
         render_data status: :ok
       end

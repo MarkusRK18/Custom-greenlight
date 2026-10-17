@@ -31,8 +31,8 @@ export default function useCreateActivationLink(id) {
         toast.success(t('toast.success.user.activation_email_sent'));
         navigate('/');
       },
-      onError: () => {
-        toast.error(t('toast.error.problem_completing_action'));
+      onError: (err) => {
+        toast.error(t(err.response?.data?.errors === 'MailNotConfigured' ? 'mail_not_configured' : 'toast.error.problem_completing_action'));
       },
     },
   );

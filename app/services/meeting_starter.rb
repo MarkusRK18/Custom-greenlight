@@ -75,6 +75,7 @@ class MeetingStarter
       bannerText: '',
       copyright: 'Sri Shakthi',
       welcome: 'Welcome to SIETConnect',
+      guestPolicy: 'ASK_MODERATOR',
       # Native live captions: browser speech recognition, no paid API credentials.
       disabledFeaturesExclude: 'liveTranscription',
       clientSettingsOverride: {

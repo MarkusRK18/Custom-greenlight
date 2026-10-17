@@ -51,6 +51,7 @@ class BigBlueButtonApi
       '', # empty password -> use the role passed ing
       {
         role:,
+        guest: role == 'Viewer' ? true : nil,
         'userdata-bbb_client_title': 'SIETConnect',
         'userdata-bbb_transcription_provider': 'webspeech',
         'userdata-bbb_hide_presentation_on_join': true,

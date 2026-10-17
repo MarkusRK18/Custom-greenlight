@@ -16,8 +16,9 @@
 
 /* eslint-disable react/jsx-props-no-spreading */
 
-import React from 'react';
-import { Form as BootStrapForm } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Form as BootStrapForm, InputGroup } from 'react-bootstrap';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useFormContext } from 'react-hook-form';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,8 @@ export default function FormControl({
   field, control, children, noLabel, ...props
 }) {
   const { t } = useTranslation();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const isPassword = props.type === 'password';
 
   const { formState: { errors } } = useFormContext();
   const error = errors[field.hookForm.id];
@@ -41,20 +44,36 @@ export default function FormControl({
           </BootStrapForm.Label>
         )
       }
-      <FormControlGeneric {...props} field={field} control={control}>
-        {children}
-      </FormControlGeneric>
+      {isPassword ? (
+        <InputGroup>
+          <FormControlGeneric {...props} type={passwordVisible ? 'text' : 'password'} field={field} control={control} />
+          <Button
+            type="button"
+            variant="outline-secondary"
+            aria-label={passwordVisible ? t('password_visibility.hide') : t('password_visibility.show')}
+            aria-pressed={passwordVisible}
+            aria-controls={field.controlId}
+            onClick={() => setPasswordVisible((visible) => !visible)}
+          >
+            {passwordVisible ? <EyeSlashIcon width={20} aria-hidden="true" /> : <EyeIcon width={20} aria-hidden="true" />}
+          </Button>
+        </InputGroup>
+      ) : (
+        <FormControlGeneric {...props} field={field} control={control}>
+          {children}
+        </FormControlGeneric>
+      )}
       {
         error
         && (
           (error.types
             && Object.keys(error.types).map(
               (key) => (
-                error.types[key] && <BootStrapForm.Control.Feedback key={key} type="invalid">{t(error.types[key])}</BootStrapForm.Control.Feedback>
+                error.types[key] && <BootStrapForm.Control.Feedback key={key} className={isPassword ? 'd-block' : undefined} type="invalid">{t(error.types[key])}</BootStrapForm.Control.Feedback>
               ),
             )
           )
-          || (error.message && <BootStrapForm.Control.Feedback type="invalid">{t(error.message)}</BootStrapForm.Control.Feedback>)
+          || (error.message && <BootStrapForm.Control.Feedback className={isPassword ? 'd-block' : undefined} type="invalid">{t(error.message)}</BootStrapForm.Control.Feedback>)
         )
 
       }

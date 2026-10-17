@@ -1,4 +1,9 @@
 {
+  "mail_not_configured": "Email delivery is not configured. Please contact your SIETConnect administrator.",
+  "password_visibility": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
   "start": "Start",
   "search": "Search",
   "home": "Home",

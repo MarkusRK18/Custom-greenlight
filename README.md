@@ -4,6 +4,7 @@ Sri Shakthi Meetings customization of Greenlight, with institutional account res
 
 - [Local portal setup](LOCAL_RUN.md)
 - [Install on your existing BBB server](deploy/INSTALL.md)
+- [Account verification, password recovery and invitation approval](deploy/ACCOUNTS_AND_INVITES.md)
 - [Local BigBlueButton testing](LOCAL_BIGBLUEBUTTON.md)
 - [Sri Shakthi deployment notes](SRI_SHAKTHI_SETUP.md)
 

@@ -44,6 +44,10 @@ module Api
         # Check if this is an admin creating a user
         admin_create = current_user && PermissionsChecker.new(current_user:, permission_names: 'ManageUsers', current_provider:).call
 
+        if !admin_create && ENV['SMTP_SERVER'].blank?
+          return render_error errors: 'MailNotConfigured', status: :service_unavailable
+        end
+
         # Allow only administrative access for authenticated requests
         return render_error status: :forbidden if current_user && !admin_create
 
@@ -65,14 +69,20 @@ module Api
         signup_params = signup_params.except(:role_id) unless admin_create
         user = UserCreator.new(user_params: signup_params, provider: current_provider, role: default_role).call
 
-        # Local institutional signup activates the account without an email challenge.
-        user.verified = true
+        # Administrators may provision accounts; self-signup must prove email ownership.
+        user.verified = !!admin_create
 
         # Set to pending if registration method is approval
         user.pending! if !admin_create && registration_method == SiteSetting::REGISTRATION_METHODS[:approval]
 
         if user.save
           create_default_room(user)
+
+          unless user.verified?
+            token = user.generate_activation_token!
+            UserMailer.with(user:, activation_url: activate_account_url(token), base_url: request.base_url,
+                            provider: current_provider).activate_account_email.deliver_later
+          end
 
           return render_data data: user, serializer: CurrentUserSerializer, status: :created unless user.verified?
 
