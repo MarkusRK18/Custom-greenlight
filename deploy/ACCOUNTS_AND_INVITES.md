@@ -28,9 +28,27 @@ host and cannot approve their own entry.
 
 ## Mail setup required
 
-The server currently has no outgoing mail account. Obtain a free mailbox with
-SMTP access or an approved college SMTP relay before enabling public signup.
-No paid mail API is required. Do not paste credentials into chat or commit them.
+Open **Administration → Site Settings → Email / SMTP**. Enter the host, port,
+TLS mode, username, password, sender address and HELO domain supplied by your mail
+provider. Enable outgoing email and save, then use **Test connection** and
+**Send test email to me**. Settings apply immediately to new mail without a
+container restart. The test email goes to the signed-in administrator only;
+SMTP acceptance is not proof of inbox delivery.
+
+Obtain a free mailbox with SMTP access or an approved college SMTP relay before
+enabling public signup. No paid mail API is required. Do not paste credentials
+into chat or commit them. Only users with Manage Site Settings permission can
+read or change this configuration. The password is encrypted in the database,
+never returned by the settings API, and a blank password keeps the saved value.
+Back up the deployment's secret key with the database: changing that key makes
+stored SMTP passwords unreadable and requires entering them again.
+
+Saved GUI settings override the environment for that provider, including when
+email is disabled. Existing environment configuration is used until settings
+are first saved in the GUI. With no outgoing mail account yet, mail features
+remain unavailable until valid credentials are provided.
+
+### Environment alternative
 
 Edit the existing deployment's private `.env` (for example
 `/root/greenlight-v3/.env`) with the values provided by that mail service:
@@ -56,8 +74,9 @@ recreate the app with the new environment and built-in account checks.
 
 Test delivery with your own institutional address: sign up, receive and open the
 verification email, sign in, request a password reset and confirm its email arrives.
-The installer's account checks use an in-memory mail queue and roll back their
-database fixtures. They do not establish SMTP delivery or mailbox receipt.
+The installer's account checks use an in-memory mail queue; SMTP settings checks
+simulate connections and delivery. Both roll back their database fixtures.
+They do not establish SMTP delivery or mailbox receipt.
 
 For host approval, open a new meeting as its owner and use its normal room invite
 link in a private browser. The guest should wait until the host accepts them.

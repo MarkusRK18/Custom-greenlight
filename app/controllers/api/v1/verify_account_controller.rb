@@ -27,7 +27,7 @@ module Api
       # POST /api/v1/verify_account.json
       # Creates a unique token, saves its digest to the user and emails it
       def create
-        return render_error errors: 'MailNotConfigured', status: :service_unavailable if ENV['SMTP_SERVER'].blank?
+        return render_error errors: 'MailNotConfigured', status: :service_unavailable unless SmtpConfiguration.configured?(provider: current_provider)
 
         token = @user.generate_activation_token!
 

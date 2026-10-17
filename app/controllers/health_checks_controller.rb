@@ -51,6 +51,11 @@ class HealthChecksController < ApplicationController
   end
 
   def check_smtp
+    config = SmtpConfiguration.find_by(provider: current_provider)
+    if config
+      config.test_connection!
+      return
+    end
     settings = ActionMailer::Base.smtp_settings
 
     smtp = Net::SMTP.new(settings[:address], settings[:port])

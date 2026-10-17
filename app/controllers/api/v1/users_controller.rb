@@ -44,7 +44,7 @@ module Api
         # Check if this is an admin creating a user
         admin_create = current_user && PermissionsChecker.new(current_user:, permission_names: 'ManageUsers', current_provider:).call
 
-        if !admin_create && ENV['SMTP_SERVER'].blank?
+        if !admin_create && !SmtpConfiguration.configured?(provider: current_provider)
           return render_error errors: 'MailNotConfigured', status: :service_unavailable
         end
 

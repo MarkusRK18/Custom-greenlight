@@ -29,7 +29,7 @@ module Api
       def create
         # TODO: Log events.
         return render_error status: :bad_request if params.dig(:user, :email).blank?
-        return render_error errors: 'MailNotConfigured', status: :service_unavailable if ENV['SMTP_SERVER'].blank?
+        return render_error errors: 'MailNotConfigured', status: :service_unavailable unless SmtpConfiguration.configured?(provider: current_provider)
 
         user = User.find_by email: params[:user][:email].strip.downcase, provider: current_provider
 

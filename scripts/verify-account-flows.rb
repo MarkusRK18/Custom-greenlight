@@ -13,10 +13,12 @@ User.transaction do
   post = lambda do |path, body|
     client.post("/api/v1/#{path}.json", params: body.to_json, headers:)
   end
-  ENV.delete('SMTP_SERVER')
+  smtp = SmtpConfiguration.for_provider('greenlight')
+  smtp.assign_attributes(enabled: false, port: 587, authentication: 'none', security: 'starttls')
+  smtp.save!
   post.call('reset_password', { user: { email: } })
   raise 'Missing mail service was reported as success' unless client.response.status == 503
-  ENV['SMTP_SERVER'] = 'mail.invalid' # No connection: test queue keeps all mail in memory.
+  smtp.update!(enabled: true, host: 'mail.invalid', domain: 'siet.ac.in', sender_email: 'test@siet.ac.in')
   post.call('users', { user: { name: 'Account verification', email:, password:, password_confirmation: password, language: 'en' } })
   raise "Signup failed: #{client.response.status}" unless client.response.status == 201
   user = User.find_by!(email:)

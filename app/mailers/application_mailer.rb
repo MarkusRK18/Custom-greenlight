@@ -18,4 +18,16 @@
 
 class ApplicationMailer < ActionMailer::Base
   layout 'mailer'
+  after_action :configure_provider_smtp
+
+  private
+
+  def configure_provider_smtp
+    config = SmtpConfiguration.for_provider(params[:provider] || 'greenlight')
+    mail.perform_deliveries = config.configured?
+    return unless mail.perform_deliveries
+
+    mail.delivery_method(:smtp, config.smtp_settings)
+    mail.from = email_address_with_name(config.sender_email, config.sender_name)
+  end
 end

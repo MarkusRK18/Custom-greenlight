@@ -90,6 +90,10 @@ Rails.application.routes.draw do
       resources :locales, only: %i[index show], param: :name
 
       namespace :admin do
+        resource :smtp_configuration, only: %i[show update] do
+          post :test_connection
+          post :test_email
+        end
         resources :users, only: %i[update] do
           collection do
             get '/verified', to: 'users#verified'

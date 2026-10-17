@@ -26,6 +26,7 @@ import Appearance from './appearance/Appearance';
 import Administration from './administration/Administration';
 import Settings from './settings/Settings';
 import Registration from './registration/Registration';
+import SmtpSettings from './SmtpSettings';
 import { useAuth } from '../../../contexts/auth/AuthProvider';
 
 export default function SiteSettings() {
@@ -54,6 +55,9 @@ export default function SiteSettings() {
                     <h3>{ t('admin.site_settings.customize_greenlight') }</h3>
                   </div>
                   <Tabs className="border-bottom ps-3" defaultActiveKey="appearance" unmountOnExit>
+                    <Tab className="p-4" eventKey="smtp" title="Email / SMTP">
+                      <SmtpSettings />
+                    </Tab>
                     <Tab className="p-4" eventKey="appearance" title={t('admin.site_settings.appearance.appearance')}>
                       <Appearance />
                     </Tab>
